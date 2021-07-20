@@ -4,4 +4,20 @@
 
 .chat-user-list {
     list-style: none;
+    margin-bottom: 10px;
+}
+
+.name-image {
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.chat-image {
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    position: relative;
 }
