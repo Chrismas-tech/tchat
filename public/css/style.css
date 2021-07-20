@@ -1,3 +1,7 @@
+body {
+    font-size: 18px;
+}
+
 .chat-row {
     margin: 50px;
 }
@@ -5,6 +9,8 @@
 .chat-user-list {
     list-style: none;
     margin-bottom: 10px;
+    padding: 5px;
+    background-color: rgb(233 233 233);
 }
 
 .name-image {
@@ -17,7 +23,18 @@
 
 .chat-image {
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     position: relative;
+}
+
+.user-status-icon {
+    position: absolute;
+    top: -1px;
+    right: -2px;
+    color: #abacaa;
+}
+
+.active {
+    background-color: rgb(24 217 170);
 }

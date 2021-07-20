@@ -10,8 +10,9 @@
                 <ul class="list-group list-chat-item">
                     @if ($users->count())
                         @foreach ($users as $user)
-                            <li class="chat-user-list">
-                                <a href="{{route('message.conversation', $user->id)}}" class="d-flex align-items-center">
+                            <li class="chat-user-list 
+                            @if($user->id == $friendInfo->id) active @endif">
+                                <a href="{{ route('message.conversation', $user->id) }}" class="d-flex align-items-center text-decoration-none">
                                     <div class="chat-image bg-primary">
                                         <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
                                         <div class="name-image">
@@ -19,7 +20,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="chat-name ml-1">
+                                    <div class="chat-name ml-1 font-bold {{$user->id == $friendInfo->id ? "text-white" : '' }}">
                                         {{ $user->name }}
                                     </div>
                                 </a>
@@ -31,10 +32,7 @@
         </div>
 
         <div class="col-md-9">
-            <h1>
-                Message Section
-            </h1>
-            Select user from the list to begin conversation.
+            Chat body here
         </div>
 
     </div>
