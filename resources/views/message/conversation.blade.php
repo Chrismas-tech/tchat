@@ -11,10 +11,10 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                                                    @if ($user->id ==
-                                $friendInfo->id) active @endif">
+                                    @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
+
                                     <div class="chat-image">
                                         <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
                                         <div class="name-image">
@@ -22,10 +22,11 @@
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="chat-name ml-1 font-bold {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                    <div class="m-auto chat-name ml-1 font-bold 
+                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user->name }}
                                     </div>
+
                                 </a>
                             </li>
                         @endforeach
@@ -66,11 +67,11 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-12 message-content">
                         <div class="message-text">
                             Message Here
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -84,15 +85,18 @@
                         <i class="fa fa-paperclip"></i>
                     </button>
                     |
-                    <button title="Bold" class="btn btn-light btn-sm tool-items" onclick="document.execCommand('bold',false,'')">
+                    <button title="Bold" class="btn btn-light btn-sm tool-items"
+                        onclick="document.execCommand('bold',false,'')">
                         <i class="fa fa-bold tool-icon"></i>
                     </button>
                     |
-                    <button title="Italic" class="btn btn-light btn-sm tool-items" onclick="document.execCommand('italic',false,'')">
+                    <button title="Italic" class="btn btn-light btn-sm tool-items"
+                        onclick="document.execCommand('italic',false,'')">
                         <i class="fa fa-italic tool-icon"></i>
                     </button>
                     |
-                    <button title="Underline" class="btn btn-light btn-sm tool-items" onclick="document.execCommand('underline',false,'')">
+                    <button title="Underline" class="btn btn-light btn-sm tool-items"
+                        onclick="document.execCommand('underline',false,'')">
                         <i class="fa fa-underline tool-icon"></i>
                     </button>
                 </div>

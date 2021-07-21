@@ -13,6 +13,10 @@ body {
     background-color: rgb(233 233 233);
 }
 
+.chat-user-list a {
+    text-decoration: none;
+}
+
 .name-image {
     color: white;
     position: absolute;
@@ -35,6 +39,10 @@ body {
     top: -1px;
     right: -2px;
     color: #abacaa;
+}
+
+.online {
+    color: greenyellow;
 }
 
 .active {
