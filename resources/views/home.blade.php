@@ -58,8 +58,9 @@
                 /* Pour tous les utilisateurs connectés  :
                 Si #status-id == #status-key ---> alors on ajoute une classe car l'utilisteur est connecté
                 */
-                console.log(users);
-                /* Chaque index correspond à un objet qui renferme le user_id et le socket_id */
+
+                /* Chaque index correspond à un objet qui contient l'élement objet el (user_id et le socket_id) */
+                
                 $.each(users, (index, el) => {
                     if ($('#status-' + el.user_id)) {
                         $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
@@ -68,12 +69,10 @@
             })
 
             socket.on('UserStatusDisconnect', user_id => {
-
                 if ($('#status-' + user_id)) {
                     $('#status-' + user_id).removeClass('online')
                     $('#status-' + user_id).attr('title', 'Online')
                 }
-
             })
 
         })

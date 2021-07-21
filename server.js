@@ -32,10 +32,15 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
 
         /* On supprime l'utilisateur du tableau */
+
         users.forEach((user, index) => {
             if (user.socket_id == socket.id) {
-                console.log('Match')
+                /*  console.log('Match') */
+
+                /* S'il y a un match ---> on update le statut de l'utilisateur qui se déconnecte seulement pour les autres utilisateurs */
                 socket.broadcast.emit('UserStatusDisconnect', user.user_id)
+
+                /* On supprime l'utilisateur du tableau */
                 users.splice(index, 1);
             }
         });
