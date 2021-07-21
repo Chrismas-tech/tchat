@@ -13,6 +13,7 @@
                             <li class="chat-user-list">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center">
+                                    
                                     <div class="chat-image bg-primary">
                                         <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
                                             title="Away"></i>
@@ -53,26 +54,28 @@
 
             socket.emit('user_connected', user_id)
 
-            socket.on('UserStatusOnline', users => {
+            socket.on('UserStatus', users => {
+
+                /* Ici on update le statut, à savoir Online ou Disconnect */
+                /* Note : 
+
+                Lorsque l'on se déconnecte, le user déconnecté est retiré du tableau users ---> impossible de lui changer son statut, on passera par une autre classe pour mettre tout le monde à "absent", puis on reparcourt le tableau users */
+
+                let userStatusIcon = $('.user-status-icon');
+                userStatusIcon.removeClass('online')
+                userStatusIcon.attr('title', 'Away');
 
                 /* Pour tous les utilisateurs connectés  :
-                Si #status-id == #status-key ---> alors on ajoute une classe car l'utilisteur est connecté
+                Si #status-el.user_id existe ---> alors on ajoute une classe car l'utilisateur en question est connecté
                 */
 
-                /* Chaque index correspond à un objet qui contient l'élement objet el (user_id et le socket_id) */
-                
+                /* Chaque index contient un élement objet el {user_id et le socket_id} */
+
                 $.each(users, (index, el) => {
                     if ($('#status-' + el.user_id)) {
                         $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
                     }
                 })
-            })
-
-            socket.on('UserStatusDisconnect', user_id => {
-                if ($('#status-' + user_id)) {
-                    $('#status-' + user_id).removeClass('online')
-                    $('#status-' + user_id).attr('title', 'Online')
-                }
             })
 
         })

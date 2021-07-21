@@ -16,42 +16,39 @@ io.on('connection', socket => {
 
         users.push({ user_id: user_id, socket_id: socket.id })
 
-        console.log('User id ' + user_id);
-        console.log("USERS CONNECTION");
-        console.log(users);
-        console.log("---------------------------------------");
-        console.log("---------------------------------------");
-        console.log("---------------------------------------");
-        console.log("---------------------------------------");
+        /*         console.log('User id ' + user_id);
+                console.log("USERS CONNECTION");
+                console.log(users);
+                console.log("---------------------------------------");
+                console.log("---------------------------------------");
+                console.log("---------------------------------------");
+                console.log("---------------------------------------"); */
 
         /* Update des statuts de sa propre page et celle des autres */
-        io.emit('UserStatusOnline', users)
+        io.emit('UserStatus', users)
     })
 
 
     socket.on('disconnect', () => {
 
-        /* On supprime l'utilisateur du tableau */
-
         users.forEach((user, index) => {
             if (user.socket_id == socket.id) {
                 /*  console.log('Match') */
-
-                /* S'il y a un match ---> on update le statut de l'utilisateur qui se déconnecte seulement pour les autres utilisateurs */
-                socket.broadcast.emit('UserStatusDisconnect', user.user_id)
-
                 /* On supprime l'utilisateur du tableau */
                 users.splice(index, 1);
+
+                /* On change le status de l'utilisateur */
+                io.emit('UserStatus', users)
             }
         });
 
         /* Update des statuts de sa propre page et celle des autres */
 
-        console.log("USERS DISCONNECTION");
-        console.log(users);
-        console.log("---------------------------------------");
-        console.log("---------------------------------------");
-        console.log("---------------------------------------");
-        console.log("---------------------------------------");
+        /*         console.log("USERS DISCONNECTION");
+                console.log(users);
+                console.log("---------------------------------------");
+                console.log("---------------------------------------");
+                console.log("---------------------------------------");
+                console.log("---------------------------------------"); */
     })
 })
