@@ -13,17 +13,17 @@
                             <li class="chat-user-list">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center">
-                                    
+
                                     <div class="chat-image bg-primary">
                                         <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
                                             title="Away"></i>
                                         <div class="name-image">
-                                            {{ makeShortCutName($user->name) }}
+                                            {{ makeShortCutName($user->firstname.' '.$user->lastname) }}
                                         </div>
                                     </div>
 
                                     <div class="m-auto chat-name ml-1">
-                                        {{ $user->name }}
+                                        {{ $user->firstname.' '.$user->lastname}}
                                     </div>
                                 </a>
                             </li>

@@ -15,9 +15,16 @@ class CreateUserMessagesTable extends Migration
     {
         Schema::create('user_messages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('message_id');
-            $table->unsignedInteger('sender_id');
-            $table->unsignedInteger('receiver_id');
+
+            $table->unsignedBigInteger('message_id');
+            $table->foreign('message_id')->references('id')->on('messages');
+
+            $table->unsignedBigInteger('sender_id');
+            $table->foreign('sender_id')->references('id')->on('users');
+
+            $table->unsignedBigInteger('receiver_id');
+            $table->foreign('receiver_id')->references('id')->on('users');
+
             $table->tinyInteger('type')->default(0)->comment('1:group message', '0:personal message');
             $table->tinyInteger('seen_status')->default(0)->comment('1:seen');
             $table->tinyInteger('deliver_status')->default(0)->comment('1:delivered');

@@ -14,7 +14,7 @@ class CreateMessagesTable extends Migration
     public function up()
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
+            $table->id('id');
             $table->unsignedInteger('parent_id')->nullable();
             $table->longText('message');
             $table->tinyInteger('type')->default(1)->comment('1:message, 2:file');

@@ -11,7 +11,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                            @if ($user->id == $friendInfo->id) active @endif">
+                            @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -19,13 +19,13 @@
                                         <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
                                             title="Away"></i>
                                         <div class="name-image">
-                                            {{ makeShortCutName($user->name) }}
+                                            {{ makeShortCutName($friend_full_name) }}
                                         </div>
                                     </div>
 
                                     <div class="m-auto chat-name ml-1 font-bold 
-                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
-                                        {{ $user->name }}
+                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                        {{ $friend_full_name }}
                                     </div>
 
                                 </a>
@@ -41,12 +41,12 @@
                 <div class="chat-image">
                     <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
                     <div class="name-image">
-                        {{ makeShortCutName($myInfo->name) }}
+                        {{makeShortCutName($friend_full_name) }}
                     </div>
                 </div>
 
                 <div class="chat-name ml-1 font-bold">
-                    {{ $myInfo->name }}
+                    {{ $friend_full_name }}
                 </div>
             </div>
 
@@ -57,11 +57,11 @@
                             <div class="chat-image">
                                 <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
                                 <div class="name-image">
-                                    {{ makeShortCutName($friendInfo->name) }}
+                                    {{ makeShortCutName($friend_full_name) }}
                                 </div>
                             </div>
                             <div class="chat-name ml-1 font-weight-bold">
-                                Manohar Kahdka
+                               {{$friend_full_name}}
                                 <span class="small time text-secondary" title="2020-05-06 10:30 PM">
                                     10:30 PM
                                 </span>
@@ -78,7 +78,7 @@
             </div>
 
             <div class="chat-box">
-                <div class="chat-input bg-white" id="chatInput" contenteditable="">
+                <div class="chat-input bg-white" id="chatInput" contenteditable="true">
                     Write your message here...
                 </div>
                 <div class="chat-input-toolbar">
@@ -112,12 +112,19 @@
 @push('scripts')
     <script>
         $(function() {
-            let user_id = "{{ auth()->user()->id }}"
+
+            let $chatInput = $("#chatInput");
+            let $chatInputTollbar = $('.chat-input-toolbar');
+            let $chatBody = $(".chat-Body")
+
+            let sender_id = "{{ auth()->user()->id }}"
+            let receiver_id = "{{ $friendInfo->id }}"
+
             let ip_address = '127.0.0.1';
             let socket_port = '3000';
             let socket = io(ip_address + ':' + socket_port)
 
-            socket.emit('user_connected', user_id)
+            socket.emit('user_connected', sender_id)
 
             socket.on('UserStatus', users => {
 
@@ -143,6 +150,47 @@
                 })
 
             })
+
+            $chatInput.keypress(function(e) {
+                let message = $(this).html();
+
+                /* JQuery function which -> which key was pressed */
+                /* Si on tape Enter et si Shift n'est pas enfoncée */
+
+                if (e.which === 13 && !e.shiftKey) {
+                    e.preventDefault()
+                    console.log('ENTER ALONE');
+                    $chatInput.empty();
+                    sendMessage(message);
+                }
+            })
+
+            function sendMessage(message) {
+
+                $.ajax({
+                    url: "{{ route('message.send-message') }}", // La ressource ciblée
+                    method: 'POST', // Le type de la requête HTTP
+                    dataType: 'JSON', // On définit le type des données retourné par le serveur (évite d'utiliser JSON.parse pour la réponse)
+
+                    data: {
+                        message: message,
+                        _token: "{{ csrf_token() }}",
+                        receiver_id: receiver_id
+                    },
+
+                    success: function(response, status) {
+                        if (response.success) {
+                            console.log(response.data);
+                        }
+                    },
+
+                    error: function(response) {
+                         console.log(response);
+/*                         console.log(status);
+                        console.log(error);  */
+                    }
+                });
+            }
         })
     </script>
 @endpush

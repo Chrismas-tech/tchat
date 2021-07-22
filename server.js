@@ -13,16 +13,7 @@ var users = [];
 io.on('connection', socket => {
 
     socket.on('user_connected', user_id => {
-
         users.push({ user_id: user_id, socket_id: socket.id })
-
-        /*         console.log('User id ' + user_id);
-                console.log("USERS CONNECTION");
-                console.log(users);
-                console.log("---------------------------------------");
-                console.log("---------------------------------------");
-                console.log("---------------------------------------");
-                console.log("---------------------------------------"); */
 
         /* Update des statuts de sa propre page et celle des autres */
         io.emit('UserStatus', users)
