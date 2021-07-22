@@ -3,9 +3,20 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http, {
     cors: { origin: "*" }
 });
+const Redis = require('ioredis');
+const redis = new Redis();
 
 http.listen(3000, function() {
     console.log('Listening to port 3000');
+});
+
+redis.subscribe('private-channel', function() {
+    console.log('Subscribed to private channel')
+})
+
+redis.on('message', function(channel, message) {
+    console.log(channel)
+    console.log(message)
 })
 
 var users = [];

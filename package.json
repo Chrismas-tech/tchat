@@ -27,6 +27,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "ioredis": "^4.27.6",
         "socket.io": "^4.1.3"
     }
 }

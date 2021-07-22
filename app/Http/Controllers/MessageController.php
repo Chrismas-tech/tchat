@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PrivateMessageEvent;
 use App\Models\Message;
 use App\Models\User;
 use App\Models\UserMessage;
@@ -45,7 +46,7 @@ class MessageController extends Controller
             'message' => $request->message,
         ];
 
-        /* dd($datas); */
+        event(new PrivateMessageEvent($datas_user_message));
 
         if (Message::create($datas_message) && UserMessage::create($datas_user_message)) {
             try {
