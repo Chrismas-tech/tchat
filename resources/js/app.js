@@ -7,6 +7,9 @@
 window.$ = require('jquery');
 require('./bootstrap');
 
+let moment = require('moment');
+window.moment = require('moment');
+
 /* window.Vue = require('vue').default; */
 
 /**

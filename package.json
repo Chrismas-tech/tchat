@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "ioredis": "^4.27.6",
+        "moment": "^2.29.1",
         "socket.io": "^4.1.3"
     }
 }

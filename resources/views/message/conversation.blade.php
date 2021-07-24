@@ -11,7 +11,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                    @if ($user->id == $friendInfo->id) active @endif">
+                                                            @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -23,8 +23,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="m-auto chat-name ml-1 font-bold 
-                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                    <div
+                                        class="m-auto chat-name ml-1 font-bold 
+                                                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $friend_full_name }}
                                     </div>
 
@@ -39,7 +40,6 @@
         <div class="col-md-9 chat-section">
             <div class="chat-header d-flex align-items-center">
                 <div class="chat-image">
-                    <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
                     <div class="name-image">
                         {{ makeShortCutName($friend_full_name) }}
                     </div>
@@ -53,26 +53,11 @@
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
                     <div class="row message align-items-center mb-2">
-                        <div class="col-md-12 user-info d-flex align-items-center">
-                            <div class="chat-image">
-                                <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
-                                <div class="name-image">
-                                    {{ makeShortCutName($friend_full_name) }}
-                                </div>
-                            </div>
-                            <div class="chat-name ml-1 font-weight-bold">
-                                {{ $friend_full_name }}
-                                <span class="small time text-secondary" title="2020-05-06 10:30 PM">
-                                    10:30 PM
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 message-content">
-                        <div class="message-text">
-                            Message Here
-                        </div>
+                        <p>erthtrthdrthdrthh</p>
+                        <h1>oezgheriogheroigsergseftyjtfjtfyjtfjyrgserg
+                        </h1>
+                        <p>erthtrthdrthrthdrthdrthdrthdthrdthdrthdrthdrthrdhrddrthdrthdrthdrthdrththrdth</p>
+                        <p>erthtrthdrthdrthdrthrdhrdthrdth</p>
                     </div>
                 </div>
             </div>
@@ -202,16 +187,23 @@
 
             function appendMessageToSender(message) {
                 console.log(message);
-                let $user_full_name = '{{$user->firstname}}' + '{{$user->lastname}}';
+
+                let $user_full_name = '{{ $user_full_name }}';
                 let $image = '{{ makeShortCutName($user_full_name) }}';
 
-                console.log($user_full_name);
-                console.log($image);
+                let userInfo =
+                    '<div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $user_full_name + ' ' +
+                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content + '</div>';
+
+                $('#messageWrapper .message').append(userInfo);
+
 
             }
 
             socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
-                console.log('VUE PRIVATE CHANNEL RETOUR');
+                /*          console.log('VUE PRIVATE CHANNEL RETOUR'); */
                 appendMessageToSender(message)
             })
 
