@@ -10,16 +10,32 @@ http.listen(3000, function() {
     console.log('Listening to port 3000');
 });
 
+var users = [];
+
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
 })
 
-redis.on('message', function(channel, message) {
-    console.log(channel)
-    console.log(message)
+redis.on('message', (channel, message) => {
+    message = JSON.parse(message)
+    console.log(message.data);
+
+    if (channel == 'private-channel') {
+        /*         console.log('PRIVATE CHANNEL'); */
+        let data = message.data.data;
+        let receiver_id = data.receiver_id;
+        let event = message.event;
+        /* 
+                console.log(users); */
+
+        users.forEach((user, index) => {
+            if (user.user_id == receiver_id) {
+                io.to(user.socket_id).emit(channel + ':' + event, data);
+            }
+        });
+    }
 })
 
-var users = [];
 
 io.on('connection', socket => {
 
@@ -43,14 +59,5 @@ io.on('connection', socket => {
                 io.emit('UserStatus', users)
             }
         });
-
-        /* Update des statuts de sa propre page et celle des autres */
-
-        /*         console.log("USERS DISCONNECTION");
-                console.log(users);
-                console.log("---------------------------------------");
-                console.log("---------------------------------------");
-                console.log("---------------------------------------");
-                console.log("---------------------------------------"); */
     })
 })

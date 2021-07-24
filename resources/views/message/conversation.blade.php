@@ -11,7 +11,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                            @if ($user->id == $friendInfo->id) active @endif">
+                                    @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -24,7 +24,7 @@
                                     </div>
 
                                     <div class="m-auto chat-name ml-1 font-bold 
-                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $friend_full_name }}
                                     </div>
 
@@ -41,7 +41,7 @@
                 <div class="chat-image">
                     <i class="fa fa-circle fa-xs user-status-icon" title="away"></i>
                     <div class="name-image">
-                        {{makeShortCutName($friend_full_name) }}
+                        {{ makeShortCutName($friend_full_name) }}
                     </div>
                 </div>
 
@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="chat-name ml-1 font-weight-bold">
-                               {{$friend_full_name}}
+                                {{ $friend_full_name }}
                                 <span class="small time text-secondary" title="2020-05-06 10:30 PM">
                                     10:30 PM
                                 </span>
@@ -78,8 +78,7 @@
             </div>
 
             <div class="chat-box">
-                <div class="chat-input bg-white" id="chatInput" contenteditable="true">
-                    Write your message here...
+                <div class="chat-input bg-white" id="chatInput" contenteditable="true">Write your message here...
                 </div>
                 <div class="chat-input-toolbar">
                     <button title="Add File" class="btn btn-light btn-sm btn-fil-upload">
@@ -151,6 +150,14 @@
 
             })
 
+            $chatInput.on('click', function() {
+                let placeholder = $(this).text();
+
+                if (placeholder.trim() == ('Write your message here...')) {
+                    $(this).text('');
+                }
+            })
+
             $chatInput.keypress(function(e) {
                 let message = $(this).html();
 
@@ -159,7 +166,6 @@
 
                 if (e.which === 13 && !e.shiftKey) {
                     e.preventDefault()
-                    console.log('ENTER ALONE');
                     $chatInput.empty();
                     sendMessage(message);
                 }
@@ -180,17 +186,35 @@
 
                     success: function(response, status) {
                         if (response.success) {
-                            console.log(response.data);
+                            console.log('AJAX SUCCESS');
                         }
                     },
 
                     error: function(response) {
-                         console.log(response);
-/*                         console.log(status);
-                        console.log(error);  */
+                        console.log(response);
+                        /*
+                        console.log(status);
+                        console.log(error);  
+                        */
                     }
                 });
             }
+
+            function appendMessageToSender(message) {
+                console.log(message);
+                let $user_full_name = '{{$user->firstname}}' + '{{$user->lastname}}';
+                let $image = '{{ makeShortCutName($user_full_name) }}';
+
+                console.log($user_full_name);
+                console.log($image);
+
+            }
+
+            socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
+                console.log('VUE PRIVATE CHANNEL RETOUR');
+                appendMessageToSender(message)
+            })
+
         })
     </script>
 @endpush
