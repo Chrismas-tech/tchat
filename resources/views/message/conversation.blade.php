@@ -11,7 +11,8 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                            @if ($user->id == $friendInfo->id) active @endif">
+                                                                    @if ($user->id ==
+                                $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -25,7 +26,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $friend_full_name }}
                                     </div>
 
@@ -52,13 +53,6 @@
 
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
-                    <div class="row message align-items-center mb-2">
-                        <p>erthtrthdrthdrthh</p>
-                        <h1>oezgheriogheroigsergseftyjtfjtfyjtfjyrgserg
-                        </h1>
-                        <p>erthtrthdrthrthdrthdrthdrthdthrdthdrthdrthdrthrdhrddrthdrthdrthdrthdrththrdth</p>
-                        <p>erthtrthdrthdrthdrthrdhrdthrdth</p>
-                    </div>
                 </div>
             </div>
 
@@ -97,16 +91,16 @@
     <script>
         $(function() {
 
+            let ip_address = '127.0.0.1';
+            let socket_port = '3000';
+            let socket = io(ip_address + ':' + socket_port)
+
             let $chatInput = $("#chatInput");
             let $chatInputTollbar = $('.chat-input-toolbar');
             let $chatBody = $(".chat-Body")
 
             let sender_id = "{{ auth()->user()->id }}"
             let receiver_id = "{{ $friendInfo->id }}"
-
-            let ip_address = '127.0.0.1';
-            let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
 
             socket.emit('user_connected', sender_id)
 
@@ -166,7 +160,7 @@
                     data: {
                         message: message,
                         _token: "{{ csrf_token() }}",
-                        receiver_id: receiver_id
+                        receiver_id: receiver_id,
                     },
 
                     success: function(response, status) {
@@ -185,27 +179,26 @@
                 });
             }
 
+            socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
+               console.log(message);
+                appendMessageToSender(message)
+            })
+
             function appendMessageToSender(message) {
-                console.log(message);
 
-                let $user_full_name = '{{ $user_full_name }}';
-                let $image = '{{ makeShortCutName($user_full_name) }}';
+                let $friend_full_name = '{{ $friend_full_name }}';
+                let $image = '{{ makeShortCutName($friend_full_name) }}';
 
-                let userInfo =
+                let new_message =
                     '<div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $user_full_name + ' ' +
+                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
                     getCurrentTime() + '</span></div></div><div class="message-text">' + message.content + '</div>';
 
-                $('#messageWrapper .message').append(userInfo);
+                $('#messageWrapper').append(new_message);
 
 
             }
-
-            socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
-                /*          console.log('VUE PRIVATE CHANNEL RETOUR'); */
-                appendMessageToSender(message)
-            })
 
         })
     </script>
