@@ -21,6 +21,7 @@ redis.on('message', (channel, message) => {
     console.log(message.data);
 
     if (channel == 'private-channel') {
+        console.log(message);
         /*         console.log('PRIVATE CHANNEL'); */
         let data = message.data.data;
         let receiver_id = data.receiver_id;
@@ -33,6 +34,7 @@ redis.on('message', (channel, message) => {
                 io.to(user.socket_id).emit(channel + ':' + event, data);
             }
         });
+
     }
 })
 

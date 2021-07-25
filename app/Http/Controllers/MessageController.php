@@ -36,7 +36,7 @@ class MessageController extends Controller
         $datas_user_message = [
             'message_id' => Auth::id(),
             'sender_id' => Auth::id(),
-            'sender_name' => Auth::user()->name,
+            'sender_name' => Auth::user()->firstname.' '.Auth::user()->lastname,
             'receiver_id' => $request->receiver_id,
             'content' => $request->message,
         ];
