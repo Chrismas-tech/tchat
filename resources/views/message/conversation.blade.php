@@ -11,7 +11,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                                            @if ($user->id ==
+                                                                                @if ($user->id ==
                                 $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
@@ -26,7 +26,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $friend_full_name }}
                                     </div>
 
@@ -151,6 +151,8 @@
             })
 
             function sendMessage(message) {
+                console.log(message);
+                appendMessageToSender(message)
 
                 $.ajax({
                     url: "{{ route('message.send-message') }}", // La ressource ciblée
@@ -165,22 +167,17 @@
 
                     success: function(response, status) {
                         if (response.success) {
-                            console.log('AJAX SUCCESS');
+                            console.log(response);
                         }
                     },
 
                     error: function(response) {
                         console.log(response);
-                        /*
-                        console.log(status);
-                        console.log(error);  
-                        */
                     }
                 });
             }
 
             socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
-                console.log(message);
                 appendMessageToReceiver(message)
             })
 
@@ -201,6 +198,8 @@
 
             function appendMessageToSender(message) {
 
+                console.log(message);
+
                 let $user_full_name = '{{ $user_full_name }}';
                 let $image = '{{ makeShortCutName($user_full_name) }}';
 
@@ -208,7 +207,7 @@
                     '<div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
                     $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $user_full_name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content + '</div>';
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message + '</div>';
 
                 $('#messageWrapper').append(new_message);
 
