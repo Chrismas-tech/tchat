@@ -11,8 +11,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                                                @if ($user->id ==
-                                $friendInfo->id) active @endif">
+                                                                                                        @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -26,7 +25,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $friend_full_name }}
                                     </div>
 
@@ -53,6 +52,7 @@
 
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
+
                 </div>
             </div>
 
@@ -151,7 +151,7 @@
             })
 
             function sendMessage(message) {
-                console.log(message);
+                /* console.log(message); */
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -187,27 +187,26 @@
                 let $image = '{{ makeShortCutName($friend_full_name) }}';
 
                 let new_message =
-                    '<div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                    '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
                     $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content + '</div>';
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content + '</div></div></div>';
 
                 $('#messageWrapper').append(new_message);
 
             }
 
             function appendMessageToSender(message) {
-
-                console.log(message);
+                /* console.log(message); */
 
                 let $user_full_name = '{{ $user_full_name }}';
                 let $image = '{{ makeShortCutName($user_full_name) }}';
 
                 let new_message =
-                    '<div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                    '<div class="d-flex justify-content-end"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
                     $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $user_full_name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message + '</div>';
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message + '</div></div></div>';
 
                 $('#messageWrapper').append(new_message);
 
