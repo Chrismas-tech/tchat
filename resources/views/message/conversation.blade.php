@@ -9,31 +9,33 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                @if ($user->id == $friendInfo->id) active @endif">
+                                    @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
                                     <div class="chat-image">
-                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
-                                            title="Away"></i>
+                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}" title="Away"></i>
                                         <div class="name-image">
                                             @php
-                                            $user_name_full = $user->firstname. ' '.$user->lastname.'';
+                                                $user_name_full = $user->firstname . ' ' . $user->lastname . '';
                                             @endphp
                                             {{ makeShortCutName($user_name_full) }}
                                         </div>
                                     </div>
 
                                     <div class="m-auto chat-name ml-1 font-bold 
-                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }}
                                     </div>
-
                                 </a>
                             </li>
                         @endforeach
                     @endif
                 </ul>
+            </div>
+
+            <div class="groups mt-5">
+                <h5>Groups <i class="class fa fa-plus ml-1 add-user-group" data-toggle="modal" data-target="#Modal_add_to_group"></i></h5>
             </div>
         </div>
 
@@ -89,7 +91,27 @@
     <!-- Audio Sound -->
     <audio id="audio_sent" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
 
-
+    <!-- Modal -->
+    <div class="modal fade" id="Modal_add_to_group" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 

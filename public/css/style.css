@@ -104,6 +104,10 @@ body {
     padding: 15px 0;
 }
 
+.add-user-group {
+    cursor: pointer;
+}
+
 
 /* MEDIA QUERIES */
 
