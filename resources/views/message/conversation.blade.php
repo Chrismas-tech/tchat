@@ -9,7 +9,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                        @if ($user->id == $friendInfo->id) active @endif">
+                                @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -17,14 +17,16 @@
                                         <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
                                             title="Away"></i>
                                         <div class="name-image">
-                                            {{ makeShortCutName($friend_full_name) }}
+                                            @php
+                                            $user_name_full = $user->firstname. ' '.$user->lastname.'';
+                                            @endphp
+                                            {{ makeShortCutName($user_name_full) }}
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="m-auto chat-name ml-1 font-bold 
-                                                                                                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
-                                        {{ $friend_full_name }}
+                                    <div class="m-auto chat-name ml-1 font-bold 
+                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                        {{ $user_name_full }}
                                     </div>
 
                                 </a>
