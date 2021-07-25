@@ -4,14 +4,12 @@
     <div class="row chat-row">
         <div class="col-md-3">
             <div class="users">
-
                 <h5>Users</h5>
-
                 <ul class="list-group list-chat-item">
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                                                                        @if ($user->id == $friendInfo->id) active @endif">
+                                        @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -25,7 +23,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $friend_full_name }}
                                     </div>
 
@@ -48,11 +46,14 @@
                 <div class="chat-name ml-1 font-bold">
                     {{ $friend_full_name }}
                 </div>
+
+                <div>
+                    <img class="icon-audio" src="{{ asset('img/haut-parleur-on.png') }}" alt="icon-audio">
+                </div>
             </div>
 
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
-
                 </div>
             </div>
 
@@ -81,8 +82,11 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <!-- Audio Sound -->
+    <audio id="audio_sent" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
+
 
 @endsection
 
@@ -103,6 +107,8 @@
             let receiver_id = "{{ $friendInfo->id }}"
 
             socket.emit('user_connected', sender_id)
+
+            $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
 
             socket.on('UserStatus', users => {
 
@@ -179,6 +185,7 @@
 
             socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
                 appendMessageToReceiver(message)
+                $('#audio_sent')[0].play()
             })
 
             function appendMessageToReceiver(message) {
@@ -190,7 +197,8 @@
                     '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
                     $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content + '</div></div></div>';
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
+                    '</div></div></div>';
 
                 $('#messageWrapper').append(new_message);
 
@@ -206,11 +214,25 @@
                     '<div class="d-flex justify-content-end"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
                     $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $user_full_name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message + '</div></div></div>';
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message +
+                    '</div></div></div>';
 
                 $('#messageWrapper').append(new_message);
 
             }
+
+
+            $('.icon-audio').on('click', function() {
+                if ($(this).attr('src') == '{{ asset('img/haut-parleur-on.png') }}') {
+                    console.log('ON -> OFF');
+                    $(this).attr('src', '{{ asset('img/haut-parleur-off.png') }}')
+                    $('#audio_sent').attr('src', '')
+                } else {
+                    console.log('OFF -> ON');
+                    $(this).attr('src', '{{ asset('img/haut-parleur-on.png') }}')
+                    $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
+                }
+            })
 
         })
     </script>
