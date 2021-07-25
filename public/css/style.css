@@ -108,6 +108,23 @@ body {
     cursor: pointer;
 }
 
+.add-user-group:hover {
+    color: #ffffff !important;
+}
+
+.users-registered,
+.groups-registered {
+    width: max-content;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    outline: none !important;
+}
+
 
 /* MEDIA QUERIES */
 

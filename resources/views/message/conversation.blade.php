@@ -4,17 +4,18 @@
     <div class="row chat-row">
         <div class="col-md-3">
             <div class="users">
-                <h5>Users</h5>
+                <h5 class="bg-primary users-registered text-white px-2 py-2 rounded">Users</h5>
                 <ul class="list-group list-chat-item">
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                    @if ($user->id == $friendInfo->id) active @endif">
+                                                                                                                                @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
                                     <div class="chat-image">
-                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}" title="Away"></i>
+                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
+                                            title="Away"></i>
                                         <div class="name-image">
                                             @php
                                                 $user_name_full = $user->firstname . ' ' . $user->lastname . '';
@@ -23,8 +24,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="m-auto chat-name ml-1 font-bold 
-                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                    <div
+                                        class="m-auto chat-name ml-1 font-bold 
+                                                                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }}
                                     </div>
                                 </a>
@@ -34,8 +36,9 @@
                 </ul>
             </div>
 
-            <div class="groups mt-5">
-                <h5>Groups <i class="class fa fa-plus ml-1 add-user-group" data-toggle="modal" data-target="#Modal_add_to_group"></i></h5>
+            <div class="groups-registered mt-5">
+                <h5 class="bg-success text-white px-2 py-2 rounded">Groups <i class="class text-secondary fa fa-plus ml-1 add-user-group" data-toggle="modal"
+                data-target="#Modal_add_to_group"></i></h5>
             </div>
         </div>
 
@@ -97,18 +100,41 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+
+                <form action="">
+
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="name">Group Name</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+
+                        <div class="form-group">
+                            <select class="js-example-basic-single form-control" name="states[]" multiple="multiple">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->firstname }} {{ $user->lastname }}
+                                    </option>
+                                @endforeach
+                                <option value="WY">Wyoming</option>
+                            </select>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
@@ -118,6 +144,8 @@
 @push('scripts')
     <script>
         $(function() {
+
+            $('.js-example-basic-single').select2();
 
             let ip_address = '127.0.0.1';
             let socket_port = '3000';
@@ -257,6 +285,8 @@
                     $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
                 }
             })
+
+
 
         })
     </script>
