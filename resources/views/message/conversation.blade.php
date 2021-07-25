@@ -9,7 +9,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                                                                                                @if ($user->id == $friendInfo->id) active @endif">
+                                                                                                                                        @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -26,7 +26,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }}
                                     </div>
                                 </a>
@@ -37,8 +37,10 @@
             </div>
 
             <div class="groups-registered mt-4">
-                <h5 class="bg-success text-white px-2 py-2 rounded">Groups <i class="class text-secondary fa fa-plus ml-1 add-user-group" data-toggle="modal"
-                data-target="#Modal_add_to_group"></i></h5>
+                <h5 class="bg-success text-white px-2 py-2 rounded">Groups <i
+                        class="class text-secondary fa fa-plus ml-1 add-user-group" data-toggle="modal"
+                        data-target="#Modal_add_to_group"></i>
+                </h5>
             </div>
         </div>
 
