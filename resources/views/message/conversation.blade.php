@@ -4,8 +4,8 @@
     <div class="row chat-row">
         <div class="col-md-3">
             <div class="users">
-                <h5 class="bg-primary users-registered text-white px-2 py-2 rounded">Users</h5>
-                <ul class="list-group list-chat-item">
+                <h5 class="bg-primary users-registered text-white px-2 py-2 rounded">Users registered</h5>
+                <ul class="list-group list-chat-item mt-4">
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
@@ -36,7 +36,7 @@
                 </ul>
             </div>
 
-            <div class="groups-registered mt-5">
+            <div class="groups-registered mt-4">
                 <h5 class="bg-success text-white px-2 py-2 rounded">Groups <i class="class text-secondary fa fa-plus ml-1 add-user-group" data-toggle="modal"
                 data-target="#Modal_add_to_group"></i></h5>
             </div>
