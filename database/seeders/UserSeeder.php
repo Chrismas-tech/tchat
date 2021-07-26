@@ -1,29 +1,22 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class UserFactory extends Factory
+class UserSeeder extends Seeder
 {
     /**
-     * The name of the factory's corresponding model.
+     * Run the database seeds.
      *
-     * @var string
+     * @return void
      */
-    protected $model = User::class;
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
+    public function run()
     {
-        return [
+        $users = [
             [
                 'firstname' => 'Alex',
                 'lastname' => 'Toucan',
@@ -50,21 +43,10 @@ class UserFactory extends Factory
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
             ]
-
         ];
-    }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function unverified()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
+        foreach ($users as $user) {
+            User::create($user);
+        }
     }
 }
