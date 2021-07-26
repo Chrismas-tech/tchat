@@ -19,10 +19,12 @@ class MessageController extends Controller
 
         $user_full_name = $user->firstname . ' ' . $user->lastname;
 
+        $user_messages = UserMessage::where('sender_id', [Auth::id(), $userId])->orwhere('receiver_id', [Auth::id(), $userId])->get();
+
         $friendInfo = User::findOrFail($userId);
         $friend_full_name = $friendInfo->firstname . ' ' . $friendInfo->lastname;
 
-        return view('message.conversation', compact('users', 'user','user_full_name', 'friendInfo', 'friend_full_name'));
+        return view('message.conversation', compact('users', 'user', 'user_messages', 'user_full_name', 'friendInfo', 'friend_full_name'));
     }
 
     public function sendMessage(Request $request)
@@ -32,18 +34,20 @@ class MessageController extends Controller
             'receiver_id' => 'required',
         ]);
 
-        /* Creating User_message */
-        $datas_user_message = [
-            'message_id' => Auth::id(),
-            'sender_id' => Auth::id(),
-            'sender_name' => Auth::user()->firstname.' '.Auth::user()->lastname,
-            'receiver_id' => $request->receiver_id,
-            'content' => $request->message,
-        ];
-
         /* Creating Message */
         $datas_message = [
             'message' => $request->message,
+        ];
+
+        /* Creating User_message */
+        $count_message = Message::all()->count();
+
+        $datas_user_message = [
+            'message_id' => $count_message + 1,
+            'sender_id' => Auth::id(),
+            'sender_name' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
+            'receiver_id' => $request->receiver_id,
+            'content' => $request->message,
         ];
 
         event(new PrivateMessageEvent($datas_user_message));

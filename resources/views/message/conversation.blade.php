@@ -9,7 +9,8 @@
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list 
-                                                                                                                                        @if ($user->id == $friendInfo->id) active @endif">
+                                                                                @if ($user->id ==
+                                $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -26,7 +27,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }}
                                     </div>
                                 </a>
@@ -63,6 +64,49 @@
 
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
+
+                    @foreach ($user_messages as $user_message)
+                        @if ($user_message->sender_id == Auth::id())
+                            <div class="d-flex justify-content-end">
+                                <div>
+                                    <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
+                                        <div class="chat-image">
+                                            <div class="name-image">
+                                                {{ makeShortCutName($user_full_name) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="chat-name ml-1 font-weight-bold">{{ $user_full_name }}
+                                            <span class="small time text-secondary"
+                                                title="{{ $user_message->message->created_at }}">{{ $user_message->message->created_at }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="message-text">
+                                        {{ $user_message->message->message }}
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-start">
+                                <div>
+                                    <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
+                                        <div class="chat-image">
+                                            <div class="name-image">
+                                                {{ makeShortCutName($friend_full_name) }}
+                                            </div>
+                                        </div>
+                                        <div class="chat-name ml-1 font-weight-bold">{{ $friendInfo->firstname }}
+                                            {{ $friendInfo->lastname }}
+                                            <span class="small time text-secondary"
+                                                title="{{ $user_message->message->created_at }}">{{ $user_message->message->created_at }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="message-text">{{ $user_message->message->message }}</div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+
                 </div>
             </div>
 
@@ -243,7 +287,7 @@
             })
 
             function appendMessageToReceiver(message) {
-
+                console.log(message)
                 let $friend_full_name = '{{ $friend_full_name }}';
                 let $image = '{{ makeShortCutName($friend_full_name) }}';
 
