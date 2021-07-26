@@ -21,16 +21,17 @@ redis.on('message', (channel, message) => {
     console.log(message.data);
 
     if (channel == 'private-channel') {
-        console.log(message);
-        /*         console.log('PRIVATE CHANNEL'); */
+        /* console.log('PRIVATE CHANNEL'); */
         let data = message.data.data;
         let receiver_id = data.receiver_id;
         let event = message.event;
-        /* 
-                console.log(users); */
+
+        /* console.log(message.data.data); */
+        /* console.log(users); */
 
         users.forEach((user, index) => {
             if (user.user_id == receiver_id) {
+                /*    console.log(user) */
                 io.to(user.socket_id).emit(channel + ':' + event, data);
             }
         });

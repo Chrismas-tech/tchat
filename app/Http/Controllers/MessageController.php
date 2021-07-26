@@ -55,9 +55,10 @@ class MessageController extends Controller
         if (Message::create($datas_message) && UserMessage::create($datas_user_message)) {
             try {
                 return response()->json([
-                    'data' => $datas_user_message,
+                    'message' => $datas_message,
+                    'datas_user_message' => $datas_user_message,
                     'success' => true,
-                    'message' => 'Message sent successfully'
+                    'confirmation' => 'Message sent successfully'
                 ]);
             } catch (Exception $e) {
                 return $e->getMessage();

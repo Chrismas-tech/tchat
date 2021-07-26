@@ -6,10 +6,12 @@
             <div class="users">
                 <h5 class="bg-primary users-registered text-white px-2 py-2 rounded">Users registered</h5>
                 <ul class="list-group list-chat-item mt-4">
+
                     @if ($users->count())
                         @foreach ($users as $user)
+
                             <li class="chat-user-list 
-                                 @if ($user->id == $friendInfo->id) active @endif">
+                                                        @if ($user->id == $friendInfo->id) active @endif">
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -26,13 +28,15 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }}
                                     </div>
                                 </a>
                             </li>
+
                         @endforeach
                     @endif
+
                 </ul>
             </div>
 
@@ -65,7 +69,7 @@
                 <div class="message-listing" id="messageWrapper">
 
                     @foreach ($user_messages as $user_message)
-                        @if ($user_message->sender_id == Auth::id())
+                        @if ($user_message->sender_id == Auth::id() && $user_message->receiver_id == $friendInfo->id)
                             <div class="d-flex justify-content-end">
                                 <div>
                                     <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
@@ -85,7 +89,8 @@
                                     </div>
                                 </div>
                             </div>
-                        @else
+                        @elseif ($user_message->sender_id == $friendInfo->id && $user_message->receiver_id ==
+                            Auth::id())
                             <div class="d-flex justify-content-start">
                                 <div>
                                     <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
@@ -254,7 +259,8 @@
             })
 
             function sendMessage(message) {
-                /* console.log(message); */
+                console.log("SENDER MESSAGE");
+                /*  console.log(message);  */
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -286,19 +292,26 @@
             })
 
             function appendMessageToReceiver(message) {
+                console.log('APPEND RECEIVER');
                 console.log(message)
-                let $friend_full_name = '{{ $friend_full_name }}';
-                let $image = '{{ makeShortCutName($friend_full_name) }}';
 
-                let new_message =
-                    '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name + ' ' +
-                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
-                    '</div></div></div>';
+                $message_receiver_id = parseInt(message.receiver_id)
 
-                $('#messageWrapper').append(new_message);
+                if (message.sender_id == receiver_id) {
+                    console.log(true);
+                    let $friend_full_name = '{{ $friend_full_name }}';
+                    let $image = '{{ makeShortCutName($friend_full_name) }}';
 
+                    let new_message =
+                        '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name +
+                        ' ' +
+                        '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
+                        getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
+                        '</div></div></div>';
+
+                    $('#messageWrapper').append(new_message);
+                }
             }
 
             function appendMessageToSender(message) {
