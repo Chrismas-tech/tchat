@@ -246,7 +246,7 @@
             })
 
             $chatInput.keypress(function(e) {
-                let message = $(this).html();
+                let message = $(this).text();
 
                 /* JQuery function which -> which key was pressed */
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
@@ -260,7 +260,7 @@
 
             function sendMessage(message) {
                 console.log("SENDER MESSAGE");
-                /*  console.log(message);  */
+                console.log(message);  
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -292,13 +292,13 @@
             })
 
             function appendMessageToReceiver(message) {
-                console.log('APPEND RECEIVER');
-                console.log(message)
+/*                 console.log('APPEND RECEIVER');
+                console.log(message) */
 
                 $message_receiver_id = parseInt(message.receiver_id)
 
                 if (message.sender_id == receiver_id) {
-                    console.log(true);
+            /*         console.log(true); */
                     let $friend_full_name = '{{ $friend_full_name }}';
                     let $image = '{{ makeShortCutName($friend_full_name) }}';
 
