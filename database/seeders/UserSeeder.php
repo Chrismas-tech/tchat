@@ -51,6 +51,24 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
+            ],
+
+            [
+                'firstname' => 'Gérard',
+                'lastname' => 'Mensoif',
+                'email' => 'e@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('azertyui'), // password
+                'remember_token' => Str::random(10),
+            ],
+
+            [
+                'firstname' => 'Harry',
+                'lastname' => 'Foly',
+                'email' => 'f@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('azertyui'), // password
+                'remember_token' => Str::random(10),
             ]
         ];
 

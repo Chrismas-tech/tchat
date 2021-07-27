@@ -60,7 +60,7 @@
                 <h1>
                     Message Section
                 </h1>
-                <p>Select user from the list to begin conversation.</p>
+                <p>Select a user from the list to begin conversation.</p>
                 <p>You can also create a group and add people you know to the discussion.</p>
             </div>
         </div>

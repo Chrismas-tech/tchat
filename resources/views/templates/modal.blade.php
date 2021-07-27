@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="name">Add user(s) to the current discussion</label>
+                            <label for="name">Add user(s) to this new group</label>
                             <select class="js-example-basic-single form-control" name="user_id[]" multiple="multiple">
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->firstname }} {{ $user->lastname }}

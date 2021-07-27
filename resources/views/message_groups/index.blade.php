@@ -1,48 +1,95 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row chat-row">
-        <div class="col-md-3">
 
-            <div class="mt-4">
+    <div class="row chat-row">
+
+        <div class="col-md-3">
+            <div>
+                <a href="{{ route('home') }}"
+                    class="w-max-content bg-primary text-white px-2 py-2 rounded add-user-group">Return to the
+                    user section</a>
+            </div>
+
+            <div class="mt-5">
                 <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
                     data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
                 </h5>
 
-
-                <ul class="list-group list-chat-item mt-4">
-
+                <ul class="list-group list-chat-item mt-3">
                     @if ($groups->count())
                         @foreach ($groups as $group)
-                            <a href="{{ route('message-groups.show', $group->id) }}">
-                                <li class="chat-group-list">
-                                    {{ $group->name }} 
-                                </li>
-                            </a>
+                            @if ($group->user_id == Auth::id() or $group->message_group_members[0]->user_id == Auth::id())
+
+                                <a href="{{ route('message-groups.show', $group->id) }}">
+                                    <li class="chat-group-list">
+                                        {{ $group->name }}
+                                    </li>
+                                </a>
+                            @endif
                         @endforeach
                     @endif
                 </ul>
             </div>
         </div>
 
-        <div class="col-md-6 chat-section">
+        <div class="col-md-9 chat-section">
             <div class="chat-header">
+
                 <div class="d-flex align-items-center">
-                    <div class="chat-name font-bold">
-                        {{ $currentGroup->name }} 
+                    <div class="chat-name text-white font-bold bg-success mr-2 rounded px-2 py-1">
+                        Name of group : {{ $currentGroup->name }}
                     </div>
 
                     <div>
                         <img class="icon-audio" src="{{ asset('img/haut-parleur-on.png') }}" alt="icon-audio">
                     </div>
                 </div>
+
                 <div class="d-flex align-items-center mt-2">
-                    <div class="mr-2">
-                        Persons invited in group 
+                    <div class="bg-warning mr-2 rounded px-2 py-1 font-weight-bold text-2xl">
+                        <img class="icon-profile" src="{{ asset('img/icon-admin.png') }}" alt="icon-profile">Créateur du
+                        groupe :
                     </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="chat-image">
+                            <div class="name-image">
+                                @php
+                                    $user_name_full = $currentGroup->user->firstname . ' ' . $currentGroup->user->lastname . '';
+                                @endphp
+                                {{ makeShortCutName($user_name_full) }}
+                            </div>
+                        </div>
+
+                        <div class="chat-name ml-1 font-bold">
+                            {{ $currentGroup->user->firstname }} {{ $currentGroup->user->lastname }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="d-flex align-items-center mt-2">
+                    <div class="bg-warning mr-2 rounded px-2 py-1 font-weight-bold text-2xl">
+                        <img class="icon-profile" src="{{ asset('img/icon-profile.png') }}" alt="icon-profile">Persons
+                        invited :
+                    </div>
+
                     @foreach ($users_of_group as $user)
-                        <div class="bg-primary text-white mr-2 rounded px-2 py-1">
-                            {{ $user->user->firstname }} {{ $user->user->lastname }}
+
+                        <div class="d-flex align-items-center mr-3">
+                            <div class="chat-image">
+                                <div class="name-image">
+                                    @php
+                                        $user_of_group = $user->user->firstname . ' ' . $user->user->lastname . '';
+                                    @endphp
+                                    {{ makeShortCutName($user_of_group) }}
+                                </div>
+                            </div>
+
+                            <div class="chat-name ml-1 font-bold">
+                                {{ $user->user->firstname }} {{ $user->user->lastname }}
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -81,7 +128,7 @@
         </div>
 
         <div class="col-md-3">
-    {{--         @if($currentGroup->message_goup_members) --}}
+            {{-- @if ($currentGroup->message_goup_members) --}}
         </div>
     </div>
 

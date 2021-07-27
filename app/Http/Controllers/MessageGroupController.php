@@ -79,7 +79,7 @@ class MessageGroupController extends Controller
         $groups = MessageGroup::all();
         $currentGroup = MessageGroup::where('id', '=', $groupId)->first();
 
-        $users_of_group = MessageGroupMember::where('id', '=', $groupId)->get();
+        $users_of_group = MessageGroupMember::where('message_group_id', '=', $groupId)->get();
 
         /* ->with('message_group_members.user')
         ->first(); */

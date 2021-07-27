@@ -21,4 +21,8 @@ class MessageGroup extends Model
     public function user_messages() {
         return $this->hasMany(UserMessage::class);
     }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
