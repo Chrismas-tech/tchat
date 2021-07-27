@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\PrivateMessageEvent;
 use App\Models\Message;
+use App\Models\MessageGroup;
 use App\Models\User;
 use App\Models\UserMessage;
 use Exception;
@@ -24,7 +25,9 @@ class MessageController extends Controller
         $friendInfo = User::findOrFail($userId);
         $friend_full_name = $friendInfo->firstname . ' ' . $friendInfo->lastname;
 
-        return view('message.conversation', compact('users', 'user', 'user_messages', 'user_full_name', 'friendInfo', 'friend_full_name'));
+        $groups = MessageGroup::all();
+
+        return view('message.conversation', compact('users', 'user', 'user_messages', 'user_full_name', 'friendInfo', 'friend_full_name', 'groups'));
     }
 
     public function sendMessage(Request $request)

@@ -17,8 +17,11 @@ redis.subscribe('private-channel', function() {
 })
 
 redis.on('message', (channel, message) => {
+    /*    console.log(channel);
+       console.log(message); */
+
     message = JSON.parse(message)
-    console.log(message.data);
+        /*     console.log(message.data); */
 
     if (channel == 'private-channel') {
         /* console.log('PRIVATE CHANNEL'); */

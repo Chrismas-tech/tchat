@@ -24,8 +24,36 @@ body {
     background-color: rgb(233 233 233);
 }
 
+.chat-user-list:hover {
+    background-color: rgb(96 239 139);
+}
+
+.chat-user-list a:hover {
+    color: white;
+}
+
 .chat-user-list a {
     text-decoration: none;
+}
+
+.chat-group-list {
+    list-style: none;
+    margin-bottom: 10px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(236, 172, 172);
+    border-radius: 10px;
+}
+
+.chat-group-list:hover {
+    background-color: rgb(238, 96, 96);
+}
+
+.chat-group-list a {
+    text-decoration: none;
+    color: white;
 }
 
 .name-image {
@@ -106,14 +134,14 @@ body {
 
 .add-user-group {
     cursor: pointer;
+    background-color: rgb(238, 96, 96);
 }
 
-.add-user-group:hover {
+.add-user-group:hover>i {
     color: #ffffff !important;
 }
 
-.users-registered,
-.groups-registered {
+.w-max-content {
     width: max-content;
 }
 

@@ -4,14 +4,16 @@
     <div class="row chat-row">
         <div class="col-md-3">
             <div class="users">
-                <h5 class="bg-primary users-registered text-white px-2 py-2 rounded">Users registered</h5>
-                <ul class="list-group list-chat-item mt-4">
 
+                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
+
+                <ul class="list-group list-chat-item mt-4">
                     @if ($users->count())
                         @foreach ($users as $user)
 
                             <li class="chat-user-list 
-                                                        @if ($user->id == $friendInfo->id) active @endif">
+                                 @if ($user->id == $friendInfo->id) active @endif">
+
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
 
@@ -26,10 +28,9 @@
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="m-auto chat-name ml-1 font-bold 
-                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
-                                        {{ $user_name_full }}
+                                    <div class="m-auto chat-name ml-1 font-bold 
+                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                        {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>
                             </li>
@@ -40,11 +41,24 @@
                 </ul>
             </div>
 
-            <div class="groups-registered mt-4">
-                <h5 class="bg-success text-white px-2 py-2 rounded">Groups <i
-                        class="class text-secondary fa fa-plus ml-1 add-user-group" data-toggle="modal"
+            <div class="mt-4">
+                <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group">Groups <i
+                        class="class text-secondary fa fa-plus ml-1" data-toggle="modal"
                         data-target="#Modal_add_to_group"></i>
                 </h5>
+
+
+                <ul class="list-group list-chat-item mt-4">
+                    @if ($groups->count())
+                        @foreach ($groups as $group)
+                            <li class="chat-group-list">
+                                <a href="{{ route('message-groups.show', $group->id) }}">
+                                    {{ $group->name }}
+                                </a>
+                            </li>
+                </ul>
+                @endforeach
+                @endif
             </div>
         </div>
 
@@ -149,6 +163,7 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add Group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -156,32 +171,29 @@
                     </button>
                 </div>
 
-                <form action="">
-
+                <form action="{{ route('message-groups.store') }}" method="POST">
+                    @csrf
                     <div class="modal-body">
-
                         <div class="form-group">
                             <label for="name">Group Name</label>
                             <input type="text" class="form-control" name="name">
                         </div>
 
                         <div class="form-group">
-                            <select class="js-example-basic-single form-control" name="states[]" multiple="multiple">
+                            <label for="name">Add user(s) to the current discussion</label>
+                            <select class="js-example-basic-single form-control" name="user_id[]" multiple="multiple">
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->firstname }} {{ $user->lastname }}
                                     </option>
                                 @endforeach
-                                <option value="WY">Wyoming</option>
                             </select>
                         </div>
-
-
 
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
 
                 </form>
@@ -260,7 +272,7 @@
 
             function sendMessage(message) {
                 console.log("SENDER MESSAGE");
-                console.log(message);  
+                console.log(message);
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -292,13 +304,13 @@
             })
 
             function appendMessageToReceiver(message) {
-/*                 console.log('APPEND RECEIVER');
-                console.log(message) */
+                /*                 console.log('APPEND RECEIVER');
+                                console.log(message) */
 
                 $message_receiver_id = parseInt(message.receiver_id)
 
                 if (message.sender_id == receiver_id) {
-            /*         console.log(true); */
+                    /*         console.log(true); */
                     let $friend_full_name = '{{ $friend_full_name }}';
                     let $image = '{{ makeShortCutName($friend_full_name) }}';
 
@@ -343,6 +355,8 @@
                     $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
                 }
             })
+
+
 
 
 

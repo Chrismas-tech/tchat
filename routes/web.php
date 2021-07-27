@@ -28,3 +28,10 @@ Route::get('/conversation/{userId}', [App\Http\Controllers\MessageController::cl
 Route::post('send-message', [App\Http\Controllers\MessageController::class, 'sendMessage'])
 ->name('message.send-message');
 
+Route::post('message-groups', [App\Http\Controllers\MessageGroupController::class, 'store'])
+->name('message-groups.store');
+
+Route::get('message-groups/{groupId}', [App\Http\Controllers\MessageGroupController::class, 'show'])->name('message-groups.show');
+
+
+
