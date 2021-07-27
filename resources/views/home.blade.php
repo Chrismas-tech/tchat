@@ -52,29 +52,29 @@
                         @endforeach
                     @endif
                 </ul>
-
-
             </div>
         </div>
-
 
         <div class="col-md-9 d-flex justify-content-center">
             <div>
                 <h1>
                     Message Section
                 </h1>
-               <p>Select user from the list to begin conversation.</p> 
-               <p>You can also create a group and add people you know to the discussion.</p> 
+                <p>Select user from the list to begin conversation.</p>
+                <p>You can also create a group and add people you know to the discussion.</p>
             </div>
         </div>
-
     </div>
 
+
+    @include('templates.modal')
 @endsection
 
 @push('scripts')
     <script>
         $(function() {
+            $('.js-example-basic-single').select2();
+
             let user_id = "{{ auth()->user()->id }}"
             let ip_address = '127.0.0.1';
             let socket_port = '3000';
