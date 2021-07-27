@@ -11,8 +11,7 @@
                     @if ($users->count())
                         @foreach ($users as $user)
 
-                            <li class="chat-user-list 
-                                                     @if ($user->id == $friendInfo->id) active @endif">
+                            <li class="chat-user-list @if ($user->id == $friendInfo->id) active @endif">
 
                                 <a href="{{ route('message.conversation', $user->id) }}"
                                     class="d-flex align-items-center text-decoration-none">
@@ -29,7 +28,7 @@
                                     </div>
 
                                     <div class="m-auto chat-name ml-1 font-bold 
-                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>
@@ -46,18 +45,22 @@
                     data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
                 </h5>
 
-
                 <ul class="list-group list-chat-item mt-4">
                     @if ($groups->count())
                         @foreach ($groups as $group)
-                            <a href="{{ route('message-groups.show', $group->id) }}">
-                                <li class="chat-group-list">
-                                    {{ $group->name }}
-                                </li>
-                            </a>
+                            @if ($group->user_id == Auth::id() or $group->message_group_members[0]->user_id == Auth::id())
+
+                                <a href="{{ route('message-groups.show', $group->id) }}">
+                                    <li class="chat-group-list">
+                                        {{ $group->name }}
+                                    </li>
+                                </a>
+                            @endif
                         @endforeach
                     @endif
                 </ul>
+
+
             </div>
         </div>
 

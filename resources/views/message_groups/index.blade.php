@@ -11,11 +11,12 @@
 
 
                 <ul class="list-group list-chat-item mt-4">
+
                     @if ($groups->count())
                         @foreach ($groups as $group)
                             <a href="{{ route('message-groups.show', $group->id) }}">
                                 <li class="chat-group-list">
-                                    {{ $group->name }}
+                                    {{ $group->name }} 
                                 </li>
                             </a>
                         @endforeach
@@ -28,7 +29,7 @@
             <div class="chat-header">
                 <div class="d-flex align-items-center">
                     <div class="chat-name font-bold">
-                        {{ $currentGroup->name }}
+                        {{ $currentGroup->name }} 
                     </div>
 
                     <div>
@@ -80,7 +81,7 @@
         </div>
 
         <div class="col-md-3">
-            @if($currentGroup)
+    {{--         @if($currentGroup->message_goup_members) --}}
         </div>
     </div>
 

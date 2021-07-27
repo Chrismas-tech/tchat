@@ -5,9 +5,9 @@
         <div class="col-md-3">
             <div class="users">
 
-                <h5>Users</h5>
+                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
 
-                <ul class="list-group list-chat-item">
+                <ul class="list-group list-chat-item mt-4">
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list">
@@ -18,12 +18,12 @@
                                         <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
                                             title="Away"></i>
                                         <div class="name-image">
-                                            {{ makeShortCutName($user->firstname.' '.$user->lastname) }}
+                                            {{ makeShortCutName($user->firstname . ' ' . $user->lastname) }}
                                         </div>
                                     </div>
 
                                     <div class="m-auto chat-name ml-1">
-                                        {{ $user->firstname.' '.$user->lastname}}
+                                        {{ $user->firstname . ' ' . $user->lastname }}
                                     </div>
                                 </a>
                             </li>
@@ -31,13 +31,41 @@
                     @endif
                 </ul>
             </div>
+
+
+            <div class="mt-4">
+                <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
+                    data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
+                </h5>
+
+                <ul class="list-group list-chat-item mt-4">
+                    @if ($groups->count())
+                        @foreach ($groups as $group)
+                            @if ($group->user_id == Auth::id() or $group->message_group_members[0]->user_id == Auth::id())
+
+                                <a href="{{ route('message-groups.show', $group->id) }}">
+                                    <li class="chat-group-list">
+                                        {{ $group->name }}
+                                    </li>
+                                </a>
+                            @endif
+                        @endforeach
+                    @endif
+                </ul>
+
+
+            </div>
         </div>
 
-        <div class="col-md-9">
-            <h1>
-                Message Section
-            </h1>
-            Select user from the list to begin conversation.
+
+        <div class="col-md-9 d-flex justify-content-center">
+            <div>
+                <h1>
+                    Message Section
+                </h1>
+               <p>Select user from the list to begin conversation.</p> 
+               <p>You can also create a group and add people you know to the discussion.</p> 
+            </div>
         </div>
 
     </div>

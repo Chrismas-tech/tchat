@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MessageGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,8 @@ class HomeController extends Controller
         $user = Auth::user();
         $user_full_name = $user->firstname . ' ' . $user->lastname;
 
-        return view('home', compact('users', 'user','user_full_name'));
+        $groups = MessageGroup::all();
+
+        return view('home', compact('users', 'user','user_full_name', 'groups'));
     }
 }

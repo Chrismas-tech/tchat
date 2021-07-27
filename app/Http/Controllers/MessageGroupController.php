@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\MessageGroup;
 use App\Models\MessageGroupMember;
 use App\Models\User;
-use App\Models\UserMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,6 +58,7 @@ class MessageGroupController extends Controller
 
                     MessageGroupMember::create($member_data);
                 }
+                
             }
         }
         return back();
@@ -79,7 +79,7 @@ class MessageGroupController extends Controller
         $groups = MessageGroup::all();
         $currentGroup = MessageGroup::where('id', '=', $groupId)->first();
 
-        $users_of_group = MessageGroupMember::where('message_group_id', '=', $groupId)->get();
+        $users_of_group = MessageGroupMember::where('id', '=', $groupId)->get();
 
         /* ->with('message_group_members.user')
         ->first(); */
