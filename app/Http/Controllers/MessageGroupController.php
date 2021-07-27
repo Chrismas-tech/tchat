@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MessageGroup;
 use App\Models\MessageGroupMember;
+use App\Models\User;
+use App\Models\UserMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,10 +46,10 @@ class MessageGroupController extends Controller
 
         $messageGroup = MessageGroup::create($data);
 
-        if($messageGroup) {
-            if($request->user_id && !empty($request->user_id)) {
+        if ($messageGroup) {
+            if ($request->user_id && !empty($request->user_id)) {
 
-                foreach($request->user_id as $userId) {
+                foreach ($request->user_id as $userId) {
 
                     $member_data = [
                         'message_group_id' => $messageGroup->id,
@@ -70,7 +72,19 @@ class MessageGroupController extends Controller
      */
     public function show($groupId)
     {
-        echo $groupId;
+        $users = User::where('id', '!=', Auth::id())->get();
+        $user = Auth::user();
+        $user_full_name = $user->firstname . ' ' . $user->lastname;
+
+        $groups = MessageGroup::all();
+        $currentGroup = MessageGroup::where('id', '=', $groupId)->first();
+
+        $users_of_group = MessageGroupMember::where('message_group_id', '=', $groupId)->get();
+
+        /* ->with('message_group_members.user')
+        ->first(); */
+
+        return view('message_groups.index', compact('users', 'user', 'users_of_group', 'user_full_name', 'groups', 'currentGroup'));
     }
 
     /**

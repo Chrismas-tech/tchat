@@ -3,43 +3,6 @@
 @section('content')
     <div class="row chat-row">
         <div class="col-md-3">
-            <div class="users">
-
-                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
-
-                <ul class="list-group list-chat-item mt-4">
-                    @if ($users->count())
-                        @foreach ($users as $user)
-
-                            <li class="chat-user-list 
-                                                     @if ($user->id == $friendInfo->id) active @endif">
-
-                                <a href="{{ route('message.conversation', $user->id) }}"
-                                    class="d-flex align-items-center text-decoration-none">
-
-                                    <div class="chat-image">
-                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
-                                            title="Away"></i>
-                                        <div class="name-image">
-                                            @php
-                                                $user_name_full = $user->firstname . ' ' . $user->lastname . '';
-                                            @endphp
-                                            {{ makeShortCutName($user_name_full) }}
-                                        </div>
-                                    </div>
-
-                                    <div class="m-auto chat-name ml-1 font-bold 
-                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
-                                        {{ $user_name_full }} <span id="notif"></span>
-                                    </div>
-                                </a>
-                            </li>
-
-                        @endforeach
-                    @endif
-
-                </ul>
-            </div>
 
             <div class="mt-4">
                 <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
@@ -61,68 +24,31 @@
             </div>
         </div>
 
-        <div class="col-md-9 chat-section">
-            <div class="chat-header d-flex align-items-center">
-                <div class="chat-image">
-                    <div class="name-image">
-                        {{ makeShortCutName($friend_full_name) }}
+        <div class="col-md-6 chat-section">
+            <div class="chat-header">
+                <div class="d-flex align-items-center">
+                    <div class="chat-name font-bold">
+                        {{ $currentGroup->name }}
+                    </div>
+
+                    <div>
+                        <img class="icon-audio" src="{{ asset('img/haut-parleur-on.png') }}" alt="icon-audio">
                     </div>
                 </div>
-
-                <div class="chat-name ml-1 font-bold">
-                    {{ $friend_full_name }}
-                </div>
-
-                <div>
-                    <img class="icon-audio" src="{{ asset('img/haut-parleur-on.png') }}" alt="icon-audio">
+                <div class="d-flex align-items-center mt-2">
+                    <div class="mr-2">
+                        Persons invited in group 
+                    </div>
+                    @foreach ($users_of_group as $user)
+                        <div class="bg-primary text-white mr-2 rounded px-2 py-1">
+                            {{ $user->user->firstname }} {{ $user->user->lastname }}
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
-
-                    @foreach ($user_messages as $user_message)
-                        @if ($user_message->sender_id == Auth::id() && $user_message->receiver_id == $friendInfo->id)
-                            <div class="d-flex justify-content-end">
-                                <div>
-                                    <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
-                                        <div class="chat-image">
-                                            <div class="name-image">
-                                                {{ makeShortCutName($user_full_name) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="chat-name ml-1 font-weight-bold">{{ $user_full_name }}
-                                            <span class="small time text-secondary"
-                                                title="{{ $user_message->message->created_at }}">{{ created_at_format_date($user_message->message->created_at) }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="message-text">
-                                        {{ $user_message->message->message }}
-                                    </div>
-                                </div>
-                            </div>
-                        @elseif ($user_message->sender_id == $friendInfo->id && $user_message->receiver_id ==
-                            Auth::id())
-                            <div class="d-flex justify-content-start">
-                                <div>
-                                    <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
-                                        <div class="chat-image">
-                                            <div class="name-image">
-                                                {{ makeShortCutName($friend_full_name) }}
-                                            </div>
-                                        </div>
-                                        <div class="chat-name ml-1 font-weight-bold">{{ $friendInfo->firstname }}
-                                            {{ $friendInfo->lastname }}
-                                            <span class="small time text-secondary"
-                                                title="{{ $user_message->message->created_at }}">{{ created_at_format_date($user_message->message->created_at) }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="message-text">{{ $user_message->message->message }}</div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
 
                 </div>
             </div>
@@ -151,6 +77,10 @@
                     </button>
                 </div>
             </div>
+        </div>
+
+        <div class="col-md-3">
+            @if($currentGroup)
         </div>
     </div>
 
@@ -217,7 +147,7 @@
             let $chatBody = $(".chat-Body")
 
             let sender_id = "{{ auth()->user()->id }}"
-            let receiver_id = "{{ $friendInfo->id }}"
+            let receiver_id = "{{ $group->id }}"
 
             socket.emit('user_connected', sender_id)
 
@@ -310,8 +240,8 @@
 
                 if (message.sender_id == receiver_id) {
                     /*         console.log(true); */
-                    let $friend_full_name = '{{ $friend_full_name }}';
-                    let $image = '{{ makeShortCutName($friend_full_name) }}';
+                    let $friend_full_name = '{{ $group->id }}';
+                    let $image = '{{ $group->id }}';
 
                     let new_message =
                         '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
@@ -354,11 +284,6 @@
                     $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
                 }
             })
-
-
-
-
-
         })
     </script>
 @endpush

@@ -14,7 +14,7 @@ class MessageGroup extends Model
         'name',
     ];
 
-    public function message_groups_member() {
+    public function message_group_members() {
         return $this->hasMany(MessageGroupMember::class);
     }
 

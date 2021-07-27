@@ -18,4 +18,8 @@ class MessageGroupMember extends Model
     public function message_group() {
         return $this->belongsTo(MessageGroup::class);
     }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
