@@ -37,7 +37,7 @@
             <div class="chat-header">
 
                 <div class="d-flex align-items-center">
-                    <div class="chat-name text-white font-bold bg-success mr-2 rounded px-2 py-1">
+                    <div class="chat-name text-white font-bold bg-success mr-2 rounded px-2 py-2">
                         Name of group : {{ $currentGroup->name }}
                     </div>
 
@@ -184,47 +184,38 @@
     <script>
         $(function() {
 
-            $('.js-example-basic-single').select2();
+            $('.js-example-basic-single').select2()
 
-            let ip_address = '127.0.0.1';
-            let socket_port = '3000';
+            let ip_address = '127.0.0.1'
+            let socket_port = '3000'
             let socket = io(ip_address + ':' + socket_port)
 
-            let $chatInput = $("#chatInput");
-            let $chatInputTollbar = $('.chat-input-toolbar');
+            let $chatInput = $("#chatInput")
+            let $chatInputTollbar = $('.chat-input-toolbar')
             let $chatBody = $(".chat-Body")
 
-            let sender_id = "{{ auth()->user()->id }}"
-            let receiver_id = "{{ $group->id }}"
+            let groupId = "{{ $currentGroup->id }}"
+            let groupName = "{{ $currentGroup->name }}"
+
+
 
             socket.emit('user_connected', sender_id)
 
             $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
 
-            socket.on('UserStatus', users => {
-
-                /* Ici on update le statut, à savoir Online ou Disconnect */
-                /* Note : 
-
-                Lorsque l'on se déconnecte, le user déconnecté est retiré du tableau users ---> impossible de lui changer son statut, on passera par une autre classe pour mettre tout le monde à "absent", puis on reparcourt le tableau users */
+ /*            socket.on('UserStatus', users => {
 
                 let userStatusIcon = $('.user-status-icon');
                 userStatusIcon.removeClass('online')
                 userStatusIcon.attr('title', 'Away');
 
-                /* Pour tous les utilisateurs connectés  :
-                Si #status-el.user_id existe ---> alors on ajoute une classe car l'utilisateur en question est connecté
-                */
-
-                /* Chaque index contient un élement objet el {user_id et le socket_id} */
-
                 $.each(users, (index, el) => {
                     if ($('#status-' + el.user_id)) {
                         $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
                     }
-                })
+                }) 
 
-            })
+            }) */
 
             $chatInput.on('click', function() {
                 let placeholder = $(this).text();
@@ -248,7 +239,7 @@
             })
 
             function sendMessage(message) {
-                console.log("SENDER MESSAGE");
+                console.log("SENDER GROUP MESSAGE");
                 console.log(message);
                 appendMessageToSender(message)
 
@@ -288,8 +279,8 @@
 
                 if (message.sender_id == receiver_id) {
                     /*         console.log(true); */
-                    let $friend_full_name = '{{ $group->id }}';
-                    let $image = '{{ $group->id }}';
+                    let $friend_full_name = '{{ $friend_full_name }}';
+                    let $image = '{{ makeShortCutName($friend_full_name) }}';
 
                     let new_message =
                         '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
@@ -332,6 +323,11 @@
                     $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
                 }
             })
+
+
+
+
+
         })
     </script>
 @endpush
