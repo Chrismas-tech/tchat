@@ -37,7 +37,7 @@
             <div class="chat-header">
 
                 <div class="d-flex align-items-center">
-                    <div class="chat-name text-white font-bold bg-success mr-2 rounded px-2 py-2">
+                    <div class="chat-name text-white font-bold bg-danger mr-2 rounded px-2 py-2">
                         Name of group : {{ $currentGroup->name }}
                     </div>
 
@@ -69,15 +69,15 @@
 
                 </div>
 
-                <div class="d-flex align-items-center mt-2">
-                    <div class="bg-warning mr-2 rounded px-2 py-1 font-weight-bold text-2xl">
+                <div class="d-flex flex-wrap align-items-center mt-2">
+                    <div class="bg-success text-white mr-2 rounded px-2 py-1 font-weight-bold">
                         <img class="icon-profile" src="{{ asset('img/icon-profile.png') }}" alt="icon-profile">Persons
                         invited :
                     </div>
 
                     @foreach ($users_of_group as $user)
 
-                        <div class="d-flex align-items-center mr-3">
+                        <div class="d-flex align-items-center mr-2">
                             <div class="chat-image">
                                 <div class="name-image">
                                     @php
@@ -92,6 +92,7 @@
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
 
@@ -194,28 +195,28 @@
             let $chatInputTollbar = $('.chat-input-toolbar')
             let $chatBody = $(".chat-Body")
 
+            let sender_id = '{{ Auth::id() }}'
+
             let groupId = "{{ $currentGroup->id }}"
             let groupName = "{{ $currentGroup->name }}"
-
-
 
             socket.emit('user_connected', sender_id)
 
             $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
 
- /*            socket.on('UserStatus', users => {
+            /*            socket.on('UserStatus', users => {
 
-                let userStatusIcon = $('.user-status-icon');
-                userStatusIcon.removeClass('online')
-                userStatusIcon.attr('title', 'Away');
+                           let userStatusIcon = $('.user-status-icon');
+                           userStatusIcon.removeClass('online')
+                           userStatusIcon.attr('title', 'Away');
 
-                $.each(users, (index, el) => {
-                    if ($('#status-' + el.user_id)) {
-                        $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
-                    }
-                }) 
+                           $.each(users, (index, el) => {
+                               if ($('#status-' + el.user_id)) {
+                                   $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
+                               }
+                           }) 
 
-            }) */
+                       }) */
 
             $chatInput.on('click', function() {
                 let placeholder = $(this).text();
@@ -232,6 +233,7 @@
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
+                    console.log(message);
                     e.preventDefault()
                     $chatInput.empty();
                     sendMessage(message);
@@ -244,14 +246,15 @@
                 appendMessageToSender(message)
 
                 $.ajax({
-                    url: "{{ route('message.send-message') }}", // La ressource ciblée
+                    url: "{{ route('message.send-group-message') }}", // La ressource ciblée
                     method: 'POST', // Le type de la requête HTTP
                     dataType: 'JSON', // On définit le type des données retourné par le serveur (évite d'utiliser JSON.parse pour la réponse)
 
                     data: {
                         message: message,
                         _token: "{{ csrf_token() }}",
-                        receiver_id: receiver_id,
+                        groupId: groupId,
+                        groupName: groupName,
                     },
 
                     success: function(response, status) {
@@ -272,19 +275,21 @@
             })
 
             function appendMessageToReceiver(message) {
-                /*                 console.log('APPEND RECEIVER');
-                                console.log(message) */
+                /*  
+                console.log('APPEND RECEIVER');
+                console.log(message) 
+                */
 
                 $message_receiver_id = parseInt(message.receiver_id)
 
                 if (message.sender_id == receiver_id) {
                     /*         console.log(true); */
-                    let $friend_full_name = '{{ $friend_full_name }}';
-                    let $image = '{{ makeShortCutName($friend_full_name) }}';
+                    let $groupId = "{{ $currentGroup->id }}"
+                    let $image = '{{ makeShortCutName($currentGroup) }}';
 
                     let new_message =
                         '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name +
+                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $currentGroup_name +
                         ' ' +
                         '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
                         getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +

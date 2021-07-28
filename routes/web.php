@@ -33,5 +33,8 @@ Route::post('message-groups', [App\Http\Controllers\MessageGroupController::clas
 
 Route::get('message-groups/{groupId}', [App\Http\Controllers\MessageGroupController::class, 'show'])->name('message-groups.show');
 
+Route::post('send-group-message', [App\Http\Controllers\MessageController::class, 'sendGroupMessage'])
+->name('message.send-group-message');
+
 
 

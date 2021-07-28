@@ -237,7 +237,7 @@
                 appendMessageToSender(message)
 
                 $.ajax({
-                    url: "{{ route('message.send-message') }}", // La ressource ciblée
+                    url: "{{ route('message.send-group-message') }}", // La ressource ciblée
                     method: 'POST', // Le type de la requête HTTP
                     dataType: 'JSON', // On définit le type des données retourné par le serveur (évite d'utiliser JSON.parse pour la réponse)
 

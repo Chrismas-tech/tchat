@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PrivateGroupEvent;
 use App\Events\PrivateMessageEvent;
 use App\Models\Message;
 use App\Models\MessageGroup;
@@ -67,5 +68,18 @@ class MessageController extends Controller
                 return $e->getMessage();
             }
         }
+    }
+
+    public function sendGroupMessage() {
+
+        return response()->json([
+            'success' => 'Message sent successfully'
+        ]);
+        
+        $data_group_message = [
+            '' => '',
+        ]
+
+        /* event(new PrivateGroupEvent($data_group_message)); */
     }
 }

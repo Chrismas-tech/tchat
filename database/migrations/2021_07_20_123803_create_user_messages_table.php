@@ -25,6 +25,8 @@ class CreateUserMessagesTable extends Migration
             $table->unsignedBigInteger('receiver_id');
             $table->foreign('receiver_id')->references('id')->on('users');
 
+            $table->unsignedBigInteger('message_id')->nullable();
+
             $table->tinyInteger('type')->default(0)->comment('1:group message', '0:personal message');
             $table->tinyInteger('seen_status')->default(0)->comment('1:seen');
             $table->tinyInteger('deliver_status')->default(0)->comment('1:delivered');
