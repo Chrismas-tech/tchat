@@ -16,6 +16,10 @@ redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
 })
 
+redis.subscribe('private-group', function() {
+    console.log('Subscribed to private-group channel')
+})
+
 redis.on('message', (channel, message) => {
 
     console.log(channel);
@@ -39,6 +43,24 @@ redis.on('message', (channel, message) => {
                 io.to(user.socket_id).emit(channel + ':' + event, data);
             }
         });
+
+    }
+
+    if (channel == 'private-group') {
+        console.log('PRIVATE GROUP');
+        /* let data = message.data.data;
+        let receiver_id = data.receiver_id;
+        let event = message.event; */
+
+        /* console.log(message.data.data); */
+        /* console.log(users); */
+
+        /*    users.forEach((user, index) => {
+               if (user.user_id == receiver_id) { */
+        /*    console.log(user) */
+        /* io.to(user.socket_id).emit(channel + ':' + event, data);
+            }
+        }); */
 
     }
 })
