@@ -124,7 +124,7 @@
                         invited :
                     </div>
 
-                    @foreach ($users_of_group as $user)
+                    @foreach ($members_of_group as $user)
 
                         <div class="d-flex align-items-center mr-2">
                             <div class="chat-image">
@@ -185,9 +185,9 @@
                                         <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
                                             <div class="chat-image">
                                                 <div class="name-image">
-                       
-                                              {{--        {{makeShortCutName($friend_full_name)}} --}}
-                                               
+
+                                                    {{-- {{makeShortCutName($friend_full_name)}} --}}
+
                                                 </div>
                                             </div>
                                             <div class="chat-name ml-1 font-weight-bold">

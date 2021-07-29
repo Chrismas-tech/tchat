@@ -80,14 +80,13 @@ class MessageGroupController extends Controller
         $groups = MessageGroup::all();
         $currentGroup = MessageGroup::where('id', '=', $groupId)->first();
 
-        $users_of_group = MessageGroupMember::where('message_group_id', '=', $groupId)->get();
-
+        $members_of_group = MessageGroupMember::where('message_group_id', '=', $groupId)->get();
         $messages_of_group = Message::all();
 
         /* ->with('message_group_members.user')
         ->first(); */
 
-        return view('message_groups.index', compact('users', 'user', 'users_of_group', 'user_full_name', 'groups', 'currentGroup', 'messages_of_group'));
+        return view('message_groups.index', compact('users', 'user', 'members_of_group', 'user_full_name', 'groups', 'currentGroup', 'messages_of_group'));
     }
 
     /**
