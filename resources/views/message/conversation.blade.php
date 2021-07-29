@@ -28,7 +28,7 @@
                                     </div>
 
                                     <div class="m-auto chat-name ml-1 font-bold 
-                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>

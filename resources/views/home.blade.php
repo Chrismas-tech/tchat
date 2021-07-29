@@ -40,15 +40,30 @@
 
                 <ul class="list-group list-chat-item mt-4">
                     @if ($groups->count())
-                        @foreach ($groups as $group)
-                            @if ($group->user_id == Auth::id() or $group->message_group_members[0]->user_id == Auth::id())
 
+                        @foreach ($groups as $group)
+
+                            @if ($group->user_id == Auth::id())
                                 <a href="{{ route('message-groups.show', $group->id) }}">
                                     <li class="chat-group-list">
                                         {{ $group->name }}
                                     </li>
                                 </a>
+                            @else
+
+                                @foreach ($group->message_group_members as $member)
+                                    @if ($member->user_id == Auth::id())
+
+                                        <a href="{{ route('message-groups.show', $group->id) }}">
+                                            <li class="chat-group-list">
+                                                {{ $group->name }}
+                                            </li>
+                                        </a>
+                                    @endif
+                                @endforeach
+
                             @endif
+
                         @endforeach
                     @endif
                 </ul>
