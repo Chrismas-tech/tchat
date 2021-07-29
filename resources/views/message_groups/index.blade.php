@@ -185,14 +185,17 @@
                                         <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
                                             <div class="chat-image">
                                                 <div class="name-image">
-
-                                                    {{-- {{makeShortCutName($friend_full_name)}} --}}
-
+                                                    @php
+                                                        $friend = App\Models\User::find($user_message->sender_id);
+                                                        $friend_full_name = $friend->firstname . ' ' . $friend->lastname;
+                                                    @endphp
+                                                    {{ makeShortCutName($friend_full_name) }}
                                                 </div>
                                             </div>
                                             <div class="chat-name ml-1 font-weight-bold">
+                                                {{ $friend->firstname }} {{ $friend->lastname }}
                                                 <span class="small time text-secondary"
-                                                    title="{{ $user_message->message->created_at }}">{{ created_at_format_date($user_message->message->created_at) }}</span>
+                                                    title="{{ $friend->created_at }}">{{ created_at_format_date($friend->created_at) }}</span>
                                             </div>
                                         </div>
                                         <div class="message-text">{{ $user_message->message->message }}</div>
