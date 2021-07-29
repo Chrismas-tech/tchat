@@ -30,7 +30,7 @@ class MessageController extends Controller
 
         return view('message.conversation', compact('users', 'user', 'user_messages', 'user_full_name', 'friendInfo', 'friend_full_name', 'groups'));
     }
- 
+
     public function sendMessage(Request $request)
     {
         $request->validate([
@@ -70,12 +70,31 @@ class MessageController extends Controller
         }
     }
 
-    public function sendGroupMessage() {
+    public function sendGroupMessage(Request $request)
+    {
 
         return response()->json([
             'success' => 'Message sent successfully'
         ]);
-        
+
+        /* Creating Message */
+        $datas_message = [
+            'message' => $request->message,
+        ];
+
+        /* Creating User_message */
+        $count_message = Message::all()->count();
+
+        $datas_user_message = [
+            'message_id' => $count_message + 1,
+            'sender_id' => Auth::id(),
+            'sender_name' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
+            'receiver_id' => $request->receiver_id,
+            'receiver_id' => $request->receiver_id,
+            'content' => $request->message,
+        ];
+
+        /* Creating a group */
         $data_group_message = [
             '' => '',
         ];
