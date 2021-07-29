@@ -232,10 +232,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3">
-            {{-- @if ($currentGroup->message_goup_members) --}}
-        </div>
     </div>
 
     <!-- Audio Sound -->
@@ -309,7 +305,8 @@
             socket.on('connect', function() {
                 let data = {
                     group_id: group_id,
-                    user_id: sender_id
+                    user_id: sender_id,
+                    room: "group" + group_id
                 }
                 socket.emit('user_connected', sender_id)
                 socket.emit('joinGroup', data)
