@@ -30,7 +30,7 @@ class MessageController extends Controller
 
         return view('message.conversation', compact('users', 'user', 'user_messages', 'user_full_name', 'friendInfo', 'friend_full_name', 'groups'));
     }
-
+   
     public function sendMessage(Request $request)
     {
         $request->validate([
@@ -78,7 +78,7 @@ class MessageController extends Controller
         
         $data_group_message = [
             '' => '',
-        ]
+        ];
 
         /* event(new PrivateGroupEvent($data_group_message)); */
     }
