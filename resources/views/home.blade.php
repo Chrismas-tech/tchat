@@ -43,6 +43,8 @@
 
                         @foreach ($groups as $group)
 
+                        <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
+
                             @if ($group->user_id == Auth::id())
                                 <a href="{{ route('message-groups.show', $group->id) }}">
                                     <li class="chat-group-list">
@@ -50,6 +52,8 @@
                                     </li>
                                 </a>
                             @else
+
+                            <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
 
                                 @foreach ($group->message_group_members as $member)
                                     @if ($member->user_id == Auth::id())

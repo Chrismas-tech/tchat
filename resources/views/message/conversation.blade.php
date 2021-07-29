@@ -47,17 +47,36 @@
 
                 <ul class="list-group list-chat-item mt-4">
                     @if ($groups->count())
-                        @foreach ($groups as $group)
-                            @if ($group->user_id == Auth::id() or $group->message_group_members[0]->user_id == Auth::id())
 
-                                <a href="{{ route('message-groups.show', $group->id) }}">
-                                    <li class="chat-group-list">
-                                        {{ $group->name }}
-                                    </li>
-                                </a>
-                            @endif
-                        @endforeach
-                    @endif
+                    @foreach ($groups as $group)
+
+                    <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
+
+                        @if ($group->user_id == Auth::id())
+                            <a href="{{ route('message-groups.show', $group->id) }}">
+                                <li class="chat-group-list">
+                                    {{ $group->name }}
+                                </li>
+                            </a>
+                        @else
+
+                        <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
+
+                            @foreach ($group->message_group_members as $member)
+                                @if ($member->user_id == Auth::id())
+
+                                    <a href="{{ route('message-groups.show', $group->id) }}">
+                                        <li class="chat-group-list">
+                                            {{ $group->name }}
+                                        </li>
+                                    </a>
+                                @endif
+                            @endforeach
+
+                        @endif
+
+                    @endforeach
+                @endif
                 </ul>
 
 
