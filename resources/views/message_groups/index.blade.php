@@ -216,8 +216,8 @@
 
             let sender_id = '{{ Auth::id() }}'
 
-            let groupId = "{{ $currentGroup->id }}"
-            let groupName = "{{ $currentGroup->name }}"
+            let group_id = '{{ $currentGroup->id }}'
+            let group_name = '{{ $currentGroup->name }}'
 
             socket.emit('user_connected', sender_id)
 
@@ -252,7 +252,7 @@
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
-                    console.log(message);
+             /*        console.log(message); */
                     e.preventDefault()
                     $chatInput.empty();
                     sendMessage(message);
@@ -272,8 +272,8 @@
                     data: {
                         message: message,
                         _token: "{{ csrf_token() }}",
-                        groupId: groupId,
-                        groupName: groupName,
+                        group_id: group_id,
+                        group_name: group_name,
                     },
 
                     success: function(response, status) {
@@ -294,10 +294,9 @@
             })
 
             function appendMessageToReceiver(message) {
-                /*  
-                console.log('APPEND RECEIVER');
+                
+                console.log('RECEIVER GROUP MESSAGE');
                 console.log(message) 
-                */
 
                 $message_receiver_id = parseInt(message.receiver_id)
 
@@ -347,10 +346,6 @@
                     $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
                 }
             })
-
-
-
-
 
         })
     </script>

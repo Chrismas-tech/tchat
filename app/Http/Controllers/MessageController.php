@@ -73,10 +73,6 @@ class MessageController extends Controller
     public function sendGroupMessage(Request $request)
     {
 
-        return response()->json([
-            'success' => 'Message sent successfully'
-        ]);
-
         /* Creating Message */
         $datas_message = [
             'message' => $request->message,
@@ -89,16 +85,23 @@ class MessageController extends Controller
             'message_id' => $count_message + 1,
             'sender_id' => Auth::id(),
             'sender_name' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
-            'receiver_id' => $request->receiver_id,
-            'receiver_id' => $request->receiver_id,
+            'message_group_id' => intval($request->group_id),
             'content' => $request->message,
         ];
 
-        /* Creating a group */
-        $data_group_message = [
-            '' => '',
-        ];
+        event(new PrivateGroupEvent($datas_user_message));
 
-        /* event(new PrivateGroupEvent($data_group_message)); */
+        if (Message::create($datas_message) && UserMessage::create($datas_user_message)) {
+            try {
+                return response()->json([
+                    'datas_message' => $datas_message,
+                    'datas_user_message' => $datas_user_message,
+                    'success' => true,
+                    'confirmation' => 'Message to Group sent successfully'
+                ]);
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
+        }
     }
 }

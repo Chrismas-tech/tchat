@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use GMP;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            GroupSeeder::class,
         ]);
     }
 }

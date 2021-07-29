@@ -18,7 +18,7 @@ class CreateMessageGroupMembersTable extends Migration
             $table->unsignedBigInteger('message_group_id');
             $table->foreign('message_group_id')->references('id')->on('message_groups');
             $table->unsignedInteger('user_id');
-            $table->integer('status');
+            $table->integer('status')->nullable();
             $table->timestamps();
         });
     }

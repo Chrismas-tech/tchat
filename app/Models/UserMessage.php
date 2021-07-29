@@ -13,6 +13,7 @@ class UserMessage extends Model
         'message_id',
         'sender_id',
         'receiver_id',
+        'message_group_id',
     ];
 
     public function message() {
