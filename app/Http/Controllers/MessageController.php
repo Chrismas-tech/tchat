@@ -30,7 +30,7 @@ class MessageController extends Controller
 
         return view('message.conversation', compact('users', 'user', 'user_messages', 'user_full_name', 'friendInfo', 'friend_full_name', 'groups'));
     }
-   
+ 
     public function sendMessage(Request $request)
     {
         $request->validate([
