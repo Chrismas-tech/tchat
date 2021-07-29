@@ -5,10 +5,40 @@
     <div class="row chat-row">
 
         <div class="col-md-3">
-            <div>
-                <a href="{{ route('home') }}"
-                    class="w-max-content bg-primary text-white px-2 py-2 rounded add-user-group">Return to the
-                    user section</a>
+            <div class="users">
+
+                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
+
+                <ul class="list-group list-chat-item mt-4">
+                    @if ($users->count())
+                        @foreach ($users as $user)
+
+                            <li class="chat-user-list">
+
+                                <a href="{{ route('message.conversation', $user->id) }}"
+                                    class="d-flex align-items-center text-decoration-none">
+
+                                    <div class="chat-image">
+                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
+                                            title="Away"></i>
+                                        <div class="name-image">
+                                            @php
+                                                $user_name_full = $user->firstname . ' ' . $user->lastname . '';
+                                            @endphp
+                                            {{ makeShortCutName($user_name_full) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="m-auto chat-name ml-1 font-bold">
+                                        {{ $user_name_full }} <span id="notif"></span>
+                                    </div>
+                                </a>
+                            </li>
+
+                        @endforeach
+                    @endif
+
+                </ul>
             </div>
 
             <div class="mt-5">
@@ -21,7 +51,7 @@
 
                         @foreach ($groups as $group)
 
-                        <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
+                            <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
 
                             @if ($group->user_id == Auth::id())
                                 <a href="{{ route('message-groups.show', $group->id) }}">
@@ -31,7 +61,7 @@
                                 </a>
                             @else
 
-                            <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
+                                <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
 
                                 @foreach ($group->message_group_members as $member)
                                     @if ($member->user_id == Auth::id())
@@ -117,7 +147,60 @@
 
             <div class="chat-body" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
+                    <!-- Pour tous les messages -->
+                    @foreach ($messages_of_group as $message)
 
+                        <!-- Pour chaque message on recherche son groupId et son sender -->
+                        @foreach ($message->user_messages as $user_message)
+
+                            <!-- Si le message appartien au groupe courant et que le sender est l'utilisateur connecté, alors on affiche à droite -->
+
+                            @if ($user_message->message_group_id == $currentGroup->id and $user_message->sender_id == Auth::id())
+                                <div class="d-flex justify-content-end">
+                                    <div>
+                                        <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
+                                            <div class="chat-image">
+                                                <div class="name-image">
+                                                    {{ makeShortCutName($user_full_name) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="chat-name ml-1 font-weight-bold">{{ $user_full_name }}
+                                                <span class="small time text-secondary"
+                                                    title="{{ $user_message->message->created_at }}">{{ created_at_format_date($user_message->message->created_at) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="message-text">
+                                            {{ $user_message->message->message }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sinon on affiche à gauche -->
+                            @elseif ($user_message->message_group_id == $currentGroup->id and $user_message->sender_id
+                                != Auth::id())
+
+                                <div class="d-flex justify-content-start">
+                                    <div>
+                                        <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
+                                            <div class="chat-image">
+                                                <div class="name-image">
+                       
+                                              {{--        {{makeShortCutName($friend_full_name)}} --}}
+                                               
+                                                </div>
+                                            </div>
+                                            <div class="chat-name ml-1 font-weight-bold">
+                                                <span class="small time text-secondary"
+                                                    title="{{ $user_message->message->created_at }}">{{ created_at_format_date($user_message->message->created_at) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="message-text">{{ $user_message->message->message }}</div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    @endforeach
                 </div>
             </div>
 
@@ -219,7 +302,15 @@
             let group_id = '{{ $currentGroup->id }}'
             let group_name = '{{ $currentGroup->name }}'
 
-            socket.emit('user_connected', sender_id)
+
+            socket.on('connect', function() {
+                let data = {
+                    group_id: group_id,
+                    user_id: sender_id
+                }
+                socket.emit('user_connected', sender_id)
+                socket.emit('joinGroup', data)
+            })
 
             $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
 
@@ -252,7 +343,7 @@
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
-             /*        console.log(message); */
+                    /*        console.log(message); */
                     e.preventDefault()
                     $chatInput.empty();
                     sendMessage(message);
@@ -294,16 +385,16 @@
             })
 
             function appendMessageToReceiver(message) {
-                
+
                 console.log('RECEIVER GROUP MESSAGE');
-                console.log(message) 
+                console.log(message)
 
                 $message_receiver_id = parseInt(message.receiver_id)
 
                 if (message.sender_id == receiver_id) {
                     /*         console.log(true); */
-                    let $groupId = "{{ $currentGroup->id }}"
-                    let $image = '{{ makeShortCutName($currentGroup) }}';
+                    let name = message.sender_name;
+                    let $image = '';
 
                     let new_message =
                         '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +

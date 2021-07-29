@@ -72,6 +72,10 @@ class MessageController extends Controller
 
     public function sendGroupMessage(Request $request)
     {
+        $request->validate([
+            'message' => 'required',
+            'group_id' => 'required',
+        ]);
 
         /* Creating Message */
         $datas_message = [
@@ -87,6 +91,7 @@ class MessageController extends Controller
             'sender_name' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
             'message_group_id' => intval($request->group_id),
             'content' => $request->message,
+            'type' => 1,
         ];
 
         event(new PrivateGroupEvent($datas_user_message));

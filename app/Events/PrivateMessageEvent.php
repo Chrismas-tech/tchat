@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -31,6 +32,6 @@ class PrivateMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('private-channel');
+        return new Channel('private-channel');
     }
 }

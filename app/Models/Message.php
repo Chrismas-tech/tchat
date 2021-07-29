@@ -15,6 +15,6 @@ class Message extends Model
     ];
 
     public function user_messages() {
-        return $this->belongsTo(UserMessage::class);
+        return $this->hasMany(UserMessage::class);
     }
 }

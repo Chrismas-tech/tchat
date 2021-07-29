@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\MessageGroup;
 use App\Models\MessageGroupMember;
 use App\Models\User;
@@ -81,10 +82,12 @@ class MessageGroupController extends Controller
 
         $users_of_group = MessageGroupMember::where('message_group_id', '=', $groupId)->get();
 
+        $messages_of_group = Message::all();
+
         /* ->with('message_group_members.user')
         ->first(); */
 
-        return view('message_groups.index', compact('users', 'user', 'users_of_group', 'user_full_name', 'groups', 'currentGroup'));
+        return view('message_groups.index', compact('users', 'user', 'users_of_group', 'user_full_name', 'groups', 'currentGroup', 'messages_of_group'));
     }
 
     /**
