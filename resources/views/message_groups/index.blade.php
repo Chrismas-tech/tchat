@@ -352,7 +352,7 @@
 
             function sendMessage(message) {
                 console.log("SENDER GROUP MESSAGE");
-                console.log(message);
+/*                 console.log(message); */
                 appendMessageToSender(message)
 
                 $.ajax({

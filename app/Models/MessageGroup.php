@@ -12,6 +12,7 @@ class MessageGroup extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'status',
     ];
 
     public function message_group_members() {

@@ -20,18 +20,14 @@ redis.subscribe('group-channel', function() {
 })
 
 redis.on('message', (channel, message) => {
-
-    /*     
     console.log(channel);
     console.log(message);
-    */
-
     message = JSON.parse(message)
         /*     
         console.log(message.data);
         */
-
     if (channel == 'private-channel') {
+
         /* console.log('PRIVATE CHANNEL'); */
         let data = message.data.data;
         let receiver_id = data.receiver_id;
@@ -49,16 +45,15 @@ redis.on('message', (channel, message) => {
     }
 
     if (channel == 'group-channel') {
+        console.log('GROUP CHANNEL');
+        /*   console.log(message); */
+        /*         let data = message.data.data;
 
-        let data = message.data.data;
-        console.log('DATA');
-        console.log(data);
-
-        if (data.type == 2) {
-            let socket_id = getSocketIdOfUserInGroup(data.sender_id, data.group_id);
-            let socket = io.sockets.connected[socket_id];
-            socket.broadcast.to('group' + data.group_id).emit('groupMessage', data);
-        }
+                if (data.type == 1) {
+                    let socket_id = getSocketIdOfUserInGroup(data.sender_id, data.group_id);
+                    let socket = io.sockets.connected[socket_id];
+                    socket.broadcast.to('group' + data.group_id).emit('groupMessage', data);
+                } */
     }
 })
 
@@ -160,14 +155,15 @@ function checkIfUserExistInGroup(user_id, group_id) {
             console.log('-----------------------------------------------------------------------------');
 
             if (group[i]['user_id'] == user_id) {
+                console.log('User ' + user_id + ' already exist in the group !');
                 return true;
-            } else {
-                return false;
             }
-
+            11
         }
 
     }
+
+    return false;
 }
 
 function getSocketIdOfUserInGroup(user_id, group_id) {
