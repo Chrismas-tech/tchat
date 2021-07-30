@@ -438,6 +438,11 @@
                 }
             })
 
+            socket.on("groupMessage", function(message) {
+                appendMessageToReceiver(message)
+                $('#audio_sent')[0].play()
+            })
+
         })
     </script>
 @endpush
