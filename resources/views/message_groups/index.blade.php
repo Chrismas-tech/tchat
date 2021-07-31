@@ -314,6 +314,32 @@
 
             $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
 
+
+            socket.on('UserStatus', users => {
+
+                /* Ici on update le statut, à savoir Online ou Disconnect */
+                /* Note : 
+
+                Lorsque l'on se déconnecte, le user déconnecté est retiré du tableau users ---> impossible de lui changer son statut, on passera par une autre classe pour mettre tout le monde à "absent", puis on reparcourt le tableau users */
+
+                let userStatusIcon = $('.user-status-icon');
+                userStatusIcon.removeClass('online')
+                userStatusIcon.attr('title', 'Away');
+
+                /* Pour tous les utilisateurs connectés  :
+                Si #status-el.user_id existe ---> alors on ajoute une classe car l'utilisateur en question est connecté
+                */
+
+                /* Chaque index contient un élement objet el {user_id et le socket_id} */
+
+                $.each(users, (index, el) => {
+                    if ($('#status-' + el.user_id)) {
+                        $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
+                    }
+                })
+
+            })
+
             /*            socket.on('UserStatus', users => {
 
                            let userStatusIcon = $('.user-status-icon');
@@ -352,7 +378,7 @@
 
             function sendMessage(message) {
                 console.log("SENDER GROUP MESSAGE");
-/*                 console.log(message); */
+                /* console.log(message); */
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -389,23 +415,18 @@
                 console.log('RECEIVER GROUP MESSAGE');
                 console.log(message)
 
-                $message_receiver_id = parseInt(message.receiver_id)
+                let name = message.sender_name;
+                let $image = message.shortcut_name;
 
-                if (message.sender_id == receiver_id) {
-                    /*         console.log(true); */
-                    let name = message.sender_name;
-                    let $image = '';
+                let new_message =
+                    '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + name +
+                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
+                    '</div></div></div>';
 
-                    let new_message =
-                        '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $currentGroup_name +
-                        ' ' +
-                        '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                        getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
-                        '</div></div></div>';
+                $('#messageWrapper').append(new_message);
 
-                    $('#messageWrapper').append(new_message);
-                }
             }
 
             function appendMessageToSender(message) {
@@ -441,6 +462,14 @@
             socket.on("groupMessage", function(message) {
                 appendMessageToReceiver(message)
                 $('#audio_sent')[0].play()
+            })
+
+            socket.on("groupMessage", function(message) {
+                /*               appendMessageToReceiver(message)
+                              $('#audio_sent')[0].play() */
+
+                console.log('GROUP MESSAGE ARRIVED');
+                console.log(message);
             })
 
         })

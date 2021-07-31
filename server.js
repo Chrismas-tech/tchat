@@ -19,9 +19,73 @@ redis.subscribe('group-channel', function() {
     console.log('Subscribed to group channel')
 })
 
+let users = [];
+let groups = [];
+let socket_defined = '';
+
+io.on('connection', socket => {
+
+    socket_defined = socket;
+
+    socket.on('user_connected', user_id => {
+        /* console.log(users); */
+        users.push({ user_id: user_id, socket_id: socket.id })
+
+        /* Update des statuts de sa propre page et celle des autres */
+        io.emit('UserStatus', users)
+    })
+
+
+    socket.on('disconnect', () => {
+
+        users.forEach((user, index) => {
+            if (user.socket_id == socket.id) {
+                users.splice(index, 1);
+
+                /* On change le status de l'utilisateur */
+                io.emit('UserStatus', users)
+            }
+        });
+    })
+
+    socket.on('joinGroup', function(data) {
+
+        console.log(groups)
+
+        data['socket_id'] = socket.id
+
+        /* Si le groupe existe */
+        if (groups[data.group_id]) {
+            let userExist = checkIfUserExistInGroup(data.user_id, data.group_id);
+
+            /* Si l'utilisateur n'existe pas dans le groupe -> on push l'utilisateur */
+            if (!userExist) {
+                console.log('User doesn\'t exist');
+
+                groups[data.group_id].push(data)
+                socket.join(data.room);
+
+            } else {
+                console.log('User already exist');
+
+            }
+
+            /* Si le groupe n'existe pas --> on créé le groupe et on joint l'utilisateur au groupe  */
+        } else {
+            groups[data.group_id] = [data];
+            socket.join(data.room);
+        }
+    })
+})
+
+
 redis.on('message', (channel, message) => {
-    /*     console.log(channel);
-        console.log(message); */
+
+    /*     
+    console.log(channel);
+    console.log(message); 
+    */
+
     message = JSON.parse(message)
         /*     
         console.log(message.data);
@@ -50,63 +114,24 @@ redis.on('message', (channel, message) => {
 
         let data = message.data.data;
 
+
         if (data.type == 1) {
-            let socket_id = getSocketIdOfUserInGroup(data.sender_id, data.message_group_id);
-            let socket = io.sockets.connected[socket_id];
-            socket.broadcast.to('group' + data.group_id).emit('groupMessage', data);
+            console.log('DATA TYPE 1 OK');
+            console.log('GROUP ID : ' + data.message_group_id);
+
+            /* 
+            Pour pouvoir utiliser socket en dehors de la callback io.on on l'a définie dans une autre variable socket_defined dans :
+
+            io.on('connection', socket => {
+            socket_defined = socket;...}
+            */
+
+            console.log('broadcast DONE');
+            socket_defined.broadcast.to('group' + data.message_group_id).emit('groupMessage', data);
+
+            console.log('IO GROUP DONE');
         }
     }
-})
-
-let users = [];
-let groups = [];
-
-io.on('connection', socket => {
-
-    socket.on('user_connected', user_id => {
-        /* console.log(users); */
-        users.push({ user_id: user_id, socket_id: socket.id })
-
-        /* Update des statuts de sa propre page et celle des autres */
-        io.emit('UserStatus', users)
-    })
-
-
-    socket.on('disconnect', () => {
-
-        users.forEach((user, index) => {
-            if (user.socket_id == socket.id) {
-                users.splice(index, 1);
-
-                /* On change le status de l'utilisateur */
-                io.emit('UserStatus', users)
-            }
-        });
-    })
-
-    socket.on('joinGroup', function(data) {
-
-        data['socket_id'] = socket.id
-
-        if (groups[data.group_id]) {
-            let userExist = checkIfUserExistInGroup(data.user_id, data.group_id);
-
-            if (!userExist) {
-                console.log('User doesn\'t exist');
-
-                groups[data.group_id].push(data)
-                socket.join(data.room);
-
-            } else {
-                console.log('User already exist');
-
-            }
-
-        } else {
-            groups[data.group_id] = [data];
-            socket.join(data.room);
-        }
-    })
 })
 
 function checkIfUserExistInGroup(user_id, group_id) {

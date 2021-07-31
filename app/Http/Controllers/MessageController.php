@@ -94,6 +94,9 @@ class MessageController extends Controller
             'type' => 1,
         ];
 
+        /* ShortCutName */
+        $datas_user_message['shortcut_name'] = makeShortCutName($datas_user_message['sender_name']);
+
         event(new PrivateGroupEvent($datas_user_message));
 
         if (Message::create($datas_message) && UserMessage::create($datas_user_message)) {
