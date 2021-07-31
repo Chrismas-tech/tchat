@@ -4,6 +4,7 @@ const io = require('socket.io')(http, {
     cors: { origin: "*" }
 });
 const Redis = require('ioredis');
+const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
 http.listen(3000, function() {
@@ -21,10 +22,17 @@ redis.subscribe('group-channel', function() {
 
 let users = [];
 let groups = [];
-let socket_defined = '';
+let socket_defined;
+let room_to_leave;
 
 io.on('connection', socket => {
 
+    /*     console.log('SOCKET of USER : ' + socket.id + '--------------------------------------------------');
+        console.log('--------------------------------------------------');
+        console.log('--------------------------------------------------');
+        console.log(socket.adapter.sids);
+
+         */
     socket_defined = socket;
 
     socket.on('user_connected', user_id => {
@@ -38,6 +46,9 @@ io.on('connection', socket => {
 
     socket.on('disconnect', () => {
 
+        console.log("ROOM TO LEAVE : " + room_to_leave)
+        socket.leave(room_to_leave)
+
         users.forEach((user, index) => {
             if (user.socket_id == socket.id) {
                 users.splice(index, 1);
@@ -50,30 +61,34 @@ io.on('connection', socket => {
 
     socket.on('joinGroup', function(data) {
 
-        console.log(groups)
-
         data['socket_id'] = socket.id
 
         /* Si le groupe existe */
         if (groups[data.group_id]) {
-            let userExist = checkIfUserExistInGroup(data.user_id, data.group_id);
 
-            /* Si l'utilisateur n'existe pas dans le groupe -> on push l'utilisateur */
+            let userExist = Check_User_Exist_in_Group(data.user_id, data.group_id, socket);
+
+            /* Si l'utilisateur n'existe pas dans le groupe -> on push l'utilisateur et on le joint dans la room */
             if (!userExist) {
-                console.log('User doesn\'t exist');
+                /*     console.log('User doesn\'t exist'); */
 
                 groups[data.group_id].push(data)
+                    /*                 console.log('STATUS GROUPS AFTER USER PUSHED IN GROUP ' + data.group_id);
+
+                                    console.log(groups); */
+
                 socket.join(data.room);
-
+                room_to_leave = data.room;
             } else {
-                console.log('User already exist');
-
+                socket.join(data.room);
+                room_to_leave = data.room;
             }
 
-            /* Si le groupe n'existe pas --> on créé le groupe et on joint l'utilisateur au groupe  */
+            /* Si le groupe n'existe pas --> on créé le groupe et on joint l'utilisateur dans la room */
         } else {
             groups[data.group_id] = [data];
             socket.join(data.room);
+            room_to_leave = data.room;
         }
     })
 })
@@ -81,15 +96,8 @@ io.on('connection', socket => {
 
 redis.on('message', (channel, message) => {
 
-    /*     
-    console.log(channel);
-    console.log(message); 
-    */
-
     message = JSON.parse(message)
-        /*     
-        console.log(message.data);
-        */
+
     if (channel == 'private-channel') {
 
         /* console.log('PRIVATE CHANNEL'); */
@@ -109,32 +117,34 @@ redis.on('message', (channel, message) => {
     }
 
     if (channel == 'group-channel') {
+
         console.log('GROUP CHANNEL');
         console.log(message);
 
         let data = message.data.data;
 
-
         if (data.type == 1) {
+
             console.log('DATA TYPE 1 OK');
-            console.log('GROUP ID : ' + data.message_group_id);
 
             /* 
-            Pour pouvoir utiliser socket en dehors de la callback io.on on l'a définie dans une autre variable socket_defined dans :
-
-            io.on('connection', socket => {
-            socket_defined = socket;...}
+            Pour pouvoir utiliser socket en dehors de la callback io.on on l'a définie dans une autre variable socket_defined dans : io.on('connection', socket => { socket_defined = socket;...}
             */
 
-            console.log('broadcast DONE');
-            socket_defined.broadcast.to('group' + data.message_group_id).emit('groupMessage', data);
+            console.log(socket_defined);
+            console.log('SOCKET_DEFINED of USER : ' + socket_defined.id);
+            console.log('--------------------------------------------------');
+            console.log('--------------------------------------------------');
+            console.log(socket_defined.adapter.rooms);
 
-            console.log('IO GROUP DONE');
+            socket_defined.broadcast.to('group' + data.message_group_id).emit('groupMessage', data);
+            console.log('BROADCAST DONE');
         }
     }
 })
 
-function checkIfUserExistInGroup(user_id, group_id) {
+function Check_User_Exist_in_Group(user_id, group_id, socket) {
+
     let group = groups[group_id]
 
     /* Si groups n'est pas vide */
@@ -144,36 +154,21 @@ function checkIfUserExistInGroup(user_id, group_id) {
         for (let i = 0; i < group.length; i++) {
 
             if (group[i]['user_id'] == user_id) {
-                console.log('User ' + user_id + ' already exist in the group !');
+
+                /*           
+                console.log('User ' + user_id + ' already exist in the group ! --> replace Socket'); 
+                */
+
+                group[i]['socket_id'] = socket.id
+
+                /*               
+                console.log('GROUP CHECK IF USER EXIST');
+                console.log(groups); 
+                */
+
                 return true;
             }
         }
     }
     return false;
-}
-
-function getSocketIdOfUserInGroup(user_id, group_id) {
-
-    console.log("IS SOCKET_ID IN GROUP ?");
-    console.log("USER_ID : " + user_id);
-    console.log("GROUP_ID : " + group_id);
-    console.log("IS SOCKET ID IN GROUP ?");
-
-    let group = groups[group_id]
-
-    /* Si groups n'est pas vide */
-    if (groups.length > 0) {
-
-        console.log('groups.length > 0 --> OK');
-
-        /* Dans Groups, y-a-t'il le user_id du socket, si oui on retourne true */
-        for (let i = 0; i < group.length; i++) {
-
-            if (group[i]['user_id'] == user_id) {
-                return group[i]['socket_id'];
-            }
-
-        }
-
-    }
 }

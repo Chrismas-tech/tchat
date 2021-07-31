@@ -340,19 +340,21 @@
 
             })
 
-            /*            socket.on('UserStatus', users => {
+            /*            
+            socket.on('UserStatus', users => {
 
-                           let userStatusIcon = $('.user-status-icon');
-                           userStatusIcon.removeClass('online')
-                           userStatusIcon.attr('title', 'Away');
+                let userStatusIcon = $('.user-status-icon');
+                userStatusIcon.removeClass('online')
+                userStatusIcon.attr('title', 'Away');
 
-                           $.each(users, (index, el) => {
-                               if ($('#status-' + el.user_id)) {
-                                   $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
-                               }
-                           }) 
+                $.each(users, (index, el) => {
+                    if ($('#status-' + el.user_id)) {
+                        $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
+                    }
+                }) 
 
-                       }) */
+            }) */
+
 
             $chatInput.on('click', function() {
                 let placeholder = $(this).text();
@@ -377,8 +379,9 @@
             })
 
             function sendMessage(message) {
+
                 console.log("SENDER GROUP MESSAGE");
-                /* console.log(message); */
+                console.log(message);
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -413,14 +416,14 @@
             function appendMessageToReceiver(message) {
 
                 console.log('RECEIVER GROUP MESSAGE');
-                console.log(message)
+                console.log('GROUP MESSAGE ARRIVED : ' + message.content);
 
                 let name = message.sender_name;
                 let $image = message.shortcut_name;
 
                 let new_message =
                     '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + name +
+                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + name + ' ' +
                     '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
                     getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
                     '</div></div></div>';
@@ -462,14 +465,6 @@
             socket.on("groupMessage", function(message) {
                 appendMessageToReceiver(message)
                 $('#audio_sent')[0].play()
-            })
-
-            socket.on("groupMessage", function(message) {
-                /*               appendMessageToReceiver(message)
-                              $('#audio_sent')[0].play() */
-
-                console.log('GROUP MESSAGE ARRIVED');
-                console.log(message);
             })
 
         })
