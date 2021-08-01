@@ -152,14 +152,22 @@ a {
 .icon-profile {
     width: 40px;
     height: auto;
-    margin-right: 10px;
+    margin-right: 11px;
+}
+
+#writing {
+    overflow: auto;
+    flex-wrap: wrap;
+    height: 30px;
 }
 
 .is-writing {
     margin-left: 10px;
     margin-right: 10px;
-    height: 30px;
-    overflow: auto
+}
+
+.writing-gif {
+    height: 10px;
 }
 
 

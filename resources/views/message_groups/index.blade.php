@@ -495,20 +495,21 @@
                 console.log('WRITING CLIENT');
 
                 let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
-                let find_attribute = $('#' + attribute)[0];
+                let find_attribute = document.getElementById(attribute);
                 /* console.log(find_attribute); */
 
                 if (!find_attribute) {
 
                     let div = document.createElement('div');
-                    let message = data.user_name + ' is writing...'
+                    let message = data.user_name + ' is writing '
 
                     $(div).attr("id", attribute)
                     $(div).text(message)
                     $(div).addClass('is-writing')
-                    
+
                     $('#writing').append(div);
-      /*               $(div).append('<img src="{{ asset('img/writing.gif') }}/>') */
+                    let gif = '<img class="writing-gif" src="{{ asset("img/writing.gif") }}"/>';
+                    $(div).append(gif)
                 }
 
             })
