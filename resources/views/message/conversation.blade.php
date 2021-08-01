@@ -29,7 +29,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>
@@ -209,7 +209,7 @@
 
             socket.emit('user_connected', sender_id)
 
-            $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
+            $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
 
             socket.on('UserStatus', users => {
 
@@ -255,11 +255,17 @@
                 if (e.which === 13 && !e.shiftKey) {
 
                     /* Si il y a du texte dans le champ input alors --> on envoie un message au serveur */
-                    if ($(this).text().length + 1 > 1) {
+                    if (length_message > 0) {
 
                         /* on évite un retour à la ligne */
                         e.preventDefault()
                         sendMessage(message);
+
+                        socket.emit('remove_writing', {
+                            receiver_id: receiver_id,
+                            receiver_name: receiver_name
+                        })
+
                         $chatInput.empty();
 
                     } else {
@@ -268,6 +274,7 @@
                 }
 
                 if (length_message > 0) {
+
                     /* Si le champ n'est pas vide, on émet vers le serveur */
 
                     socket.emit('is_writing', {
@@ -277,7 +284,7 @@
 
 
                 } else {
-                    /* Sinon on émet vers le serveur pour que les autres enlève leur div writing */
+                    /* Sinon on émet vers le serveur pour que l'autre enlève sa div writing */
 
                     socket.emit('remove_writing', {
                         receiver_id: receiver_id,
@@ -319,8 +326,10 @@
             })
 
             function appendMessageToReceiver(message) {
-                /*                 console.log('APPEND RECEIVER');
-                                console.log(message) */
+                /*                 
+                console.log('APPEND RECEIVER');
+                console.log(message) 
+                */
 
                 $message_receiver_id = parseInt(message.receiver_id)
 
@@ -338,6 +347,7 @@
                         '</div></div></div>';
 
                     $('#messageWrapper').append(new_message);
+                    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
                 }
             }
 
@@ -355,6 +365,7 @@
                     '</div></div></div>';
 
                 $('#messageWrapper').append(new_message);
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
 
             }
 
@@ -389,17 +400,27 @@
                     let gif = '<img class="writing-gif" src="{{ asset('img/writing.gif') }}"/>';
                     $(div).append(gif)
                 }
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
 
             })
 
 
             socket.on('remove_writing', (data) => {
-
                 let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
+
+                console.log(attribute);
                 let find_attribute = document.getElementById(attribute);
 
+                console.log(find_attribute);
+
                 if (find_attribute) {
-                    find_attribute.remove()
+                    console.log(true);
+                    console.log('attribute exist');
+
+                    /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
+                    setTimeout(() => {
+                        document.getElementById(attribute).remove()
+                    }, 1);
                 }
 
             })

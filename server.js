@@ -35,13 +35,21 @@ io.on('connection', socket => {
         io.emit('UserStatus', users)
     })
 
+    /* GROUP */
+    /* GROUP */
     socket.on('is_writing_group', (data) => {
         socket.broadcast.emit('is_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
     })
 
     socket.on('remove_writing_group', (data) => {
+
+        console.log('REMOVE WRITING EVENT');
+
         socket.broadcast.emit('remove_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
     })
+
+    /* USER TO USER */
+    /* USER TO USER */
 
     socket.on('is_writing', (data) => {
         users.forEach(user => {
@@ -54,9 +62,12 @@ io.on('connection', socket => {
     })
 
     socket.on('remove_writing', (data) => {
+
+        console.log('REMOVE WRITING EVENT');
+
         users.forEach(user => {
             if (data.receiver_id == user.user_id) {
-                console.log('send remove');
+                /*  console.log('send remove'); */
                 io.to(user.socket_id).emit('remove_writing', { user_id: data.receiver_id, user_name: data.receiver_name })
             }
         });
@@ -136,9 +147,6 @@ redis.on('message', (channel, message) => {
     }
 
     if (channel == 'group-channel') {
-
-        console.log('GROUP CHANNEL');
-        console.log(message);
 
         let data = message.data.data;
 

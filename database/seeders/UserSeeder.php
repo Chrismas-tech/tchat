@@ -18,9 +18,9 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'firstname' => 'Alex',
-                'lastname' => 'Toucan',
-                'email' => 'a@gmail.com',
+                'firstname' => 'Martin',
+                'lastname' => 'Luciani',
+                'email' => 'm@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -36,8 +36,8 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'firstname' => 'Cédric',
-                'lastname' => 'Jojo',
+                'firstname' => 'Christophe',
+                'lastname' => 'Luciani',
                 'email' => 'c@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
