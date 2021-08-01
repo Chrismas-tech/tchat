@@ -67,7 +67,7 @@
                                     @if ($member->user_id == Auth::id())
 
                                         <a href="{{ route('message-groups.show', $group->id) }}">
-                                            <li class="chat-group-list">
+                                            <li class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
                                                 {{ $group->name }}
                                             </li>
                                         </a>
@@ -86,7 +86,7 @@
             <div class="chat-header">
 
                 <div class="d-flex align-items-center">
-                    <div class="chat-name text-white font-bold bg-danger mr-2 rounded px-2 py-2">
+                    <div class="chat-name text-white font-bold active-group mr-2 rounded px-2 py-2">
                         Name of group : {{ $currentGroup->name }}
                     </div>
 
@@ -358,9 +358,11 @@
                 }
             })
 
+
             $chatInput.keypress(e => {
 
-                let message = $(this).text();
+                let message = $chatInput.text();
+                console.log(message);
                 let length_message = message.length
 
                 console.log('YOLO : ' + length_message);
