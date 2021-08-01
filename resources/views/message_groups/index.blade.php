@@ -207,7 +207,7 @@
                 </div>
             </div>
 
-            <div class="d-flex fst-italic" id="writing">
+            <div class="d-flex font-italic" id="writing">
 
             </div>
 
@@ -495,19 +495,20 @@
                 console.log('WRITING CLIENT');
 
                 let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
-                let find_attribute = document.getElementById(attribute);
+                let find_attribute = $('#' + attribute)[0];
                 /* console.log(find_attribute); */
 
                 if (!find_attribute) {
 
-                    let div = document.createElement('div')
+                    let div = document.createElement('div');
                     let message = data.user_name + ' is writing...'
 
-                    div.setAttribute("id", attribute)
-                    div.textContent = message;
-
+                    $(div).attr("id", attribute)
+                    $(div).text(message)
+                    $(div).addClass('is-writing')
+                    
                     $('#writing').append(div);
-
+                    $(div).append('<img src="{{ asset('img/writing.gif') }}/>')
                 }
 
             })

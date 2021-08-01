@@ -155,6 +155,12 @@ a {
     margin-right: 10px;
 }
 
+.is-writing {
+    margin-left: 10px;
+    height: 30px;
+    overflow: auto
+}
+
 
 /* MEDIA QUERIES */
 
