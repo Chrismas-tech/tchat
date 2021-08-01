@@ -508,7 +508,7 @@
                     $(div).addClass('is-writing')
                     
                     $('#writing').append(div);
-                    $(div).append('<img src="{{ asset('img/writing.gif') }}/>')
+      /*               $(div).append('<img src="{{ asset('img/writing.gif') }}/>') */
                 }
 
             })

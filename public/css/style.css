@@ -157,6 +157,7 @@ a {
 
 .is-writing {
     margin-left: 10px;
+    margin-right: 10px;
     height: 30px;
     overflow: auto
 }
