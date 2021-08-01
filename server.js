@@ -22,27 +22,18 @@ redis.subscribe('group-channel', function() {
 
 let users = [];
 let groups = [];
-let socket_defined;
 let room_to_leave;
 
 io.on('connection', socket => {
 
-    /*     console.log('SOCKET of USER : ' + socket.id + '--------------------------------------------------');
-        console.log('--------------------------------------------------');
-        console.log('--------------------------------------------------');
-        console.log(socket.adapter.sids);
-
-         */
-    socket_defined = socket;
-
     socket.on('user_connected', user_id => {
         /* console.log(users); */
+
         users.push({ user_id: user_id, socket_id: socket.id })
 
         /* Update des statuts de sa propre page et celle des autres */
         io.emit('UserStatus', users)
     })
-
 
     socket.on('disconnect', () => {
 
@@ -70,17 +61,17 @@ io.on('connection', socket => {
 
             /* Si l'utilisateur n'existe pas dans le groupe -> on push l'utilisateur et on le joint dans la room */
             if (!userExist) {
-                /*     console.log('User doesn\'t exist'); */
 
                 groups[data.group_id].push(data)
-                    /*                 console.log('STATUS GROUPS AFTER USER PUSHED IN GROUP ' + data.group_id);
-
-                                    console.log(groups); */
-
                 socket.join(data.room);
+                /* 
+                                console.log(socket.adapter.rooms); */
                 room_to_leave = data.room;
+
+                /* Si l'utilisateur existe dans le groupe -> on le joint dans la room */
             } else {
                 socket.join(data.room);
+                console.log(socket.adapter.rooms);
                 room_to_leave = data.room;
             }
 
@@ -88,6 +79,8 @@ io.on('connection', socket => {
         } else {
             groups[data.group_id] = [data];
             socket.join(data.room);
+
+            console.log(socket.adapter.rooms);
             room_to_leave = data.room;
         }
     })
@@ -104,9 +97,6 @@ redis.on('message', (channel, message) => {
         let data = message.data.data;
         let receiver_id = data.receiver_id;
         let event = message.event;
-
-        /* console.log(message.data.data); */
-        /* console.log(users); */
 
         users.forEach((user, index) => {
             if (user.user_id == receiver_id) {
@@ -125,19 +115,14 @@ redis.on('message', (channel, message) => {
 
         if (data.type == 1) {
 
-            console.log('DATA TYPE 1 OK');
-
             /* 
-            Pour pouvoir utiliser socket en dehors de la callback io.on on l'a définie dans une autre variable socket_defined dans : io.on('connection', socket => { socket_defined = socket;...}
+            console.log('data.type == 1'); 
             */
 
-            console.log(socket_defined);
-            console.log('SOCKET_DEFINED of USER : ' + socket_defined.id);
-            console.log('--------------------------------------------------');
-            console.log('--------------------------------------------------');
-            console.log(socket_defined.adapter.rooms);
+            /* Astuce : on émet pour tout le groupe, mais du côté client on appendra pour tous les utilisateurs sauf l'expéditeur */
 
-            socket_defined.broadcast.to('group' + data.message_group_id).emit('groupMessage', data);
+            io.to('group' + data.message_group_id).emit('groupMessage', data);
+
             console.log('BROADCAST DONE');
         }
     }

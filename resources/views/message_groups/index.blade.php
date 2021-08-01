@@ -415,25 +415,23 @@
 
             function appendMessageToReceiver(message) {
 
-                console.log('RECEIVER GROUP MESSAGE');
-                console.log('GROUP MESSAGE ARRIVED : ' + message.content);
+                if (message.sender_id != sender_id) {
 
-                let name = message.sender_name;
-                let $image = message.shortcut_name;
+                    let name = message.sender_name;
+                    let name_shortcut = message.shortcut_name;
 
-                let new_message =
-                    '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + name + ' ' +
-                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
-                    '</div></div></div>';
+                    let new_message =
+                        '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                        name_shortcut + '</div></div><div class="chat-name ml-1 font-weight-bold">' + name + ' ' +
+                        '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
+                        getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
+                        '</div></div></div>';
 
-                $('#messageWrapper').append(new_message);
-
+                    $('#messageWrapper').append(new_message);
+                }
             }
 
             function appendMessageToSender(message) {
-                /* console.log(message); */
 
                 let $user_full_name = '{{ $user_full_name }}';
                 let $image = '{{ makeShortCutName($user_full_name) }}';
