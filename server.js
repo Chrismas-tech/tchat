@@ -35,6 +35,10 @@ io.on('connection', socket => {
         io.emit('UserStatus', users)
     })
 
+    socket.on('is_writing', (data) => {
+        socket.broadcast.emit('is_writing', { user_id: data.sender_id, user_name: data.sender_name })
+    })
+
     socket.on('disconnect', () => {
 
         console.log("ROOM TO LEAVE : " + room_to_leave)
@@ -62,26 +66,28 @@ io.on('connection', socket => {
             /* Si l'utilisateur n'existe pas dans le groupe -> on push l'utilisateur et on le joint dans la room */
             if (!userExist) {
 
+                /* console.log(socket.adapter.rooms); */
                 groups[data.group_id].push(data)
                 socket.join(data.room);
-                /* 
-                                console.log(socket.adapter.rooms); */
                 room_to_leave = data.room;
 
                 /* Si l'utilisateur existe dans le groupe -> on le joint dans la room */
             } else {
+
+                /* console.log(socket.adapter.rooms); */
                 socket.join(data.room);
-                console.log(socket.adapter.rooms);
                 room_to_leave = data.room;
+
             }
 
             /* Si le groupe n'existe pas --> on créé le groupe et on joint l'utilisateur dans la room */
         } else {
+            /* console.log(socket.adapter.rooms); */
+
             groups[data.group_id] = [data];
             socket.join(data.room);
-
-            console.log(socket.adapter.rooms);
             room_to_leave = data.room;
+
         }
     })
 })

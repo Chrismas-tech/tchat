@@ -207,6 +207,10 @@
                 </div>
             </div>
 
+            <div class="d-flex fst-italic" id="writing">
+
+            </div>
+
             <div class="chat-box">
                 <div class="chat-input bg-white" id="chatInput" contenteditable="true">Write your message here...
                 </div>
@@ -297,6 +301,7 @@
             let $chatBody = $(".chat-Body")
 
             let sender_id = '{{ Auth::id() }}'
+            let sender_name = '{{ Auth::user()->firstname }}' + ' ' + '{{ Auth::user()->lastname }}'
 
             let group_id = '{{ $currentGroup->id }}'
             let group_name = '{{ $currentGroup->name }}'
@@ -340,21 +345,10 @@
 
             })
 
-            /*            
-            socket.on('UserStatus', users => {
-
-                let userStatusIcon = $('.user-status-icon');
-                userStatusIcon.removeClass('online')
-                userStatusIcon.attr('title', 'Away');
-
-                $.each(users, (index, el) => {
-                    if ($('#status-' + el.user_id)) {
-                        $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
-                    }
-                }) 
-
-            }) */
-
+            /* CHAT INPUT */
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
 
             $chatInput.on('click', function() {
                 let placeholder = $(this).text();
@@ -367,16 +361,33 @@
             $chatInput.keypress(function(e) {
                 let message = $(this).text();
 
+                console.log($(this).text().length + 1);
+
+                if ($(this).text().length + 1 > 0) {
+                    socket.emit('is_writing', {
+                        sender_id: sender_id,
+                        sender_name: sender_name
+                    })
+                } else if ($(this).text().length + 1 == 0) {
+                    $('#writing').empty();
+                }
+
                 /* JQuery function which -> which key was pressed */
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
-                    /*        console.log(message); */
+
+                    /* on évite un retour à la ligne */
                     e.preventDefault()
                     $chatInput.empty();
                     sendMessage(message);
                 }
             })
+
+            /* END CHAT INPUT */
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
 
             function sendMessage(message) {
 
@@ -411,6 +422,35 @@
                 $('#audio_sent')[0].play()
             })
 
+            socket.on("groupMessage", function(message) {
+                appendMessageToReceiver(message)
+                $('#audio_sent')[0].play()
+            })
+
+            /* AUDIO */
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
+
+            $('.icon-audio').on('click', function() {
+                if ($(this).attr('src') == '{{ asset('img/haut-parleur-on.png') }}') {
+                    console.log('ON -> OFF');
+                    $(this).attr('src', '{{ asset('img/haut-parleur-off.png') }}')
+                    $('#audio_sent').attr('src', '')
+                } else {
+                    console.log('OFF -> ON');
+                    $(this).attr('src', '{{ asset('img/haut-parleur-on.png') }}')
+                    $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
+                }
+            })
+
+            /* END AUDIO */
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
+
+
+            /* FUNCTIONS APPEND*/
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
             function appendMessageToReceiver(message) {
 
 
@@ -446,25 +486,31 @@
                 $('#messageWrapper').append(new_message);
                 $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
             }
+            /* END FUNCTIONS APPEND*/
+            /* -------------------------------------------------------------------*/
+            /* -------------------------------------------------------------------*/
 
+            socket.on('is_writing', (data) => {
 
-            $('.icon-audio').on('click', function() {
-                if ($(this).attr('src') == '{{ asset('img/haut-parleur-on.png') }}') {
-                    console.log('ON -> OFF');
-                    $(this).attr('src', '{{ asset('img/haut-parleur-off.png') }}')
-                    $('#audio_sent').attr('src', '')
-                } else {
-                    console.log('OFF -> ON');
-                    $(this).attr('src', '{{ asset('img/haut-parleur-on.png') }}')
-                    $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
+                console.log('WRITING CLIENT');
+
+                let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
+                let find_attribute = document.getElementById(attribute);
+                /* console.log(find_attribute); */
+
+                if (!find_attribute) {
+
+                    let div = document.createElement('div')
+                    let message = data.user_name + ' is writing...'
+
+                    div.setAttribute("id", attribute)
+                    div.textContent = message;
+
+                    $('#writing').append(div);
+
                 }
-            })
 
-            socket.on("groupMessage", function(message) {
-                appendMessageToReceiver(message)
-                $('#audio_sent')[0].play()
             })
-
         })
     </script>
 @endpush
