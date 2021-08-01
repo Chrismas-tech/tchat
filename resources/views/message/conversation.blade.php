@@ -29,7 +29,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>
@@ -373,14 +373,8 @@
 
             socket.on('is_writing', (data) => {
 
-                console.log(data.user_name);
-                console.log(data.user_id);
-
-                console.log('WRITING CLIENT');
-
                 let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
                 let find_attribute = document.getElementById(attribute);
-                /* console.log(find_attribute); */
 
                 if (!find_attribute) {
 
@@ -400,8 +394,6 @@
 
 
             socket.on('remove_writing', (data) => {
-
-                console.log('REMOVING WRITING CLIENT');
 
                 let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
                 let find_attribute = document.getElementById(attribute);

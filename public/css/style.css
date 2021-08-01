@@ -162,6 +162,7 @@ a {
 #writing {
     overflow: auto;
     flex-wrap: wrap;
+    height: 30px;
 }
 
 .is-writing {
