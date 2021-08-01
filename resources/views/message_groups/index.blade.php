@@ -55,7 +55,7 @@
 
                             @if ($group->user_id == Auth::id())
                                 <a href="{{ route('message-groups.show', $group->id) }}">
-                                    <li class="chat-group-list">
+                                    <li class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
                                         {{ $group->name }}
                                     </li>
                                 </a>
@@ -358,29 +358,51 @@
                 }
             })
 
-            $chatInput.keypress(function(e) {
+            $chatInput.keypress(e => {
+
                 let message = $(this).text();
+                let length_message = message.length
 
-                console.log($(this).text().length + 1);
-
-                if ($(this).text().length + 1 > 0) {
-                    socket.emit('is_writing', {
-                        sender_id: sender_id,
-                        sender_name: sender_name
-                    })
-                } else if ($(this).text().length + 1 == 0) {
-                    $('#writing').empty();
-                }
+                console.log('YOLO : ' + length_message);
 
                 /* JQuery function which -> which key was pressed */
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
 
-                    /* on évite un retour à la ligne */
-                    e.preventDefault()
-                    $chatInput.empty();
-                    sendMessage(message);
+                    /* Si il y a du texte dans le champ input alors --> on envoie un message au serveur */
+                    if ($(this).text().length + 1 > 1) {
+
+                        /* on évite un retour à la ligne */
+                        e.preventDefault()
+                        sendMessage(message);
+                        $chatInput.empty();
+
+                    } else {
+                        e.preventDefault()
+                    }
+                }
+
+                /* Si le champ est vide --> on supprime la div writing de l'utilisateur */
+                if (length_message > 0) {
+                    console.log('EMIT WRITING');
+
+                    socket.emit('is_writing', {
+                        sender_id: sender_id,
+                        sender_name: sender_name
+                    })
+
+                } else {
+
+                    /* On supprime le champ writer s'il existe */
+                    console.log('ERASE WRITING');
+                    let attribute = 'writer' + '-' + sender_id + '-' + sender_name;
+                    let find_attribute = document.getElementById(attribute);
+
+                    if (find_attribute) {
+                        console.log('WRITER EXIST ---> DELETE');
+                    }
+
                 }
             })
 
@@ -508,7 +530,7 @@
                     $(div).addClass('is-writing')
 
                     $('#writing').append(div);
-                    let gif = '<img class="writing-gif" src="{{ asset("img/writing.gif") }}"/>';
+                    let gif = '<img class="writing-gif" src="{{ asset('img/writing.gif') }}"/>';
                     $(div).append(gif)
                 }
 

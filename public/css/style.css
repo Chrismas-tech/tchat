@@ -84,6 +84,10 @@ a {
     background-color: rgb(96 239 139);
 }
 
+.active-group {
+    background-color: rgb(238, 96, 96);
+}
+
 .icon-audio {
     width: 40px;
     height: auto;
