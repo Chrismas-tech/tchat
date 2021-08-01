@@ -55,7 +55,8 @@
 
                             @if ($group->user_id == Auth::id())
                                 <a href="{{ route('message-groups.show', $group->id) }}">
-                                    <li class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
+                                    <li
+                                        class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
                                         {{ $group->name }}
                                     </li>
                                 </a>
@@ -67,7 +68,8 @@
                                     @if ($member->user_id == Auth::id())
 
                                         <a href="{{ route('message-groups.show', $group->id) }}">
-                                            <li class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
+                                            <li
+                                                class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
                                                 {{ $group->name }}
                                             </li>
                                         </a>
@@ -358,14 +360,10 @@
                 }
             })
 
-
-            $chatInput.keypress(e => {
+            $chatInput.on('keyup ', e => {
 
                 let message = $chatInput.text();
-                console.log(message);
                 let length_message = message.length
-
-                console.log('YOLO : ' + length_message);
 
                 /* JQuery function which -> which key was pressed */
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
@@ -385,26 +383,22 @@
                     }
                 }
 
-                /* Si le champ est vide --> on supprime la div writing de l'utilisateur */
                 if (length_message > 0) {
-                    console.log('EMIT WRITING');
+                    /* Si le champ n'est pas vide, on émet vers le serveur */
 
-                    socket.emit('is_writing', {
+                    socket.emit('is_writing_group', {
                         sender_id: sender_id,
                         sender_name: sender_name
                     })
 
+
                 } else {
+                    /* Sinon on émet vers le serveur pour que les autres enlève leur div writing */
 
-                    /* On supprime le champ writer s'il existe */
-                    console.log('ERASE WRITING');
-                    let attribute = 'writer' + '-' + sender_id + '-' + sender_name;
-                    let find_attribute = document.getElementById(attribute);
-
-                    if (find_attribute) {
-                        console.log('WRITER EXIST ---> DELETE');
-                    }
-
+                    socket.emit('remove_writing_group', {
+                        sender_id: sender_id,
+                        sender_name: sender_name
+                    })
                 }
             })
 
@@ -514,7 +508,7 @@
             /* -------------------------------------------------------------------*/
             /* -------------------------------------------------------------------*/
 
-            socket.on('is_writing', (data) => {
+            socket.on('is_writing_group', (data) => {
 
                 console.log('WRITING CLIENT');
 
@@ -534,6 +528,18 @@
                     $('#writing').append(div);
                     let gif = '<img class="writing-gif" src="{{ asset('img/writing.gif') }}"/>';
                     $(div).append(gif)
+                }
+
+            })
+
+
+            socket.on('remove_writing_group', (data) => {
+
+                let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
+                let find_attribute = document.getElementById(attribute);
+
+                if (find_attribute) {
+                    find_attribute.remove()
                 }
 
             })

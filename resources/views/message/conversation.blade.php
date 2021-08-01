@@ -27,8 +27,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="m-auto chat-name ml-1 font-bold 
-                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                    <div
+                                        class="m-auto chat-name ml-1 font-bold 
+                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>
@@ -48,35 +49,35 @@
                 <ul class="list-group list-chat-item mt-4">
                     @if ($groups->count())
 
-                    @foreach ($groups as $group)
+                        @foreach ($groups as $group)
 
-                    <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
+                            <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
 
-                        @if ($group->user_id == Auth::id())
-                            <a href="{{ route('message-groups.show', $group->id) }}">
-                                <li class="chat-group-list">
-                                    {{ $group->name }}
-                                </li>
-                            </a>
-                        @else
+                            @if ($group->user_id == Auth::id())
+                                <a href="{{ route('message-groups.show', $group->id) }}">
+                                    <li class="chat-group-list">
+                                        {{ $group->name }}
+                                    </li>
+                                </a>
+                            @else
 
-                        <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
+                                <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
 
-                            @foreach ($group->message_group_members as $member)
-                                @if ($member->user_id == Auth::id())
+                                @foreach ($group->message_group_members as $member)
+                                    @if ($member->user_id == Auth::id())
 
-                                    <a href="{{ route('message-groups.show', $group->id) }}">
-                                        <li class="chat-group-list">
-                                            {{ $group->name }}
-                                        </li>
-                                    </a>
-                                @endif
-                            @endforeach
+                                        <a href="{{ route('message-groups.show', $group->id) }}">
+                                            <li class="chat-group-list">
+                                                {{ $group->name }}
+                                            </li>
+                                        </a>
+                                    @endif
+                                @endforeach
 
-                        @endif
+                            @endif
 
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
                 </ul>
 
 
@@ -148,6 +149,9 @@
 
                 </div>
             </div>
+            <div class="d-flex font-italic" id="writing">
+
+            </div>
 
             <div class="chat-box">
                 <div class="chat-input bg-white" id="chatInput" contenteditable="true">Write your message here...
@@ -197,8 +201,11 @@
             let $chatInputTollbar = $('.chat-input-toolbar');
             let $chatBody = $(".chat-Body")
 
-            let sender_id = "{{ auth()->user()->id }}"
+            let sender_id = '{{ Auth::id() }}'
+            let sender_name = '{{ Auth::user()->firstname }}' + ' ' + '{{ Auth::user()->lastname }}'
+
             let receiver_id = "{{ $friendInfo->id }}"
+            let receiver_name = '{{ $friendInfo->firstname }}' + ' ' + '{{ $friendInfo->lastname }}'
 
             socket.emit('user_connected', sender_id)
 
@@ -237,22 +244,50 @@
                 }
             })
 
-            $chatInput.keypress(function(e) {
-                let message = $(this).text();
+            $chatInput.on('keyup ', e => {
+
+                let message = $chatInput.text();
+                let length_message = message.length
 
                 /* JQuery function which -> which key was pressed */
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
-                    e.preventDefault()
-                    $chatInput.empty();
-                    sendMessage(message);
+
+                    /* Si il y a du texte dans le champ input alors --> on envoie un message au serveur */
+                    if ($(this).text().length + 1 > 1) {
+
+                        /* on évite un retour à la ligne */
+                        e.preventDefault()
+                        sendMessage(message);
+                        $chatInput.empty();
+
+                    } else {
+                        e.preventDefault()
+                    }
+                }
+
+                if (length_message > 0) {
+                    /* Si le champ n'est pas vide, on émet vers le serveur */
+
+                    socket.emit('is_writing', {
+                        receiver_id: receiver_id,
+                        receiver_name: receiver_name
+                    })
+
+
+                } else {
+                    /* Sinon on émet vers le serveur pour que les autres enlève leur div writing */
+
+                    socket.emit('remove_writing', {
+                        receiver_id: receiver_id,
+                        receiver_name: receiver_name
+                    })
                 }
             })
 
             function sendMessage(message) {
-                console.log("SENDER MESSAGE");
-                console.log(message);
+
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -336,10 +371,46 @@
                 }
             })
 
+            socket.on('is_writing', (data) => {
+
+                console.log(data.user_name);
+                console.log(data.user_id);
+
+                console.log('WRITING CLIENT');
+
+                let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
+                let find_attribute = document.getElementById(attribute);
+                /* console.log(find_attribute); */
+
+                if (!find_attribute) {
+
+                    let div = document.createElement('div');
+                    let message = data.user_name + ' is writing '
+
+                    $(div).attr("id", attribute)
+                    $(div).text(message)
+                    $(div).addClass('is-writing')
+
+                    $('#writing').append(div);
+                    let gif = '<img class="writing-gif" src="{{ asset('img/writing.gif') }}"/>';
+                    $(div).append(gif)
+                }
+
+            })
 
 
+            socket.on('remove_writing', (data) => {
 
+                console.log('REMOVING WRITING CLIENT');
 
+                let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
+                let find_attribute = document.getElementById(attribute);
+
+                if (find_attribute) {
+                    find_attribute.remove()
+                }
+
+            })
         })
     </script>
 @endpush

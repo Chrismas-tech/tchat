@@ -35,13 +35,36 @@ io.on('connection', socket => {
         io.emit('UserStatus', users)
     })
 
+    socket.on('is_writing_group', (data) => {
+        socket.broadcast.emit('is_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
+    })
+
+    socket.on('remove_writing_group', (data) => {
+        socket.broadcast.emit('remove_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
+    })
+
     socket.on('is_writing', (data) => {
-        socket.broadcast.emit('is_writing', { user_id: data.sender_id, user_name: data.sender_name })
+        users.forEach(user => {
+            if (data.receiver_id == user.user_id) {
+                console.log('BROADCAST send writing');
+                console.log(user.socket_id);
+                io.to(user.socket_id).emit('is_writing', { user_id: data.receiver_id, user_name: data.receiver_name })
+            }
+        });
+    })
+
+    socket.on('remove_writing', (data) => {
+        users.forEach(user => {
+            if (data.receiver_id == user.user_id) {
+                console.log('send remove');
+                io.to(user.socket_id).emit('remove_writing', { user_id: data.receiver_id, user_name: data.receiver_name })
+            }
+        });
     })
 
     socket.on('disconnect', () => {
 
-        console.log("ROOM TO LEAVE : " + room_to_leave)
+        /*         console.log("ROOM TO LEAVE : " + room_to_leave) */
         socket.leave(room_to_leave)
 
         users.forEach((user, index) => {
