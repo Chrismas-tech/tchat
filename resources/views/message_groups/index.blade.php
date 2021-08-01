@@ -312,7 +312,7 @@
                 socket.emit('joinGroup', data)
             })
 
-            $("#messageWrapper").scrollTop($("#messageWrapper")[0].scrollHeight);
+            $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
 
 
             socket.on('UserStatus', users => {
@@ -380,8 +380,6 @@
 
             function sendMessage(message) {
 
-                console.log("SENDER GROUP MESSAGE");
-                console.log(message);
                 appendMessageToSender(message)
 
                 $.ajax({
@@ -415,6 +413,7 @@
 
             function appendMessageToReceiver(message) {
 
+
                 if (message.sender_id != sender_id) {
 
                     let name = message.sender_name;
@@ -429,6 +428,7 @@
 
                     $('#messageWrapper').append(new_message);
                 }
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
             }
 
             function appendMessageToSender(message) {
@@ -444,7 +444,7 @@
                     '</div></div></div>';
 
                 $('#messageWrapper').append(new_message);
-
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
             }
 
 
