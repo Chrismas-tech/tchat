@@ -1,6 +1,6 @@
 const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http, {
+const https = require('https').Server(app);
+const io = require('socket.io')(https, {
     cors: { origin: "*" }
 });
 
@@ -15,6 +15,7 @@ http.listen(3000, function() {
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
 })
+
 
 redis.subscribe('group-channel', function() {
     console.log('Subscribed to group channel')
