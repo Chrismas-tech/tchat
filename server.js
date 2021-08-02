@@ -4,6 +4,8 @@ const io = require('socket.io')(http, {
     cors: { origin: "*" }
 });
 
+console.log('REDIS 2');
+
 const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
@@ -11,6 +13,8 @@ const redis = new Redis();
 http.listen(3000, function() {
     console.log('Listening to port 3000');
 });
+
+console.log('REDIS 3');
 
 
 redis.subscribe('private-channel', function() {
