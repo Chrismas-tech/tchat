@@ -13,9 +13,11 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <script>console.log('YOLO 0');</script>
     <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"
         integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
     </script>
+        <script>console.log('YOLO -1');</script>
 
 
     <!-- Fonts -->
