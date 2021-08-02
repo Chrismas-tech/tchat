@@ -96,7 +96,7 @@
             let ip_address = '51.77.157.244';
             let socket_port = '3000';
 
-            let address = "https://51.77.157.244:3000";
+            let address = "https://tchat.duckdns.org:3000";
             let socket = io(address)
 
             socket.emit('user_connected', user_id)
