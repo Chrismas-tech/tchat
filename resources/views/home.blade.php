@@ -95,7 +95,9 @@
             let user_id = "{{ auth()->user()->id }}"
             let ip_address = '127.0.0.1';
             let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port) 
+            let socket = io(ip_address + ':' + socket_port)
+
+            socket.connect('https://' + ip_address + ':3000');
 
 
             socket.emit('user_connected', user_id)
