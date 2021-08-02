@@ -92,14 +92,13 @@
         $(function() {
             $('.js-example-basic-single').select2();
 
-            console.log('YOLO1');
-
             let user_id = "{{ auth()->user()->id }}"
-            let ip_address = '127.0.0.1';
+/*             let ip_address = '127.0.0.1';
             let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
+            let socket = io(ip_address + ':' + socket_port) */
 
-            console.log('YOLO2');
+            let socket = socket.connect('https://51.77.157.244:3000');
+
 
             socket.emit('user_connected', user_id)
 
