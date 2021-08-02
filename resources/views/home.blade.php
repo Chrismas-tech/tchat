@@ -31,7 +31,6 @@
                 </ul>
             </div>
 
-
             <div class="mt-4">
                 <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
                     data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
@@ -94,7 +93,7 @@
             $('.js-example-basic-single').select2();
 
             let user_id = "{{ auth()->user()->id }}"
-            let ip_address = '51.77.157.244';
+            let ip_address = '127.0.0.1';
             let socket_port = '3000';
             let socket = io(ip_address + ':' + socket_port)
 
