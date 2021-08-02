@@ -4,7 +4,7 @@
     <div class="row chat-row">
         <div class="col-md-3">
             <div class="users">
-
+                <p>zoihefiozefiozhoizefh</p>
                 <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
 
                 <ul class="list-group list-chat-item mt-4">
@@ -43,7 +43,7 @@
 
                         @foreach ($groups as $group)
 
-                        <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
+                            <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
 
                             @if ($group->user_id == Auth::id())
                                 <a href="{{ route('message-groups.show', $group->id) }}">
@@ -53,7 +53,7 @@
                                 </a>
                             @else
 
-                            <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
+                                <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
 
                                 @foreach ($group->message_group_members as $member)
                                     @if ($member->user_id == Auth::id())
