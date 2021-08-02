@@ -95,7 +95,7 @@
             let user_id = "{{ auth()->user()->id }}"
             let ip_address = '51.77.157.244';
             let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
+            let socket = io("tchat.duckdns.org")
 
             socket.emit('user_connected', user_id)
 
