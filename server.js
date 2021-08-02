@@ -1,8 +1,15 @@
-const app = require('express')();
+/* const app = require('express')();
 const http = require('https').Server(app);
 const io = require('socket.io')(http, {
     cors: { origin: "*" }
-});
+}); */
+
+
+var app = express();
+var server = app.listen(3000);
+var io = require('socket.io').listen(server);
+var http = require('http');
+
 const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
