@@ -93,7 +93,7 @@
             $('.js-example-basic-single').select2();
 
             let user_id = "{{ auth()->user()->id }}"
-            let ip_address = '51.77.157.244';
+            let ip_address = '127.0.0.1';
             let socket_port = '3000';
             let socket = io(ip_address + ':' + socket_port)
 
