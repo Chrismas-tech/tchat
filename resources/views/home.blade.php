@@ -97,7 +97,7 @@
             let socket_port = '3000';
             let socket = io(ip_address + ':' + socket_port) */
 
-            let socket = socket.connect('https://51.77.157.244:3000');
+            var socket = socket.connect('https://51.77.157.244:3000');
 
 
             socket.emit('user_connected', user_id)
