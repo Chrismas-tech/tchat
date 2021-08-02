@@ -4,7 +4,6 @@
     <div class="row chat-row">
         <div class="col-md-3">
             <div class="users">
-                <p>zoihefiozefiozhoizefh</p>
                 <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
 
                 <ul class="list-group list-chat-item mt-4">
