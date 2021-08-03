@@ -1,13 +1,4 @@
 const app = require('express')();
-
-let fs = require('fs');
-
-let options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/example.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/example.com/cert.pem'),
-    ca: fs.readFileSync('/etc/letsencrypt/live/example.com/chain.pem')
-};
-
 const https = require('https').Server(options, app);
 const io = require('socket.io')(https, {
     cors: { origin: "*" }
