@@ -1,5 +1,7 @@
 const app = require('express')();
 
+let fs = require('fs');
+
 let options = {
     key: fs.readFileSync('/etc/letsencrypt/live/example.com/privkey.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/example.com/cert.pem'),
