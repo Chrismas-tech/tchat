@@ -100,7 +100,7 @@
             let address = "https://127.0.0.1:3000";
             /*     let socket = io(address) */
 
-            let socket = io.connect('https://127.0.0.1:3000');
+            let socket = io.connect();
 
             socket.emit('user_connected', user_id)
 
