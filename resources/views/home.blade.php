@@ -99,7 +99,7 @@
             let socket_port = '3000';
             let socket = io(ip_address + ':' + socket_port) */
 
-            let socket = io.connect('tchat.duckdns.org:3000', {secure: true});
+            let socket = io.connect('tchat.duckdns.org:3000');
 
             socket.emit('user_connected', user_id)
 
