@@ -1,6 +1,6 @@
 const app = require('express')();
-const https = require('https').Server(app);
-const io = require('socket.io')(https, {
+const http = require('http').Server(app);
+const io = require('socket.io')(http, {
     cors: { origin: "*" }
 });
 
@@ -8,7 +8,7 @@ const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-https.listen(3000, function() {
+http.listen(3000, function() {
     console.log('Listening to port 3000');
 });
 
