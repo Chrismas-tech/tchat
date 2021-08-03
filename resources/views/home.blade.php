@@ -94,9 +94,12 @@
             $('.js-example-basic-single').select2();
 
             let user_id = "{{ auth()->user()->id }}"
-            let ip_address = 'tchat.duckdns.org';
+
+/*          let ip_address = 'tchat.duckdns.org';
             let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
+            let socket = io(ip_address + ':' + socket_port) */
+
+            let socket = io.connect('tchat.duckdns.org:3000', {secure: true});
 
             socket.emit('user_connected', user_id)
 
