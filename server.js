@@ -8,8 +8,8 @@ const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-https.listen(3000, function() {
-    console.log('Listening to port 3000');
+https.listen(9000, function() {
+    console.log('Listening to port 9000');
 });
 
 redis.subscribe('private-channel', function() {
