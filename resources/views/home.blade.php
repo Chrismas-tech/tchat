@@ -88,6 +88,7 @@
 @endsection
 
 @push('scripts')
+    <script src="https://tchat.duckdns.org:3000/socket.io/socket.io.js"></script>
     <script>
         $(function() {
             $('.js-example-basic-single').select2();
@@ -97,7 +98,7 @@
             let socket_port = '3000';
 
             let address = "https://tchat.duckdns.org:3000";
-        /*     let socket = io(address) */
+            /*     let socket = io(address) */
 
             let socket = io.connect('https://tchat.duckdns.org:4200');
 
