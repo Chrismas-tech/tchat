@@ -88,7 +88,7 @@
 @endsection
 
 @push('scripts')
-    <script src="https://tchat.duckdns.org/socket.io/socket.io.js"></script>
+
     <script>
         $(function() {
             $('.js-example-basic-single').select2();
