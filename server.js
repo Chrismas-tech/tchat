@@ -8,7 +8,7 @@ const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-http.listen(3000, function() {
+https.listen(3000, function() {
     console.log('Listening to port 3000');
 });
 
