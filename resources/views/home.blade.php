@@ -100,7 +100,7 @@
             let address = "https://tchat.duckdns.org:3000";
             /*     let socket = io(address) */
 
-            let socket = io.connect('https://tchat.duckdns.org:4200');
+            let socket = io.connect('https://tchat.duckdns.org:3000');
 
             socket.emit('user_connected', user_id)
 
