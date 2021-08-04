@@ -35,7 +35,7 @@
 
 <body class="bg-login">
     <div id="app">
-        <main class="centered-login">
+        <main>
             @yield('content')
         </main>
     </div>
