@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const httpServer = require("https").createServer({
     key: fs.readFileSync('./ssl/privkey.pem'),
-    cert: fs.readFileSync('./ssl/fullchain.pem')
+    cert: fs.readFileSync('./ssl/cert.pem')
 });
 
 const io = require('socket.io')(httpServer, {
@@ -10,7 +10,6 @@ const io = require('socket.io')(httpServer, {
 });
 
 const Redis = require('ioredis');
-const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
 app.listen(options.port)
