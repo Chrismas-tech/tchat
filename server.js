@@ -12,7 +12,7 @@ const io = require('socket.io')(httpServer, {
 const Redis = require('ioredis');
 const redis = new Redis();
 
-httpServer.listen(port)
+httpServer.listen(3000)
 
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
