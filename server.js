@@ -1,13 +1,12 @@
-const serverOptions = {
-    port: 3000,
-    host: 'https://tchat.duckdns.org/', //address to your site
-    key: './ssl/cert.pem', //Or whatever the path to your SSL is
-    cert: './ssl/privkey.pem',
-    NPNProtocols: ['http/2.0', 'spdy', 'http/1.1', 'http/1.0']
-}
+let fs = require('fs');
+
+let options = {
+    key: fs.readFileSync('./ssl/privkey.pem'),
+    cert: fs.readFileSync('./ssl/fullchain.pem')
+};
 
 const app = require('express')();
-const http = require('http').Server(serverOptions, app);
+const http = require('http').Server(options, app);
 const io = require('socket.io')(http, {
     cors: { origin: "*" }
 });
