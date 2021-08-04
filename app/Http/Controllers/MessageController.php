@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function conversation($userId)
     {
         $users = User::where('id', '!=', Auth::id())->get();
