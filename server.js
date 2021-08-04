@@ -16,9 +16,7 @@ const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-http.listen(3000, function() {
-    console.log('Listening to port 3000');
-});
+app.listen(serverOptions.port)
 
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
