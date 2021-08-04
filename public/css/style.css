@@ -6,6 +6,58 @@ a {
     text-decoration: none !important;
 }
 
+.bg-login {
+    height: 100vh;
+    margin: 0;
+    background: #7F7FD5;
+    background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+    background: radial-gradient(ellipse at center, #0264d6 1%, #1c2b5a 100%);
+}
+
+.bg-purple {
+    background-color: rgba(109, 40, 217);
+}
+
+.click-here {
+    color: rgba(196, 181, 253);
+}
+
+.click-here:hover {
+    color: #fff;
+    background-color: rgba(109, 40, 217);
+    border-radius: 0.25rem;
+}
+
+.size-checkbox {
+    height: 20px;
+    width: 20px;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.centered-login {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+.icon-login {
+    border-radius: 0.25rem;
+    padding: 0.9rem;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #fff;
+}
+
+.form-border {
+    padding-right: 2rem;
+    border-right: 2px solid #fff;
+}
+
 ::-webkit-scrollbar {
     width: 0px;
     /* Remove scrollbar space */
