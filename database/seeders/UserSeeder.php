@@ -63,13 +63,50 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'firstname' => 'Harry',
-                'lastname' => 'Foly',
+                'firstname' => 'Calo',
+                'lastname' => 'Gero',
                 'email' => 'f@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
-            ]
+            ],
+
+            [
+                'firstname' => 'Mylène',
+                'lastname' => 'Farmer',
+                'email' => 'g@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('azertyui'), // password
+                'remember_token' => Str::random(10),
+            ],
+
+            [
+                'firstname' => 'Harry',
+                'lastname' => 'Foly',
+                'email' => 'h@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('azertyui'), // password
+                'remember_token' => Str::random(10),
+            ],
+
+            [
+                'firstname' => 'Louis',
+                'lastname' => 'De Funes',
+                'email' => 'i@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('azertyui'), // password
+                'remember_token' => Str::random(10),
+            ],
+
+            [
+                'firstname' => 'Christian',
+                'lastname' => 'Clavier',
+                'email' => 'j@gmail.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('azertyui'), // password
+                'remember_token' => Str::random(10),
+            ],
+
         ];
 
         foreach ($users as $user) {
