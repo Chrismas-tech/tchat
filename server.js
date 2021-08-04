@@ -1,13 +1,11 @@
-let fs = require('fs');
+const fs = require('fs');
 
-let options = {
+const httpServer = require("https").createServer({
     key: fs.readFileSync('./ssl/privkey.pem'),
     cert: fs.readFileSync('./ssl/fullchain.pem')
-};
+});
 
-const app = require('express')();
-const http = require('http').Server(options, app);
-const io = require('socket.io')(http, {
+const io = require('socket.io')(httpServer, {
     cors: { origin: "*" }
 });
 
@@ -15,12 +13,11 @@ const Redis = require('ioredis');
 const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-app.listen(serverOptions.port)
+app.listen(options.port)
 
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
 })
-
 
 redis.subscribe('group-channel', function() {
     console.log('Subscribed to group channel')
