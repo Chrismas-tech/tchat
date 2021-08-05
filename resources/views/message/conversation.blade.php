@@ -263,7 +263,7 @@
 
                         socket.emit('remove_writing', {
                             receiver_id: receiver_id,
-                            receiver_name: receiver_name
+                            sender_name: sender_name
                         })
 
                         $chatInput.empty();
@@ -275,11 +275,11 @@
 
                 if (length_message > 0) {
 
-                    /* Si le champ n'est pas vide, on émet vers le serveur */
+                    /* Si le champ n'est pas vide, on émet vers le serveur l'évènemet writing */
 
                     socket.emit('is_writing', {
                         receiver_id: receiver_id,
-                        receiver_name: receiver_name
+                        sender_name: sender_name
                     })
 
 
@@ -288,7 +288,7 @@
 
                     socket.emit('remove_writing', {
                         receiver_id: receiver_id,
-                        receiver_name: receiver_name
+                        sender_name: sender_name
                     })
                 }
             })
