@@ -438,7 +438,7 @@
                     /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
                     setTimeout(() => {
                         document.getElementById(attribute).remove()
-                    }, 1);
+                    }, 100);
                 }
 
             })
