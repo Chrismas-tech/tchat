@@ -97,7 +97,7 @@
                 </div>
 
                 <div>
-                    <img class="icon-audio" src="{{ asset('img/hp-on.png') }}" alt="icon-audio">
+                    <img class="icon-audio" src="{{ asset('img/hp-on.png') }}" alt="icon-audio" title="on/off sounds effects">
                 </div>
             </div>
 
