@@ -29,7 +29,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                    {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
                                 </a>
@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <div class="col-md-9 chat-section">
+        <div class="col-md-9 chat-section rounded">
             <div class="chat-header d-flex align-items-center">
                 <div class="chat-image">
                     <div class="name-image">
@@ -97,7 +97,7 @@
                 </div>
 
                 <div>
-                    <img class="icon-audio" src="{{ asset('img/haut-parleur-on.png') }}" alt="icon-audio">
+                    <img class="icon-audio" src="{{ asset('img/hp-on.png') }}" alt="icon-audio">
                 </div>
             </div>
 
@@ -154,7 +154,12 @@
             </div>
 
             <div class="chat-box">
-                <div class="chat-input bg-white" id="chatInput" contenteditable="true">Write your message here...
+                <div class="d-flex align-items-end">
+                    <div class="chat-input bg-white w-100" id="chatInput" contenteditable="true">Write your message here...
+                    </div>
+                    <div class="p-1">
+                        <button id="send-btn"><i class="fas fa-paper-plane fa-2x"></i></button>
+                    </div>
                 </div>
                 <div class="chat-input-toolbar">
                     <button title="Add File" class="btn btn-light btn-sm btn-fil-upload">
@@ -181,7 +186,8 @@
     </div>
 
     <!-- Audio Sound -->
-    <audio id="audio_sent" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
+    <audio id="audio_hp" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
+    <audio id="audio_arrow_mess" src="{{ asset('audio/1314.mp3') }}" preload="auto"></audio>
 
     @include('templates.modal')
 @endsection
@@ -371,14 +377,16 @@
 
 
             $('.icon-audio').on('click', function() {
-                if ($(this).attr('src') == '{{ asset('img/haut-parleur-on.png') }}') {
+                if ($(this).attr('src') == '{{ asset('img/hp-on.png') }}') {
                     console.log('ON -> OFF');
-                    $(this).attr('src', '{{ asset('img/haut-parleur-off.png') }}')
-                    $('#audio_sent').attr('src', '')
+                    $(this).attr('src', '{{ asset('img/hp-off.png') }}')
+                    $('#audio_hp').attr('src', '')
+                    $('#audio_arrow_mess').attr('src', '')
                 } else {
                     console.log('OFF -> ON');
-                    $(this).attr('src', '{{ asset('img/haut-parleur-on.png') }}')
-                    $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
+                    $(this).attr('src', '{{ asset('img/hp-on.png') }}')
+                    $('#audio_hp').attr('src', '{{ asset('audio/1313.mp3') }}')
+                    $('#audio_arrow_mess').attr('src', '{{ asset('audio/1314.mp3') }}')
                 }
             })
 
@@ -424,6 +432,33 @@
                 }
 
             })
+
+            $('#send-btn').on('click', e => {
+
+                let message = $chatInput.text().trim();
+                /*                 console.log(message); */
+                let length_message = message.length
+
+                if (message == 'Write your message here...') {
+                    return
+                }
+
+                if (length_message > 0) {
+                    e.preventDefault()
+                    sendMessage(message);
+
+                    socket.emit('remove_writing', {
+                        receiver_id: receiver_id,
+                        sender_name: sender_name
+                    })
+
+                    $('#audio_arrow_mess')[0].play()
+
+                    $chatInput.empty();
+                }
+
+            })
+
         })
     </script>
 @endpush

@@ -180,6 +180,11 @@ a {
     margin-top: -10px;
 }
 
+#send-btn {
+    border: none;
+    background-color: #fff;
+}
+
 #chatInput {
     border: 1px solid #bb9f9f;
     border-radius: 20px;
