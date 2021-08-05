@@ -18,6 +18,14 @@ a {
     background-color: rgba(109, 40, 217);
 }
 
+.bg-person-invited {
+    background-color: #2f7093;
+}
+
+.bg-admin-group {
+    background-color: #4aff8f !important;
+}
+
 .click-here {
     color: rgba(196, 181, 253);
 }

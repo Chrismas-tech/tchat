@@ -93,12 +93,13 @@
                     </div>
 
                     <div>
-                        <img class="icon-audio" src="{{ asset('img/haut-parleur-on.png') }}" alt="icon-audio">
+                        <img class="icon-audio" src="{{ asset('img/hp-on.png') }}" alt="icon-audio"
+                            title="on/off sounds effects">
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center mt-2">
-                    <div class="bg-warning mr-2 rounded px-2 py-1 font-weight-bold text-2xl">
+                    <div class="bg-admin-group mr-2 rounded px-2 py-1 font-weight-bold">
                         <img class="icon-profile" src="{{ asset('img/icon-admin.png') }}" alt="icon-profile">Créateur du
                         groupe :
                     </div>
@@ -120,15 +121,16 @@
 
                 </div>
 
-                <div class="d-flex flex-wrap align-items-center mt-2">
-                    <div class="bg-success text-white mr-2 rounded px-2 py-1 font-weight-bold">
+                <div
+                    class="d-flex flex-wrap align-items-center text-white mt-2 border border-2 rounded px-2 py-1 bg-person-invited">
+                    <div class="mr-2">
                         <img class="icon-profile" src="{{ asset('img/icon-profile.png') }}" alt="icon-profile">Persons
                         invited :
                     </div>
 
                     @foreach ($members_of_group as $user)
 
-                        <div class="d-flex align-items-center mr-2">
+                        <div class="d-flex align-items-center mr-2 py-1 ">
                             <div class="chat-image">
                                 <div class="name-image">
                                     @php
@@ -214,7 +216,12 @@
             </div>
 
             <div class="chat-box">
-                <div class="chat-input bg-white" id="chatInput" contenteditable="true">Write your message here...
+                <div class="d-flex align-items-end">
+                    <div class="chat-input bg-white w-100" id="chatInput" contenteditable="true">Write your message here...
+                    </div>
+                    <div class="p-1">
+                        <button id="send-btn"><i class="fas fa-paper-plane fa-2x"></i></button>
+                    </div>
                 </div>
                 <div class="chat-input-toolbar">
                     <button title="Add File" class="btn btn-light btn-sm btn-fil-upload">
@@ -241,7 +248,8 @@
     </div>
 
     <!-- Audio Sound -->
-    <audio id="audio_sent" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
+    <audio id="audio_hp" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
+    <audio id="audio_arrow_mess" src="{{ asset('audio/1314.mp3') }}" preload="auto"></audio>
 
     <!-- Modal -->
     <div class="modal fade" id="Modal_add_to_group" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -547,12 +555,39 @@
                 if (find_attribute) {
                     console.log(true);
                     console.log('attribute exist');
-                    
+
                     /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
                     setTimeout(() => {
                         document.getElementById(attribute).remove()
                     }, 100);
 
+                }
+
+            })
+
+
+            $('#send-btn').on('click', e => {
+
+                let message = $chatInput.text().trim();
+                console.log(message);
+                let length_message = message.length
+
+                if (message == 'Write your message here...') {
+                    return
+                }
+
+                if (length_message > 0) {
+                    e.preventDefault()
+                    sendMessage(message);
+
+                    socket.emit('remove_writing_group', {
+                        sender_id: sender_id,
+                        sender_name: sender_name
+                    })
+
+                    $('#audio_arrow_mess')[0].play()
+
+                    $chatInput.empty();
                 }
 
             })
