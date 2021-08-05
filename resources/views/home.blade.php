@@ -3,10 +3,19 @@
 @section('content')
     <div class="row chat-row">
         <div class="col-md-3">
-            <div class="users">
-                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
 
-                <ul class="list-group list-chat-item mt-4">
+            <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
+
+            <div class="users">
+
+                <div class="d-flex py-1">
+                    <input type="text" class="w-100 input-search-user" placeholder="Search a user...">
+                    <button class="btn-loupe">
+                        <img src="{{ asset('img/loupe.png') }}" alt="loupe">
+                    </button>
+                </div>
+
+                <ul class="list-group list-chat-item mt-2">
                     @if ($users->count())
                         @foreach ($users as $user)
                             <li class="chat-user-list">
@@ -14,7 +23,7 @@
                                     class="d-flex align-items-center">
 
                                     <div class="chat-image bg-primary">
-                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
+                                        <i class="fa fa-circle fa-xs user-status-icon status-{{ $user->id }}"
                                             title="Away"></i>
                                         <div class="name-image">
                                             {{ makeShortCutName($user->firstname . ' ' . $user->lastname) }}
@@ -31,12 +40,13 @@
                 </ul>
             </div>
 
+
             <div class="mt-4">
                 <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
                     data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
                 </h5>
 
-                <ul class="list-group list-chat-item mt-4">
+                <ul class="list-group list-chat-item mt-2">
                     @if ($groups->count())
 
                         @foreach ($groups as $group)
@@ -88,16 +98,12 @@
 @endsection
 
 @push('scripts')
-
+    <script src="{{ asset('js/server-connexion.js') }}"></script>
     <script>
         $(function() {
             $('.js-example-basic-single').select2();
 
             let user_id = "{{ auth()->user()->id }}"
-
-            let ip_address = 'tchat.duckdns.org';
-            let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
 
             socket.emit('user_connected', user_id)
 
@@ -119,8 +125,8 @@
                 /* Chaque index contient un élement objet el {user_id et le socket_id} */
 
                 $.each(users, (index, el) => {
-                    if ($('#status-' + el.user_id)) {
-                        $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
+                    if ($('.status-' + el.user_id)) {
+                        $('.status-' + el.user_id).addClass('online').attr('title', 'Online')
                     }
                 })
             })

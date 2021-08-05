@@ -3,11 +3,19 @@
 @section('content')
     <div class="row chat-row">
         <div class="col-md-3">
+
+            <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
+
             <div class="users">
 
-                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
+                <div class="d-flex py-1">
+                    <input type="text" class="w-100 input-search-user" placeholder="Search a user...">
+                    <button class="btn-loupe">
+                        <img src="{{ asset('img/loupe.png') }}" alt="loupe">
+                    </button>
+                </div>
 
-                <ul class="list-group list-chat-item mt-4">
+                <ul class="list-group list-chat-item mt-2">
                     @if ($users->count())
                         @foreach ($users as $user)
 
@@ -29,8 +37,13 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
+                                    </div>
+
+                                    <div>
+                                        <img src="{{ asset('img/conversation.png') }}" alt="img-conversation"
+                                            class="img-conversation">
                                     </div>
                                 </a>
                             </li>
@@ -46,7 +59,7 @@
                     data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
                 </h5>
 
-                <ul class="list-group list-chat-item mt-4">
+                <ul class="list-group list-chat-item mt-2">
                     @if ($groups->count())
 
                         @foreach ($groups as $group)
@@ -80,7 +93,6 @@
                     @endif
                 </ul>
 
-
             </div>
         </div>
 
@@ -97,7 +109,8 @@
                 </div>
 
                 <div>
-                    <img class="icon-audio" src="{{ asset('img/hp-on.png') }}" alt="icon-audio" title="on/off sounds effects">
+                    <img class="icon-audio" src="{{ asset('img/hp-on.png') }}" alt="icon-audio"
+                        title="on/off sounds effects">
                 </div>
             </div>
 
@@ -194,14 +207,11 @@
 
 
 @push('scripts')
+    <script src="{{ asset('js/server-connexion.js') }}"></script>
     <script>
         $(function() {
 
             $('.js-example-basic-single').select2();
-
-            let ip_address = 'tchat.duckdns.org';
-            let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
 
             let $chatInput = $("#chatInput");
             let $chatInputTollbar = $('.chat-input-toolbar');
@@ -281,7 +291,7 @@
 
                 if (length_message > 0) {
 
-                    /* Si le champ n'est pas vide, on émet vers le serveur l'évènemet writing */
+                    /* Si le champ n'est pas vide, on émet vers le serveur */
 
                     socket.emit('is_writing', {
                         receiver_id: receiver_id,
@@ -328,7 +338,7 @@
 
             socket.on("private-channel:App\\Events\\PrivateMessageEvent", function(message) {
                 appendMessageToReceiver(message)
-                $('#audio_sent')[0].play()
+                $('#audio_hp')[0].play()
             })
 
             function appendMessageToReceiver(message) {
@@ -428,7 +438,7 @@
                     /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
                     setTimeout(() => {
                         document.getElementById(attribute).remove()
-                    }, 100);
+                    }, 1);
                 }
 
             })
@@ -436,7 +446,7 @@
             $('#send-btn').on('click', e => {
 
                 let message = $chatInput.text().trim();
-                /*                 console.log(message); */
+                console.log(message);
                 let length_message = message.length
 
                 if (message == 'Write your message here...') {

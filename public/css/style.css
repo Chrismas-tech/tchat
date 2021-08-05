@@ -137,6 +137,14 @@ a {
     background-color: #3490dc;
 }
 
+.users {
+    height: 418px;
+    overflow: auto;
+    border: 3px solid lightblue;
+    border-radius: 8px;
+    padding: 5px;
+}
+
 .user-status-icon,
 .user-status-head {
     position: absolute;
@@ -162,6 +170,33 @@ a {
     height: auto;
     margin-left: 10px;
     cursor: pointer;
+}
+
+.img-conversation {
+    width: 40px;
+    height: auto;
+}
+
+.arrow-back {
+    width: 25px;
+    height: auto;
+}
+
+.btn-loupe {
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+    border: 1px solid rgb(148, 143, 143);
+}
+
+.btn-loupe img {
+    width: 33px;
+    height: auto;
+    border: none;
+}
+
+.input-search-user {
+    border-radius: 8px 0 0 9px;
+    border: 1px solid rgb(148, 143, 143);
 }
 
 .chat-section {

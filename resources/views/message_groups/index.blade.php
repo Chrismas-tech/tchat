@@ -5,86 +5,55 @@
     <div class="row chat-row">
 
         <div class="col-md-3">
-            <div class="users">
-
-                <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
-
-                <ul class="list-group list-chat-item mt-4">
-                    @if ($users->count())
-                        @foreach ($users as $user)
-
-                            <li class="chat-user-list">
-
-                                <a href="{{ route('message.conversation', $user->id) }}"
-                                    class="d-flex align-items-center text-decoration-none">
-
-                                    <div class="chat-image">
-                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
-                                            title="Away"></i>
-                                        <div class="name-image">
-                                            @php
-                                                $user_name_full = $user->firstname . ' ' . $user->lastname . '';
-                                            @endphp
-                                            {{ makeShortCutName($user_name_full) }}
-                                        </div>
-                                    </div>
-
-                                    <div class="m-auto chat-name ml-1 font-bold">
-                                        {{ $user_name_full }} <span id="notif"></span>
-                                    </div>
-                                </a>
-                            </li>
-
-                        @endforeach
-                    @endif
-
-                </ul>
-            </div>
-
-            <div class="mt-5">
-                <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
-                    data-target="#Modal_add_to_group">Groups <i class="class text-secondary fa fa-plus ml-1"></i>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="w-max-content text-white bg-person-invited rounded px-2 py-2 m-0">
+                    <a class="text-white" href="{{ URL::previous() }}">Return Back</a>
+                    <img src="{{asset('img/Arrow-left.png')}}" alt="img-arrow" class="arrow-back">
                 </h5>
-
-                <ul class="list-group list-chat-item mt-3">
-                    @if ($groups->count())
-
-                        @foreach ($groups as $group)
-
-                            <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
-
-                            @if ($group->user_id == Auth::id())
-                                <a href="{{ route('message-groups.show', $group->id) }}">
-                                    <li
-                                        class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
-                                        {{ $group->name }}
-                                    </li>
-                                </a>
-                            @else
-
-                                <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
-
-                                @foreach ($group->message_group_members as $member)
-                                    @if ($member->user_id == Auth::id())
-
-                                        <a href="{{ route('message-groups.show', $group->id) }}">
-                                            <li
-                                                class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
-                                                {{ $group->name }}
-                                            </li>
-                                        </a>
-                                    @endif
-                                @endforeach
-
-                            @endif
-
-                        @endforeach
-                    @endif
-                </ul>
             </div>
+            <hr>
+            <h5 class="w-max-content text-white px-2 py-2 rounded add-user-group" data-toggle="modal"
+                data-target="#Modal_add_to_group">Add a group <i class="class text-secondary fa fa-plus ml-1"></i>
+            </h5>
+
+            <ul class="list-group list-chat-item mt-3">
+                @if ($groups->count())
+
+                    @foreach ($groups as $group)
+
+                        <!-- Si le créateur du groupe est l'utilisateur connecté alors on afficher un lien vers la page du groupe -->
+
+                        @if ($group->user_id == Auth::id())
+                            <a href="{{ route('message-groups.show', $group->id) }}">
+                                <li class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
+                                    {{ $group->name }}
+                                </li>
+                            </a>
+                        @else
+
+                            <!-- Sinon pour chacun des membres du groupe, si le user_id est égal à l'utilisateur connecté alors on lui affiche aussi le lien vers le groupe -->
+
+                            @foreach ($group->message_group_members as $member)
+                                @if ($member->user_id == Auth::id())
+
+                                    <a href="{{ route('message-groups.show', $group->id) }}">
+                                        <li
+                                            class="chat-group-list {{ $group->id == $currentGroup->id ? 'active-group' : '' }}">
+                                            {{ $group->name }}
+                                        </li>
+                                    </a>
+                                @endif
+                            @endforeach
+
+                        @endif
+
+                    @endforeach
+                @endif
+            </ul>
         </div>
 
-        <div class="col-md-9 chat-section">
+
+        <div class="col-md-9 chat-section rounded">
             <div class="chat-header">
 
                 <div class="d-flex align-items-center">
@@ -127,21 +96,24 @@
                         <img class="icon-profile" src="{{ asset('img/icon-profile.png') }}" alt="icon-profile">Persons
                         invited :
                     </div>
-
-                    @foreach ($members_of_group as $user)
+                    {{-- {{dd($members_of_group)}} --}}
+                    @foreach ($members_of_group as $member)
 
                         <div class="d-flex align-items-center mr-2 py-1 ">
                             <div class="chat-image">
+
+                                <i class="fa fa-circle fa-xs user-status-icon status-{{ $member->user->id }}"
+                                    title="Away"></i>
                                 <div class="name-image">
                                     @php
-                                        $user_of_group = $user->user->firstname . ' ' . $user->user->lastname . '';
+                                        $member_of_group = $member->user->firstname . ' ' . $member->user->lastname . '';
                                     @endphp
-                                    {{ makeShortCutName($user_of_group) }}
+                                    {{ makeShortCutName($member_of_group) }}
                                 </div>
                             </div>
 
                             <div class="chat-name ml-1 font-bold">
-                                {{ $user->user->firstname }} {{ $user->user->lastname }}
+                                {{ $member->user->firstname }} {{ $member->user->lastname }}
                             </div>
                         </div>
                     @endforeach
@@ -212,7 +184,6 @@
             </div>
 
             <div class="d-flex font-italic" id="writing">
-
             </div>
 
             <div class="chat-box">
@@ -297,14 +268,11 @@
 
 
 @push('scripts')
+    <script src="{{ asset('js/server-connexion.js') }}"></script>
     <script>
         $(function() {
 
             $('.js-example-basic-single').select2()
-
-            let ip_address = 'tchat.duckdns.org';
-            let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
 
             let $chatInput = $("#chatInput")
             let $chatInputTollbar = $('.chat-input-toolbar')
@@ -345,10 +313,12 @@
                 */
 
                 /* Chaque index contient un élement objet el {user_id et le socket_id} */
-
+                console.log(users);
                 $.each(users, (index, el) => {
-                    if ($('#status-' + el.user_id)) {
-                        $('#status-' + el.user_id).addClass('online').attr('title', 'Online')
+
+                    if ($('.status-' + el.user_id)) {
+                        console.log('match');
+                        $('.status-' + el.user_id).addClass('online').attr('title', 'Online')
                     }
                 })
 
@@ -464,14 +434,16 @@
             /* -------------------------------------------------------------------*/
 
             $('.icon-audio').on('click', function() {
-                if ($(this).attr('src') == '{{ asset('img/haut-parleur-on.png') }}') {
+                if ($(this).attr('src') == '{{ asset('img/hp-on.png') }}') {
                     console.log('ON -> OFF');
-                    $(this).attr('src', '{{ asset('img/haut-parleur-off.png') }}')
-                    $('#audio_sent').attr('src', '')
+                    $(this).attr('src', '{{ asset('img/hp-off.png') }}')
+                    $('#audio_hp').attr('src', '')
+                    $('#audio_arrow_mess').attr('src', '')
                 } else {
                     console.log('OFF -> ON');
-                    $(this).attr('src', '{{ asset('img/haut-parleur-on.png') }}')
-                    $('#audio_sent').attr('src', '{{ asset('audio/1313.mp3') }}')
+                    $(this).attr('src', '{{ asset('img/hp-on.png') }}')
+                    $('#audio_hp').attr('src', '{{ asset('audio/1313.mp3') }}')
+                    $('#audio_arrow_mess').attr('src', '{{ asset('audio/1314.mp3') }}')
                 }
             })
 
@@ -559,12 +531,11 @@
                     /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
                     setTimeout(() => {
                         document.getElementById(attribute).remove()
-                    }, 100);
+                    }, 1);
 
                 }
 
             })
-
 
             $('#send-btn').on('click', e => {
 
