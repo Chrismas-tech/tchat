@@ -756,7 +756,7 @@
                     img.setAttribute('data-toggle', 'modal')
                     img.setAttribute('data-target', '#Modal_zoom_image')
 
-                    let $friend_full_name = '{{ $friend_full_name }}';
+                    let $friend_full_name = datas.sender_name;
                     let $image = '{{ makeShortCutName($friend_full_name) }}';
 
                     let new_message =
