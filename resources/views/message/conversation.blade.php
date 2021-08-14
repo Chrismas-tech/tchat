@@ -696,8 +696,15 @@
             })
 
             function sendImage(images) {
+                
                 console.log('SEND IMAGES');
                 console.log(images);
+
+                console.log('sender_id');
+                console.log(sender_id);
+
+                console.log('sender_name');
+                console.log(sender_name);
 
                 console.log('receiver_id');
                 console.log(receiver_id);
@@ -795,8 +802,6 @@
             }
 
             function appendImageToSender(images) {
-                console.log("SENDER IMAGE RECEIVED");
-                console.log(images)
 
                 images.forEach(data => {
 
