@@ -9,10 +9,10 @@ const io = require('socket.io')(httpServer, {
     cors: { origin: "*" }
 });
 
+httpServer.listen(3000)
+
 const Redis = require('ioredis');
 const redis = new Redis();
-
-httpServer.listen(3000)
 
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
@@ -170,17 +170,24 @@ redis.on('message', (channel, message) => {
 
     if (channel == 'image-channel') {
 
-        console.log('IMAGE CHANNEL');
+        /* console.log('IMAGE CHANNEL'); */
         console.log(message);
 
         let images = message.data.data
-        let event = message.data.event
+
+        console.log(images);
 
         images.forEach(image => {
 
+            let receiver_id = image.receiver_id
+            let sender_name = image.sender_name
+
+            console.log(receiver_id);
+            console.log(sender_name);
+
             users.forEach(user => {
                 if (image.receiver_id == user.user_id) {
-                    io.to(user.socket_id).emit('image', { data: image.base64 })
+                    io.to(user.socket_id).emit('image', { data: image.base64, receiver_id: receiver_id, sender_name: sender_name })
                 }
             });
 

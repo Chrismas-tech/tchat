@@ -38,7 +38,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                                                            {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
 
@@ -742,36 +742,40 @@
                 $('#audio_hp')[0].play()
             })
 
-            function appendImageToReceiver(image) {
+            function appendImageToReceiver(datas) {
 
                 console.log("DATA IMAGE RECEIVED");
-                console.log(image);
+                console.log(datas);
 
-                let img = document.createElement('img')
-                img.src = image.data
-                img.className = "img-style-append";
-                img.setAttribute('data-toggle', 'modal')
-                img.setAttribute('data-target', '#Modal_zoom_image')
+                if (datas.receiver_id == receiver_id) {
 
-                let $friend_full_name = '{{ $friend_full_name }}';
-                let $image = '{{ makeShortCutName($friend_full_name) }}';
+                    let img = document.createElement('img')
+                    img.src = image.data
+                    img.className = "img-style-append";
+                    img.setAttribute('data-toggle', 'modal')
+                    img.setAttribute('data-target', '#Modal_zoom_image')
 
-                let new_message =
-                    '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name + ' ' +
-                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div></div></div>';
+                    let $friend_full_name = '{{ $friend_full_name }}';
+                    let $image = '{{ makeShortCutName($friend_full_name) }}';
 
-                $('#messageWrapper').append(new_message)
+                    let new_message =
+                        '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
+                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name +
+                        ' ' +
+                        '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
+                        getCurrentTime() + '</span></div></div></div></div>';
 
-                let div_image_append = document.createElement('div')
-                div_image_append.style.display = 'flex'
-                div_image_append.style.justifyContent = 'flex-start'
+                    $('#messageWrapper').append(new_message)
 
-                div_image_append.append(img)
+                    let div_image_append = document.createElement('div')
+                    div_image_append.style.display = 'flex'
+                    div_image_append.style.justifyContent = 'flex-start'
 
-                $('#messageWrapper').append(div_image_append)
-                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+                    div_image_append.append(img)
+
+                    $('#messageWrapper').append(div_image_append)
+                    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+                }
             }
 
             function appendImageToSender(images) {
