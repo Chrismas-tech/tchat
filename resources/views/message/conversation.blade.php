@@ -669,8 +669,10 @@
                         reader.onload = function(e) {
                             data = {
                                 base64: e.target.result,
-                                receiver_id: receiver_id,
+                                sender_id: sender_id,
                                 sender_name: sender_name,
+                                receiver_id: receiver_id,
+                                receiver_name: receiver_name,
                             }
 
                             img_preview.src = e.target.result;
@@ -721,10 +723,6 @@
                     data: {
                         images: images,
                         _token: "{{ csrf_token() }}",
-                        sender_id: sender_id,
-                        sender_name: sender_name,
-                        receiver_id: receiver_id,
-                        receiver_name: receiver_name
                     },
 
                     success: function(response, status) {
