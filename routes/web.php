@@ -36,5 +36,9 @@ Route::get('message-groups/{groupId}', [App\Http\Controllers\MessageGroupControl
 Route::post('send-group-message', [App\Http\Controllers\MessageController::class, 'sendGroupMessage'])
 ->name('message.send-group-message');
 
+Route::post('send-image', [App\Http\Controllers\MessageController::class, 'sendImage'])
+->name('message.send-image');
+
+
 
 
