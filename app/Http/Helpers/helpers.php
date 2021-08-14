@@ -17,9 +17,20 @@ function makeShortCutName($name)
 
 function created_at_format_date($date)
 {
-   /*  dd($date); */
     $currentDateTime = $date;
     $newDateTime = date('h:i A', strtotime($currentDateTime));
 
     return $newDateTime;
+}
+
+function string_to_html_plus_clean_div($message)
+{
+    $message_converted = htmlspecialchars_decode($message);
+    echo $message_converted;
+}
+
+function contains_html_tags($message)
+{
+    $match = preg_match('#(&lt;[a-z]+&gt;)+#', $message);
+    return $match;
 }
