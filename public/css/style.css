@@ -1,5 +1,7 @@
 body {
     font-size: 18px;
+    padding: 0;
+    margin: 0;
 }
 
 a {
@@ -14,8 +16,20 @@ a {
     background: radial-gradient(ellipse at center, #0264d6 1%, #1c2b5a 100%);
 }
 
+.bg-blue {
+    background-color: #3490dc;
+}
+
 .bg-purple {
     background-color: rgba(109, 40, 217);
+}
+
+.bg-person-invited {
+    background-color: #2f7093;
+}
+
+.bg-admin-group {
+    background-color: #4aff8f !important;
 }
 
 .click-here {
@@ -45,9 +59,18 @@ a {
     transform: translate(-50%, -50%);
 }
 
+.width-register {
+    width: 50%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
 .icon-login {
     border-radius: 0.25rem;
-    padding: 0.9rem;
+    padding: 0.8rem;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
     background-color: #fff;
@@ -61,7 +84,6 @@ a {
 ::-webkit-scrollbar {
     width: 0px;
     /* Remove scrollbar space */
-    background: transparent;
     /* Optional: just make scrollbar invisible */
 }
 
@@ -120,12 +142,24 @@ a {
     background-color: #3490dc;
 }
 
+.users {
+    height: 418px;
+    overflow: auto;
+    border: 3px solid lightblue;
+    border-radius: 8px;
+    padding: 5px;
+}
+
 .user-status-icon,
 .user-status-head {
     position: absolute;
     top: -1px;
     right: -2px;
     color: #abacaa;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .online {
@@ -147,9 +181,72 @@ a {
     cursor: pointer;
 }
 
+.img-conversation {
+    width: 40px;
+    height: auto;
+}
+
+#ErrorTag img {
+    width: 35px;
+    height: auto;
+    cursor: pointer;
+}
+
+.blue-hover-style {
+    background-color: #2643ec;
+}
+
+.arrow-back {
+    width: 25px;
+    height: auto;
+}
+
+.btn-loupe {
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+    border: 1px solid rgb(148, 143, 143);
+}
+
+.btn-loupe img {
+    width: 33px;
+    height: auto;
+    border: none;
+}
+
+.attach-photo {
+    cursor: pointer;
+    font-size: 15px;
+    margin: 0;
+}
+
+.img-attach {
+    width: 33px !important;
+    height: auto;
+    padding: 2px;
+}
+
+.div-send-photos {
+    padding: 0 7px;
+    margin: 0 4px;
+    border-radius: 5px;
+}
+
+.image-send-btn {
+    border: none;
+    padding: 2px 7px;
+    border-radius: 5px;
+}
+
+.input-search-user {
+    border-radius: 8px 0 0 9px;
+    border: 1px solid rgb(148, 143, 143);
+    padding: 6px;
+}
+
 .chat-section {
     border: solid 1px lightgray;
     background: #fff;
+    padding-bottom: 15px;
 }
 
 .chat-header {
@@ -161,14 +258,17 @@ a {
 .chat-body {
     height: calc(40vh);
     position: relative;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
     overflow: auto;
 }
 
 .message-text {
     margin-left: 60px;
     margin-top: -10px;
+}
+
+#send-btn {
+    border: none;
+    background-color: #fff;
 }
 
 #chatInput {
@@ -181,7 +281,7 @@ a {
 }
 
 .chat-input-toolbar {
-    padding: 15px 0;
+    padding: 5px 0;
 }
 
 .add-user-group {
@@ -224,6 +324,64 @@ a {
 
 .writing-gif {
     height: 10px;
+}
+
+#bold,
+#italic,
+#underline {
+    padding: 2px 11px !important;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 0 4px;
+}
+
+.div-image-preview {
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.img-preview {
+    width: 44px;
+    height: auto;
+    margin-right: 10px;
+    border: 1px dashed lightgray;
+    padding: 2px;
+    position: relative
+}
+
+.cross-image-preview {
+    width: 20px;
+    height: auto;
+    position: absolute;
+    top: -5px;
+    right: 1px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.img-style-append {
+    width: 100px !important;
+    height: auto;
+    border: 1px dashed lightgrey !important;
+    padding: 5px !important;
+    cursor: pointer !important;
+}
+
+.modal-content {
+    position: relative;
+}
+
+.modal_cross_absolute {
+    position: absolute;
+    top: -8px;
+    right: -7px;
+}
+
+.modal_cross_image_width {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
 }
 
 
