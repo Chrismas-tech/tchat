@@ -42,7 +42,7 @@ io.on('connection', socket => {
         io.emit('UserStatus', users)
     })
 
-    /* GROUP */
+    /* GROUP  */
     /* GROUP */
     socket.on('is_writing_group', (data) => {
         socket.broadcast.emit('is_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
