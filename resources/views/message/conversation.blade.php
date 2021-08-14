@@ -748,7 +748,7 @@
                 console.log(datas.receiver_id);
                 console.log(receiver_id);
 
-                if (datas.receiver_id == receiver_id) {
+                if (datas.receiver_id == '{{ Auth::id() }}') {
 
                     let img = document.createElement('img')
                     img.src = image.data
