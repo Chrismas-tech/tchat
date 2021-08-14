@@ -1,15 +1,18 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http, {
+const fs = require('fs');
+
+const httpServer = require("https").createServer({
+    key: fs.readFileSync('./ssl/privkey.pem'),
+    cert: fs.readFileSync('./ssl/cert.pem')
+});
+
+const io = require('socket.io')(httpServer, {
     cors: { origin: "*" }
 });
+
 const Redis = require('ioredis');
-const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-http.listen(3000, function() {
-    console.log('Listening to port 3000');
-});
+httpServer.listen(3000)
 
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
