@@ -186,8 +186,8 @@ redis.on('message', (channel, message) => {
             let receiver_id = image.receiver_id
 
             console.log(sender_id);
-            console.log(receiver_id);
             console.log(sender_name);
+            console.log(receiver_id);
             console.log(receiver_name);
 
             users.forEach(user => {

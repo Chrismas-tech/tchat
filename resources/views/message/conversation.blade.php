@@ -714,8 +714,10 @@
                     data: {
                         images: images,
                         _token: "{{ csrf_token() }}",
-                        receiver_id: receiver_id,
                         sender_id: sender_id,
+                        sender_name: sender_name,
+                        receiver_id: receiver_id,
+                        receiver_name: receiver_name
                     },
 
                     success: function(response, status) {
