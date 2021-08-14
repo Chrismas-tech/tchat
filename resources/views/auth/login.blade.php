@@ -1,4 +1,4 @@
-@extends('templates.login-template')
+@extends('templates.auth-template')
 
 @section('content')
     <div class="mb-4">
