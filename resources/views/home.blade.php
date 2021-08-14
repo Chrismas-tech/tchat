@@ -89,16 +89,12 @@
 @endsection
 
 @push('scripts')
-
+    <script src="{{ asset('js/server-connexion.js') }}"></script>
     <script>
         $(function() {
             $('.js-example-basic-single').select2();
 
             let user_id = "{{ auth()->user()->id }}"
-
-            let ip_address = 'tchat.duckdns.org';
-            let socket_port = '3000';
-            let socket = io(ip_address + ':' + socket_port)
 
             socket.emit('user_connected', user_id)
 
