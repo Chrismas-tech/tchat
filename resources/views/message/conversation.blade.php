@@ -699,6 +699,13 @@
                 console.log('SEND IMAGES');
                 console.log(images);
 
+                console.log('receiver_id');
+                console.log(receiver_id);
+
+                console.log('receiver_name');
+                console.log(receiver_name);
+                
+
                 $.ajax({
                     url: "{{ route('message.send-image') }}", // La ressource ciblée
                     method: 'POST', // Le type de la requête HTTP
@@ -747,6 +754,7 @@
                 console.log(datas);
                 console.log(datas.receiver_id);
                 console.log(receiver_id);
+                console.log('{{ Auth::id() }}');
 
                 if (datas.receiver_id == '{{ Auth::id() }}') {
 
