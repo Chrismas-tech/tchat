@@ -751,7 +751,7 @@
                 if (datas.receiver_id == '{{ Auth::id() }}') {
 
                     let img = document.createElement('img')
-                    img.src = image.data
+                    img.src = datas.data
                     img.className = "img-style-append";
                     img.setAttribute('data-toggle', 'modal')
                     img.setAttribute('data-target', '#Modal_zoom_image')
