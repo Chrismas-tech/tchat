@@ -254,7 +254,6 @@
     @include('modals.zoom-image')
 @endsection
 
-
 @push('scripts')
     <script src="{{ asset('js/server-connexion.js') }}"></script>
     <script>
