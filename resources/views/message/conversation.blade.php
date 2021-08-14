@@ -739,7 +739,6 @@
 
             socket.on('image', (image) => {
                 appendImageToReceiver(image)
-                $('#audio_hp')[0].play()
             })
 
             function appendImageToReceiver(datas) {
@@ -774,6 +773,7 @@
                     div_image_append.append(img)
 
                     $('#messageWrapper').append(div_image_append)
+                    $('#audio_hp')[0].play()
                     $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
                 }
             }
