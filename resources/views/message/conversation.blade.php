@@ -745,6 +745,8 @@
 
                 console.log("DATA IMAGE RECEIVED");
                 console.log(datas);
+                console.log(datas.receiver_id);
+                console.log(receiver_id);
 
                 if (datas.receiver_id == receiver_id) {
 
