@@ -5,7 +5,7 @@
         <div class="col-md-3">
             <div class="users">
                 <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
- 
+
                 <ul class="list-group list-chat-item mt-4">
                     @if ($users->count())
                         @foreach ($users as $user)
@@ -83,8 +83,9 @@
         </div>
     </div>
 
-
-    @include('templates.modal')
+    <!-- Modal -->
+    @include('modals.group-modal')
+    @include('modals.zoom-image')
 @endsection
 
 @push('scripts')
@@ -113,10 +114,10 @@
                 userStatusIcon.attr('title', 'Away');
 
                 /* Pour tous les utilisateurs connectés  :
-                Si #status-el.user_id existe ---> alors on ajoute une classe car l'utilisateur en question est connecté
+                Si #status-el.user_id existe ---> alors on ajoute une classe car l'utilisateur en question est connecté 
                 */
 
-                /* Chaque index contient un élement objet el {user_id et le socket_id} */
+                /*    Chaque index contient un élement objet el {user_id et le socket_id} */
 
                 $.each(users, (index, el) => {
                     if ($('#status-' + el.user_id)) {
