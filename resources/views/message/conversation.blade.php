@@ -645,8 +645,6 @@
                 let div_preview = document.getElementById('images-preview')
                 div_preview.innerHTML = "";
 
-                /* console.log(this.files); */
-
                 if (this.files) {
 
                     images = [];
@@ -659,10 +657,6 @@
 
                         let img_preview = document.createElement('img')
                         img_preview.classList.add('img-preview')
-
-                        /* let cross_image = document.createElement('img')
-                        cross_image.classList.add('cross-image-preview')
-                        cross_image.src = "{{ asset('img/cross-upload.png') }}" */
 
                         let reader = new FileReader()
 
@@ -683,7 +677,6 @@
 
                         div_preview.append(div_image_preview)
                         div_image_preview.append(img_preview)
-                        /* div_image_preview.append(cross_image) */
 
                     }
                 }
@@ -698,22 +691,6 @@
             })
 
             function sendImage(images) {
-                
-                console.log('SEND IMAGES');
-                console.log(images);
-
-                console.log('sender_id');
-                console.log(sender_id);
-
-                console.log('sender_name');
-                console.log(sender_name);
-
-                console.log('receiver_id');
-                console.log(receiver_id);
-
-                console.log('receiver_name');
-                console.log(receiver_name);
-                
 
                 $.ajax({
                     url: "{{ route('message.send-image') }}", // La ressource ciblée
@@ -759,13 +736,7 @@
             function appendImageToReceiver(datas) {
 
                 console.log("DATA IMAGE RECEIVED");
-                console.log(datas);
-
-                console.log(datas.receiver_id);
-                console.log(datas.receiver_name);
-
-                console.log(datas.sender_id);
-                console.log(datas.sender_name);
+                console.log(datas); 
 
                 if (datas.receiver_id == '{{ Auth::id() }}' && datas.sender_id == "{{ $friendInfo->id }}") {
 
