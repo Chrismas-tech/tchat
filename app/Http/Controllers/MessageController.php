@@ -141,7 +141,6 @@ class MessageController extends Controller
 
     public function sendImage(Request $request)
     {
-        dd($request->images);
         
         foreach ($request->images as $image) {
 
