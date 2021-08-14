@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PrivateGroupEvent;
+use App\Events\PrivateImageEvent;
 use App\Events\PrivateMessageEvent;
 use App\Models\Message;
 use App\Models\MessageGroup;
@@ -14,15 +15,14 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
     }
-    
+
     public function conversation($userId)
     {
-        $users = User::where('id', '!=', Auth::id())->get();
+        $users = User::where('id', '!=', Auth::id())->orderBy('lastname')->get();
         $user = Auth::user();
 
         $user_full_name = $user->firstname . ' ' . $user->lastname;
@@ -43,6 +43,16 @@ class MessageController extends Controller
             'message' => 'required',
             'receiver_id' => 'required',
         ]);
+
+
+        /* Si le contenu du message contient des balises html */
+        $message = contains_html_tags($request->message);
+
+        if ($message == 1) {
+            return response()->json([
+                'ErrorTag' => true
+            ]);
+        }
 
         /* Creating Message */
         $datas_message = [
@@ -83,6 +93,16 @@ class MessageController extends Controller
             'group_id' => 'required',
         ]);
 
+
+        /* Si le contenu du message contient des balises html */
+        $message = contains_html_tags($request->message);
+
+        if ($message == 1) {
+            return response()->json([
+                'ErrorTag' => true
+            ]);
+        }
+
         /* Creating Message */
         $datas_message = [
             'message' => $request->message,
@@ -116,6 +136,44 @@ class MessageController extends Controller
             } catch (Exception $e) {
                 return $e->getMessage();
             }
+        }
+    }
+
+    public function sendImage(Request $request)
+    {
+        
+        foreach ($request->images as $image) {
+
+            $datas_message = [
+                'message' => $image['base64'],
+                'type' => 2,
+            ];
+
+            $count_message = Message::all()->count();
+
+            $datas_user_message = [
+                'message_id' => $count_message + 1,
+                'sender_id' => Auth::id(),
+                'sender_name' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
+                'receiver_id' => $image['receiver_id'],
+                'content' => $request->message,
+            ];
+
+            Message::create($datas_message);
+            UserMessage::create($datas_user_message);
+        }
+
+        event(new PrivateImageEvent($request->images));
+
+        try {
+            return response()->json([
+                'message' => $datas_message,
+                'datas_user_message' => $datas_user_message,
+                'success' => true,
+                'confirmation' => 'Images sent successfully'
+            ]);
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 }
