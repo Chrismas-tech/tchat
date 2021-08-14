@@ -179,15 +179,18 @@ redis.on('message', (channel, message) => {
 
         images.forEach(image => {
 
-            let receiver_id = image.receiver_id
             let sender_name = image.sender_name
+            let sender_id = image.sender_id
+
+            let receiver_name = image.receiver_name
+            let receiver_id = image.receiver_id
 
             console.log(receiver_id);
             console.log(sender_name);
 
             users.forEach(user => {
                 if (image.receiver_id == user.user_id) {
-                    io.to(user.socket_id).emit('image', { data: image.base64, receiver_id: receiver_id, sender_name: sender_name })
+                    io.to(user.socket_id).emit('image', { data: image.base64, sender_id: sender_id, sender_name: sender_name, receiver_id: receiver_id, receiver_name: receiver_name, })
                 }
             });
 

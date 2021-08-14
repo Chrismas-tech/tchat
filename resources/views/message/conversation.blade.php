@@ -715,6 +715,7 @@
                         images: images,
                         _token: "{{ csrf_token() }}",
                         receiver_id: receiver_id,
+                        sender_id: sender_id,
                     },
 
                     success: function(response, status) {
@@ -752,11 +753,14 @@
 
                 console.log("DATA IMAGE RECEIVED");
                 console.log(datas);
-                console.log(datas.receiver_id);
-                console.log(receiver_id);
-                console.log('{{ Auth::id() }}');
 
-                if (datas.receiver_id == '{{ Auth::id() }}') {
+                console.log(datas.receiver_id);
+                console.log(datas.receiver_name);
+
+                console.log(datas.sender_id);
+                console.log(datas.sender_name);
+
+                if (datas.receiver_id == '{{ Auth::id() }}' && datas.sender_id == "{{ $friendInfo->id }}") {
 
                     let img = document.createElement('img')
                     img.src = datas.data
