@@ -1,18 +1,15 @@
-const fs = require('fs');
-
-const httpServer = require("https").createServer({
-    key: fs.readFileSync('./ssl/privkey.pem'),
-    cert: fs.readFileSync('./ssl/cert.pem')
-});
-
-const io = require('socket.io')(httpServer, {
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http, {
     cors: { origin: "*" }
 });
-
 const Redis = require('ioredis');
+const { sortedIndex } = require('lodash');
 const redis = new Redis();
 
-httpServer.listen(3000)
+http.listen(3000, function() {
+    console.log('Listening to port 3000');
+});
 
 redis.subscribe('private-channel', function() {
     console.log('Subscribed to private channel')
@@ -22,6 +19,11 @@ redis.subscribe('group-channel', function() {
     console.log('Subscribed to group channel')
 })
 
+redis.subscribe('image-channel', function() {
+    console.log('Subscribed to image channel')
+})
+
+let users_group = [];
 let users = [];
 let groups = [];
 let room_to_leave;
@@ -45,8 +47,6 @@ io.on('connection', socket => {
 
     socket.on('remove_writing_group', (data) => {
 
-        console.log('REMOVE WRITING EVENT');
-
         socket.broadcast.emit('remove_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
     })
 
@@ -56,21 +56,17 @@ io.on('connection', socket => {
     socket.on('is_writing', (data) => {
         users.forEach(user => {
             if (data.receiver_id == user.user_id) {
-                console.log('BROADCAST send writing');
-                console.log(user.socket_id);
-                io.to(user.socket_id).emit('is_writing', { user_id: data.receiver_id, user_name: data.receiver_name })
+                io.to(user.socket_id).emit('is_writing', { user_id: data.receiver_id, user_name: data.sender_name })
             }
         });
     })
 
     socket.on('remove_writing', (data) => {
 
-        console.log('REMOVE WRITING EVENT');
-
         users.forEach(user => {
             if (data.receiver_id == user.user_id) {
                 /*  console.log('send remove'); */
-                io.to(user.socket_id).emit('remove_writing', { user_id: data.receiver_id, user_name: data.receiver_name })
+                io.to(user.socket_id).emit('remove_writing', { user_id: data.receiver_id, user_name: data.sender_name })
             }
         });
     })
@@ -126,16 +122,18 @@ io.on('connection', socket => {
 
         }
     })
+
 })
 
 
 redis.on('message', (channel, message) => {
+    console.log("REDIS");
 
     message = JSON.parse(message)
 
     if (channel == 'private-channel') {
 
-        /* console.log('PRIVATE CHANNEL'); */
+        console.log('PRIVATE CHANNEL');
         let data = message.data.data;
         let receiver_id = data.receiver_id;
         let event = message.event;
@@ -149,8 +147,10 @@ redis.on('message', (channel, message) => {
     }
 
     if (channel == 'group-channel') {
-
+        console.log('GROUP CHANNEL');
         let data = message.data.data;
+
+        console.log(message);
 
         if (data.type == 1) {
 
@@ -161,9 +161,28 @@ redis.on('message', (channel, message) => {
             /* Astuce : on émet pour tout le groupe, mais du côté client on appendra pour tous les utilisateurs sauf l'expéditeur */
 
             io.to('group' + data.message_group_id).emit('groupMessage', data);
-
-            console.log('BROADCAST DONE');
         }
+    }
+
+
+    if (channel == 'image-channel') {
+
+        console.log('IMAGE CHANNEL');
+        console.log(message);
+
+        let images = message.data.data
+        let event = message.data.event
+
+        images.forEach(image => {
+
+            users.forEach(user => {
+                if (image.receiver_id == user.user_id) {
+                    io.to(user.socket_id).emit('image', { data: image.base64 })
+                }
+            });
+
+        });
+
     }
 })
 
