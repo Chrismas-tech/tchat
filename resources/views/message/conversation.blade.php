@@ -738,7 +738,7 @@
                 console.log("DATA IMAGE RECEIVED");
                 console.log(datas); 
 
-                if (datas.receiver_id == '{{ Auth::id() }}' && datas.sender_id == "{{ $friendInfo->id }}") {
+                if (datas.sender_id == "{{ $friendInfo->id }}") {
 
                     let img = document.createElement('img')
                     img.src = datas.data
