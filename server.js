@@ -57,9 +57,15 @@ io.on('connection', socket => {
     /* USER TO USER */
 
     socket.on('is_writing', (data) => {
+
         users.forEach(user => {
             if (data.receiver_id == user.user_id) {
-                io.to(user.socket_id).emit('is_writing', { user_id: data.receiver_id, user_name: data.sender_name })
+                io.to(user.socket_id).emit('is_writing', {
+                    receiver_id: data.receiver_id,
+                    receiver_name: data.receiver_name,
+                    sender_id: data.sender_id,
+                    sender_name: data.sender_name
+                })
             }
         });
     })
@@ -69,7 +75,12 @@ io.on('connection', socket => {
         users.forEach(user => {
             if (data.receiver_id == user.user_id) {
                 /*  console.log('send remove'); */
-                io.to(user.socket_id).emit('remove_writing', { user_id: data.receiver_id, user_name: data.sender_name })
+                io.to(user.socket_id).emit('remove_writing', {
+                    receiver_id: data.receiver_id,
+                    receiver_name: data.receiver_name,
+                    sender_id: data.sender_id,
+                    sender_name: data.sender_name
+                })
             }
         });
     })
