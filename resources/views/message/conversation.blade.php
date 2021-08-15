@@ -198,7 +198,7 @@
 
             <div class="chat-box">
                 <div class="chat-input-toolbar d-flex">
-                    <button id="bold" title="Bold" class="text-white bg-blue">
+                    {{-- <button id="bold" title="Bold" class="text-white bg-blue">
                         <i class="fa fa-bold tool-icon"></i>
                     </button>
                     |
@@ -209,7 +209,7 @@
                     <button id="underline" title="Underline" class="text-white bg-blue">
                         <i class="fa fa-underline tool-icon"></i>
                     </button>
-                    |
+                    | --}}
                     <form id="form_send_image">
                         @csrf
                         <div class="d-flex align-items-center">
@@ -396,7 +396,7 @@
             })
 
 
-            $('#bold').on('click', () => {
+            /* $('#bold').on('click', () => {
                 console.log('bold');
                 document.execCommand('bold', false, null)
                 if ($('#bold').hasClass('bg-blue')) {
@@ -436,7 +436,7 @@
                     $('#underline').removeClass('blue-hover-style')
                     $('#underline').addClass('bg-blue')
                 }
-            })
+            }) */
 
             /*---------------------------------------------------------------------------------------*/
             /*---------------------------------------------------------------------------------------*/
