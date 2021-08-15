@@ -388,6 +388,7 @@ input[type="file"] {
 
 .modal-content {
     position: relative;
+    border: solid 3px white;
 }
 
 .modal_cross_absolute {
