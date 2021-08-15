@@ -38,7 +38,7 @@
 
                                     <div
                                         class="m-auto chat-name ml-1 font-bold 
-                                                                                                                                                                {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                                                                                                                                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
 
@@ -185,18 +185,9 @@
                 </div>
             </div>
 
-            <div class="d-flex font-italic" id="writing">
-            </div>
-
-            <div id="ErrorTag" style="display:none">
-                <div class="d-flex align-items-center">
-                    <p class="text-danger font-italic ml-1 mb-1 px-1 rounded">
-                        Html Tags are not allowed in your message ! <img src="{{ asset('img/cross.png') }}" alt="cross">
-                    </p>
-                </div>
-            </div>
-
             <div class="chat-box">
+                <div class="d-flex font-italic" id="writing">
+                </div>
                 <div class="chat-input-toolbar d-flex">
                     {{-- <button id="bold" title="Bold" class="text-white bg-blue">
                         <i class="fa fa-bold tool-icon"></i>
@@ -219,7 +210,6 @@
                                 <input type="file" name="file[]" id="file" accept="image/*" multiple>
                             </div>
                             <div class="d-none p-0 m-0 btn-image-send">
-                                |
                                 <button type="button" class="text-white image-send-btn rounded bg-success border-none">Send
                                     files</button>
                             </div>
@@ -228,7 +218,14 @@
                 </div>
 
                 <div id="images-preview" class="d-flex align-items-center">
+                </div>
+            </div>
 
+            <div id="ErrorTag" style="display:none">
+                <div class="d-flex align-items-center">
+                    <p class="text-danger font-italic ml-1 mb-1 px-1 rounded">
+                        Html Tags are not allowed in your message ! <img src="{{ asset('img/cross.png') }}" alt="cross">
+                    </p>
                 </div>
             </div>
 
@@ -259,6 +256,8 @@
     <script>
         $(function() {
 
+
+            $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
             $('.js-example-basic-single').select2();
 
             /* GLOBAL VARIABLES */
@@ -278,8 +277,6 @@
             /*---------------------------------------------------------------------------------------*/
 
             socket.emit('user_connected', sender_id)
-
-            $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
 
             socket.on('UserStatus', users => {
 
@@ -319,7 +316,7 @@
                     Si l'on clique sur un élement style puis sur le champ au chargement de la page, la fonction CommandExec ne rentre plus en compte, je contourne le problème en rétablissant les styles à 0 d'abord
                     */
 
-                    if ($('#bold').hasClass('blue-hover-style')) {
+                    /* if ($('#bold').hasClass('blue-hover-style')) {
                         console.log('blue foncé');
                         $('#bold').removeClass('blue-hover-style')
                         $('#bold').addClass('bg-blue')
@@ -335,7 +332,7 @@
                         console.log('blue foncé');
                         $('#underline').removeClass('blue-hover-style')
                         $('#underline').addClass('bg-blue')
-                    }
+                    } */
                 }
 
             })
@@ -358,15 +355,19 @@
 
                     /* Si le champ n'est pas vide, on émet vers le serveur */
                     socket.emit('is_writing', {
+                        sender_id: sender_id,
+                        sender_name: sender_name,
                         receiver_id: receiver_id,
-                        sender_name: sender_name
+                        receiver_name: receiver_name,
                     })
 
                 } else {
                     /* Sinon on émet vers le serveur pour que l'autre enlève sa div writing */
                     socket.emit('remove_writing', {
+                        sender_id: sender_id,
+                        sender_name: sender_name,
                         receiver_id: receiver_id,
-                        sender_name: sender_name
+                        receiver_name: receiver_name,
                     })
                 }
 
@@ -381,8 +382,10 @@
                         sendMessage(message_html);
 
                         socket.emit('remove_writing', {
+                            sender_id: sender_id,
+                            sender_name: sender_name,
                             receiver_id: receiver_id,
-                            sender_name: sender_name
+                            receiver_name: receiver_name,
                         })
 
                         $('#audio_arrow_mess')[0].play()
@@ -556,10 +559,6 @@
 
             }
 
-            $('#ErrorTag').on('click', () => {
-                $('#ErrorTag').addClass('d-none');
-            })
-
             /*---------------------------------------------------------------------------------------*/
             /*---------------------------------------------------------------------------------------*/
 
@@ -588,43 +587,56 @@
 
             socket.on('is_writing', (data) => {
 
-                let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
-                let find_attribute = document.getElementById(attribute);
+                console.log(data);
 
-                if (!find_attribute) {
+                /* Si l'action reçue est bien dédiée à la conversation en cours */
+                /* L'id de celui qui a envoyé le message doit être égal à celui du friend info */
+                if (data.sender_id == receiver_id) {
 
-                    let div = document.createElement('div');
-                    let message = data.user_name + ' is writing '
+                    let attribute = 'writer' + '-' + data.sender_id + '-' + data.sender_name;
+                    let find_attribute = document.getElementById(attribute);
 
-                    $(div).attr("id", attribute)
-                    $(div).text(message)
-                    $(div).addClass('is-writing')
+                    if (!find_attribute) {
 
-                    $('#writing').append(div);
-                    let gif = '<img class="writing-gif" src="{{ asset('img/writing.gif') }}"/>';
-                    $(div).append(gif)
+                        let div = document.createElement('div');
+                        let message = data.sender_name + ' is writing '
+
+                        $(div).attr("id", attribute)
+                        $(div).text(message)
+                        $(div).addClass('is-writing')
+
+                        $('#writing').append(div);
+                        let gif = '<img class="writing-gif" src="{{ asset('img/writing.gif') }}"/>';
+                        $(div).append(gif)
+                    }
+                    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+
                 }
-                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
 
             })
 
 
             socket.on('remove_writing', (data) => {
-                let attribute = 'writer' + '-' + data.user_id + '-' + data.user_name;
 
-                console.log(attribute);
-                let find_attribute = document.getElementById(attribute);
+                if (data.sender_id == receiver_id) {
 
-                console.log(find_attribute);
+                    let attribute = 'writer' + '-' + data.sender_id + '-' + data.sender_name;
 
-                if (find_attribute) {
-                    console.log(true);
-                    console.log('attribute exist');
+                    console.log(attribute);
+                    let find_attribute = document.getElementById(attribute);
 
-                    /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
-                    setTimeout(() => {
-                        document.getElementById(attribute).remove()
-                    }, 100);
+                    console.log(find_attribute);
+
+                    if (find_attribute) {
+                        console.log(true);
+                        console.log('attribute exist');
+
+                        /* AUCUNE IDEE MAIS SANS UN SET-TIMEOUT CA NE MARCHE PAS !!!! */
+                        setTimeout(() => {
+                            document.getElementById(attribute).remove()
+                        }, 100);
+                    }
+
                 }
 
             })
@@ -640,43 +652,64 @@
 
             $('#file').change(function() {
 
-                $('.btn-image-send').removeClass('d-none');
-
+                /* Dés que l'on change de fichiers prêts à l'upload, on réinitialise le contenu de la div */
                 let div_preview = document.getElementById('images-preview')
                 div_preview.innerHTML = "";
 
+                console.log(this.files);
+
+                /* Si des fichiers sont prêts à l'upload */
                 if (this.files) {
 
                     images = [];
 
                     for (const [key, file] of Object.entries(this.files)) {
 
-                        let div_image_preview = document.createElement('div')
-                        div_image_preview.classList.add('div-image-preview')
-                        div_image_preview.id = file.name;
+                        let extension_split = file.name.split('.')
+                        let extension_file = extension_split[1];
 
-                        let img_preview = document.createElement('img')
-                        img_preview.classList.add('img-preview')
+                        if (extension_file == "png" || extension_file == "jpg" || extension_file ==
+                            "jpeg" || extension_file == "gif" || extension_file == "tiff") {
 
-                        let reader = new FileReader()
+                            console.log('EXTENSION OK');
 
-                        reader.onload = function(e) {
-                            data = {
-                                base64: e.target.result,
-                                sender_id: sender_id,
-                                sender_name: sender_name,
-                                receiver_id: receiver_id,
-                                receiver_name: receiver_name,
+                            let div_image_preview = document.createElement('div')
+                            div_image_preview.classList.add('div-image-preview')
+
+                            let img_preview = document.createElement('img')
+                            img_preview.classList.add('img-preview')
+
+                            /* let cross_image = document.createElement('img')
+                            cross_image.classList.add('cross-image-preview')
+                            cross_image.src = "{{ asset('img/cross-upload.png') }}" */
+
+                            let reader = new FileReader()
+
+                            reader.onload = function(e) {
+                                data = {
+                                    base64: e.target.result,
+                                    sender_id: sender_id,
+                                    sender_name: sender_name,
+                                    receiver_id: receiver_id,
+                                    receiver_name: receiver_name,
+                                }
+
+                                img_preview.src = e.target.result;
+                                images.push(data)
                             }
 
-                            img_preview.src = e.target.result;
-                            images.push(data)
+                            reader.readAsDataURL(file)
+
+                            div_preview.append(div_image_preview)
+                            div_image_preview.append(img_preview)
+                            /* div_image_preview.append(cross_image) */
+
+                            /* On fait apparaître le bouton Send */
+                            $('.btn-image-send').removeClass('d-none');
+
+                        } else {
+                            alert('Please select only images !')
                         }
-
-                        reader.readAsDataURL(file)
-
-                        div_preview.append(div_image_preview)
-                        div_image_preview.append(img_preview)
 
                     }
                 }
@@ -691,6 +724,8 @@
             })
 
             function sendImage(images) {
+                console.log('SEND IMAGES');
+                console.log(images);
 
                 $.ajax({
                     url: "{{ route('message.send-image') }}", // La ressource ciblée
@@ -700,6 +735,33 @@
                     data: {
                         images: images,
                         _token: "{{ csrf_token() }}",
+                    },
+
+                    xhr: function() {
+                        let div_image_preview = $('#images-preview');
+
+                        let xhr = new window.XMLHttpRequest();
+
+                        xhr.upload.addEventListener("progress", function(evt) {
+
+                            console.log("EVT LENGTH COMPUTABLE");
+                            console.log(evt.lengthComputable);
+
+                            if (evt.lengthComputable) {
+
+                                console.log("EVT LOADED");
+                                console.log(evt.loaded);
+
+                                console.log("EVT TOTAL");
+                                console.log(evt.total);
+
+                                let percentComplete = (evt.loaded / evt.total) * 100;
+                                //Do something with upload progress here
+                            }
+
+                        }, false);
+
+                        return xhr;
                     },
 
                     success: function(response, status) {
@@ -736,7 +798,7 @@
             function appendImageToReceiver(datas) {
 
                 console.log("DATA IMAGE RECEIVED");
-                console.log(datas); 
+                console.log(datas);
 
                 if (datas.sender_id == "{{ $friendInfo->id }}") {
 
@@ -767,10 +829,13 @@
                     $('#messageWrapper').append(div_image_append)
                     $('#audio_hp')[0].play()
                     $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+
                 }
             }
 
             function appendImageToSender(images) {
+                console.log("SENDER IMAGE RECEIVED");
+                console.log(images)
 
                 images.forEach(data => {
 
