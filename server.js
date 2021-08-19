@@ -26,7 +26,10 @@ redis.subscribe('image-channel', function() {
     console.log('Subscribed to image channel')
 })
 
-let users_group = [];
+redis.subscribe('image-group-channel', function() {
+    console.log('Subscribed to image group channel')
+})
+
 let users = [];
 let groups = [];
 let room_to_leave;
@@ -34,7 +37,6 @@ let room_to_leave;
 io.on('connection', socket => {
 
     socket.on('user_connected', user_id => {
-        /* console.log(users); */
 
         users.push({ user_id: user_id, socket_id: socket.id })
 
@@ -42,7 +44,12 @@ io.on('connection', socket => {
         io.emit('UserStatus', users)
     })
 
-    /* GROUP  */
+    socket.on('update_status', user_id => {
+        /* Update des statuts de sa propre page et celle des autres */
+        io.emit('UserStatus', users)
+    })
+
+    /* GROUP */
     /* GROUP */
     socket.on('is_writing_group', (data) => {
         socket.broadcast.emit('is_writing_group', { user_id: data.sender_id, user_name: data.sender_name })
@@ -91,12 +98,14 @@ io.on('connection', socket => {
         socket.leave(room_to_leave)
 
         users.forEach((user, index) => {
+
             if (user.socket_id == socket.id) {
                 users.splice(index, 1);
 
                 /* On change le status de l'utilisateur */
                 io.emit('UserStatus', users)
             }
+
         });
     })
 
@@ -114,10 +123,11 @@ io.on('connection', socket => {
 
                 /* console.log(socket.adapter.rooms); */
                 groups[data.group_id].push(data)
+
+                /* Si l'utilisateur existe dans le groupe -> on le joint dans la room */
                 socket.join(data.room);
                 room_to_leave = data.room;
 
-                /* Si l'utilisateur existe dans le groupe -> on le joint dans la room */
             } else {
 
                 /* console.log(socket.adapter.rooms); */
@@ -141,7 +151,7 @@ io.on('connection', socket => {
 
 
 redis.on('message', (channel, message) => {
-    console.log("REDIS");
+    /* console.log("REDIS"); */
 
     message = JSON.parse(message)
 
@@ -210,6 +220,28 @@ redis.on('message', (channel, message) => {
                         receiver_name: receiver_name
                     })
                 }
+            });
+
+        });
+
+    }
+
+    if (channel == 'image-group-channel') {
+
+        let images = message.data.data
+
+        images.forEach(image => {
+
+            let sender_id = image.sender_id
+            let sender_name = image.sender_name
+            let group_id = image.group_id
+            let avatar = image.avatar
+
+            io.to('group' + group_id).emit('groupImage', {
+                data: image.base64,
+                avatar: avatar,
+                sender_id: sender_id,
+                sender_name: sender_name,
             });
 
         });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileServeUserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,17 @@ Route::post('send-group-message', [App\Http\Controllers\MessageController::class
 
 Route::post('send-image', [App\Http\Controllers\MessageController::class, 'sendImage'])
 ->name('message.send-image');
+
+Route::post('send-group-image', [App\Http\Controllers\MessageController::class, 'sendGroupImage'])
+->name('message.send-group-image');
+
+Route::get('/profile_image/{user_id}', [FileServeUserController::class, 'profile_image_serve'])->name('profile_image_serve');
+
+Route::get('/profile_image_friends_serve/{user_id}', [FileServeUserController::class, 'profile_image_friends_serve'])->name('profile_image_friends_serve');
+
+Route::post('search_user_DB', [App\Http\Controllers\SearchUserController::class, 'search_user_DB'])
+->name('search_user_DB');
+
 
 
 

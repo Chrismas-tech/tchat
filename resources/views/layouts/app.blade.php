@@ -33,11 +33,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
-<body class="bg-welcome">
+<body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-admin-group shadow-sm">
             <div class="container">
-                <a class="navbar-brand bg-white rounded px-2" href="{{ url('/') }}">
+                <a class="navbar-brand bg-white rounded px-2" href="{{ url('/home') }}">
                     {{ config('app.name') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -47,51 +47,43 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
 
                     <!-- Right Side Of Navbar -->
+
                     <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
+                        <li class="nav-item dropdown">
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle bg-white rounded" href="#" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
-                                </a>
+                            <a id="navbarDropdown"
+                                class="d-flex align-items-center nav-link dropdown-toggle bg-white rounded" href="#"
+                                data-toggle="dropdown" aria-expanded="false" v-pre>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                             document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+                                <div class="name-image-navbar mr-1">
+                                    <img src="{{ route('profile_image_serve', Auth::id()) }}"
+                                        alt="avatar">
                                 </div>
-                            </li>
-                        @endguest
+
+                                <div class="mr-1">
+                                    {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
+                                </div>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
                     </ul>
+
                 </div>
             </div>
         </nav>
 
-        <main class="py-2">
+        <main class="bg-welcome">
             @yield('content')
         </main>
     </div>

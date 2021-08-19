@@ -1,53 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row chat-row">
 
-        <div class="col-md-3">
+    <div class="d-flex p-4 responsive-users">
 
-            <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Users registered</h5>
+        <div>
+            {{-- <h5 class="bg-primary w-max-content text-white px-2 py-2 rounded">Friends List</h5> --}}
 
             <div class="users">
+                
 
-                <div class="d-flex py-1">
-                    <input type="text" class="w-100 input-search-user" placeholder="Search a user...">
-                    <button class="btn-loupe">
-                        <img src="{{ asset('img/loupe.png') }}" alt="loupe">
-                    </button>
+                <div class="py-1" id="input-search-user-help">
+                    <input id="input-search-user" type="text" class="w-100 input-search-user"
+                        placeholder="Search a friend...">
+
+                    <div>
+                        <ul class="list-group list-chat-item" id="search-result-ajax">
+                        </ul>
+                    </div>
                 </div>
 
-                <ul class="list-group list-chat-item mt-2">
+                <ul class="list-group list-chat-item mb-2">
                     @if ($users->count())
                         @foreach ($users as $user)
 
-                            <li class="chat-user-list @if ($user->id == $friendInfo->id) active @endif">
+                            <a href="{{ route('message.conversation', $user->id) }}" class="text-decoration-none">
 
-                                <a href="{{ route('message.conversation', $user->id) }}"
-                                    class="d-flex align-items-center text-decoration-none">
+                                <li class="chat-user-list d-flex align-items-center @if ($user->id ==
+                                    $friendInfo->id) active @endif">
 
                                     <div class="chat-image">
-                                        <i class="fa fa-circle fa-xs user-status-icon" id="status-{{ $user->id }}"
+                                        <i class="fa fa-circle fa-sm user-status-icon" id="status-{{ $user->id }}"
                                             title="Away"></i>
-                                        <div class="name-image">
-                                            @php
-                                                $user_name_full = $user->firstname . ' ' . $user->lastname . '';
-                                            @endphp
-                                            {{ makeShortCutName($user_name_full) }}
+
+                                        <div class="name-image mr-1">
+                                            <img src="{{ route('profile_image_friends_serve', $user->id) }}" alt="avatar">
                                         </div>
+                                        @php
+                                            $user_name_full = $user->firstname . ' ' . $user->lastname . '';
+                                        @endphp
+
                                     </div>
 
-                                    <div
-                                        class="m-auto chat-name ml-1 font-bold 
-                                                                                                                                                                                                                        {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
+                                    <div class="chat-name m-auto {{ $user->id == $friendInfo->id ? 'text-white' : '' }}">
                                         {{ $user_name_full }} <span id="notif"></span>
                                     </div>
 
-                                    <div>
-                                        <img src="{{ asset('img/conversation.png') }}" alt="img-conversation"
-                                            class="img-conversation">
-                                    </div>
-                                </a>
-                            </li>
+                                </li>
+                            </a>
 
                         @endforeach
                     @endif
@@ -97,15 +97,10 @@
             </div>
         </div>
 
-        <div class="col-md-9 chat-section rounded">
+        <div class="chat-section w-100 p-3 rounded ml-4">
             <div class="chat-header d-flex align-items-center">
-                <div class="chat-image">
-                    <div class="name-image">
-                        {{ makeShortCutName($friend_full_name) }}
-                    </div>
-                </div>
 
-                <div class="chat-name ml-1 font-bold">
+                <div class="chat-header-name ml-1 font-bold">
                     {{ $friend_full_name }}
                 </div>
 
@@ -122,11 +117,10 @@
                         @if ($user_message->sender_id == Auth::id() && $user_message->receiver_id == $friendInfo->id)
                             <div class="d-flex justify-content-end">
                                 <div>
-                                    <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
-                                        <div class="chat-image">
-                                            <div class="name-image">
-                                                {{ makeShortCutName($user_full_name) }}
-                                            </div>
+                                    <div class="mt-2 mb-2 user-info d-flex align-items-center">
+
+                                        <div class="image-chat">
+                                            <img src="{{ route('profile_image_serve', Auth::id()) }}" alt="avatar">
                                         </div>
 
                                         <div class="chat-name ml-1 font-weight-bold">{{ $user_full_name }}
@@ -153,12 +147,13 @@
                             Auth::id())
                             <div class="d-flex justify-content-start">
                                 <div>
-                                    <div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center">
-                                        <div class="chat-image">
-                                            <div class="name-image">
-                                                {{ makeShortCutName($friend_full_name) }}
-                                            </div>
+                                    <div class="mt-2 mb-2 user-info d-flex align-items-center">
+
+                                        <div class="image-chat">
+                                            <img src="{{ route('profile_image_friends_serve', $friendInfo->id) }}"
+                                                alt="avatar">
                                         </div>
+
                                         <div class="chat-name ml-1 font-weight-bold">{{ $friendInfo->firstname }}
                                             {{ $friendInfo->lastname }}
                                             <span class="small time text-secondary"
@@ -189,18 +184,7 @@
                 <div class="d-flex font-italic" id="writing">
                 </div>
                 <div class="chat-input-toolbar d-flex">
-                    {{-- <button id="bold" title="Bold" class="text-white bg-blue">
-                        <i class="fa fa-bold tool-icon"></i>
-                    </button>
-                    |
-                    <button id="italic" title="Italic" class="text-white bg-blue">
-                        <i class="fa fa-italic tool-icon"></i>
-                    </button>
-                    |
-                    <button id="underline" title="Underline" class="text-white bg-blue">
-                        <i class="fa fa-underline tool-icon"></i>
-                    </button>
-                    | --}}
+
                     <form id="form_send_image">
                         @csrf
                         <div class="d-flex align-items-center">
@@ -239,8 +223,8 @@
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
 
     <!-- Audio Sound -->
     <audio id="audio_hp" src="{{ asset('audio/1313.mp3') }}" preload="auto"></audio>
@@ -256,7 +240,6 @@
     <script>
         $(function() {
 
-
             $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
             $('.js-example-basic-single').select2();
 
@@ -264,14 +247,16 @@
             /* GLOBAL VARIABLES */
 
             let $chatInput = $("#chatInput");
-            let $chatInputTollbar = $('.chat-input-toolbar');
             let $chatBody = $(".chat-Body")
 
             let sender_id = '{{ Auth::id() }}'
             let sender_name = '{{ Auth::user()->firstname }}' + ' ' + '{{ Auth::user()->lastname }}'
+            let avatar = '{{ Auth::user()->avatar }}'
 
+            let avatar_friend = '{{ $friendInfo->avatar }}'
             let receiver_id = "{{ $friendInfo->id }}"
             let receiver_name = '{{ $friendInfo->firstname }}' + ' ' + '{{ $friendInfo->lastname }}'
+
 
             /*---------------------------------------------------------------------------------------*/
             /*---------------------------------------------------------------------------------------*/
@@ -279,6 +264,9 @@
             socket.emit('user_connected', sender_id)
 
             socket.on('UserStatus', users => {
+
+                console.log('USERS');
+                console.log(users);
 
                 /* Ici on update le statut, à savoir Online ou Disconnect */
                 /* Note : 
@@ -311,41 +299,19 @@
 
                 if (placeholder.trim() == ('Write your message here...')) {
                     $(this).text('');
-
-                    /* Problème :
-                    Si l'on clique sur un élement style puis sur le champ au chargement de la page, la fonction CommandExec ne rentre plus en compte, je contourne le problème en rétablissant les styles à 0 d'abord
-                    */
-
-                    /* if ($('#bold').hasClass('blue-hover-style')) {
-                        console.log('blue foncé');
-                        $('#bold').removeClass('blue-hover-style')
-                        $('#bold').addClass('bg-blue')
-                    }
-
-                    if ($('#italic').hasClass('blue-hover-style')) {
-                        console.log('blue foncé');
-                        $('#italic').removeClass('blue-hover-style')
-                        $('#italic').addClass('bg-blue')
-                    }
-
-                    if ($('#underline').hasClass('blue-hover-style')) {
-                        console.log('blue foncé');
-                        $('#underline').removeClass('blue-hover-style')
-                        $('#underline').addClass('bg-blue')
-                    } */
                 }
 
             })
 
             /* On évite de passer à la ligne avec la touche Enter --> ne marche que sur keydown pas keypress */
-            $chatInput.on('keydown ', e => {
+            $chatInput.on('keydown', e => {
                 if (e.which === 13) {
                     /* on évite un retour à la ligne */
                     e.preventDefault()
                 }
             })
 
-            $chatInput.on('keyup ', e => {
+            $chatInput.on('keyup', e => {
 
                 let message_html = $chatInput.html()
                 let message = $chatInput.text()
@@ -375,7 +341,6 @@
                 /* Si on tape Enter et si Shift n'est pas enfoncée */
 
                 if (e.which === 13 && !e.shiftKey) {
-
                     /* Si il y a du texte dans le champ input alors --> on envoie un message au serveur */
                     if (length_message > 0) {
 
@@ -397,49 +362,6 @@
                 }
 
             })
-
-
-            /* $('#bold').on('click', () => {
-                console.log('bold');
-                document.execCommand('bold', false, null)
-                if ($('#bold').hasClass('bg-blue')) {
-                    console.log('blue');
-                    $('#bold').removeClass('bg-blue')
-                    $('#bold').addClass('blue-hover-style')
-                } else if ($('#bold').hasClass('blue-hover-style')) {
-                    console.log('blue foncé');
-                    $('#bold').removeClass('blue-hover-style')
-                    $('#bold').addClass('bg-blue')
-                }
-            })
-
-            $('#italic').on('click', () => {
-                console.log('italic');
-                document.execCommand('italic', false, null)
-                if ($('#italic').hasClass('bg-blue')) {
-                    console.log('blue');
-                    $('#italic').removeClass('bg-blue')
-                    $('#italic').addClass('blue-hover-style')
-                } else if ($('#italic').hasClass('blue-hover-style')) {
-                    console.log('blue foncé');
-                    $('#italic').removeClass('blue-hover-style')
-                    $('#italic').addClass('bg-blue')
-                }
-            })
-
-            $('#underline').on('click', () => {
-                console.log('underline');
-                document.execCommand('underline', false, null)
-                if ($('#underline').hasClass('bg-blue')) {
-                    console.log('blue');
-                    $('#underline').removeClass('bg-blue')
-                    $('#underline').addClass('blue-hover-style')
-                } else if ($('#underline').hasClass('blue-hover-style')) {
-                    console.log('blue foncé');
-                    $('#underline').removeClass('blue-hover-style')
-                    $('#underline').addClass('bg-blue')
-                }
-            }) */
 
             /*---------------------------------------------------------------------------------------*/
             /*---------------------------------------------------------------------------------------*/
@@ -514,6 +436,25 @@
                 $('#audio_hp')[0].play()
             })
 
+
+            function appendMessageToSender(message) {
+                /* console.log('SENDER');
+                console.log(message); */
+
+                let $user_full_name = '{{ $user_full_name }}';
+
+                let new_message =
+                    '<div class="d-flex justify-content-end"><div><div class="mt-2 mb-2 user-info d-flex align-items-center"><div class="image-chat"><img src="{{ route('profile_image_serve', Auth::id()) }}" alt="avatar"></div><div class="chat-name ml-1 font-weight-bold">' +
+                    $user_full_name + ' ' +
+                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
+                    getCurrentTime() + '</span></div></div><div class="message-text">' + message +
+                    '</div></div></div>';
+
+
+                $('#messageWrapper').append(new_message);
+                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+            }
+
             function appendMessageToReceiver(message) {
                 /*                 
                 console.log('APPEND RECEIVER');
@@ -525,12 +466,10 @@
                 if (message.sender_id == receiver_id) {
                     /*         console.log(true); */
                     let $friend_full_name = '{{ $friend_full_name }}';
-                    let $image = '{{ makeShortCutName($friend_full_name) }}';
 
                     let new_message =
-                        '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name +
-                        ' ' +
+                        '<div class="d-flex justify-content-start"><div><div class="mt-2 mb-2 user-info d-flex align-items-center"><div class="image-chat"><img src="{{ route('profile_image_friends_serve', $friendInfo->id) }}" alt="avatar"></div><div class="chat-name ml-1 font-weight-bold">' +
+                        $friend_full_name + ' ' +
                         '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
                         getCurrentTime() + '</span></div></div><div class="message-text">' + message.content +
                         '</div></div></div>';
@@ -538,25 +477,6 @@
                     $('#messageWrapper').append(new_message);
                     $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
                 }
-            }
-
-            function appendMessageToSender(message) {
-                /* console.log('SENDER');
-                console.log(message); */
-
-                let $user_full_name = '{{ $user_full_name }}';
-                let $image = '{{ makeShortCutName($user_full_name) }}';
-
-                let new_message =
-                    '<div class="d-flex justify-content-end"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                    $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $user_full_name + ' ' +
-                    '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                    getCurrentTime() + '</span></div></div><div class="message-text">' + message +
-                    '</div></div></div>';
-
-                $('#messageWrapper').append(new_message);
-                $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
-
             }
 
             /*---------------------------------------------------------------------------------------*/
@@ -656,7 +576,7 @@
                 let div_preview = document.getElementById('images-preview')
                 div_preview.innerHTML = "";
 
-                console.log(this.files);
+                /* console.log(this.files); */
 
                 /* Si des fichiers sont prêts à l'upload */
                 if (this.files) {
@@ -665,8 +585,8 @@
 
                     for (const [key, file] of Object.entries(this.files)) {
 
-                        let extension_split = file.name.split('.')
-                        let extension_file = extension_split[1];
+                        let extension_split = file.name
+                        let extension_file = extension_split.substr(-3);
 
                         if (extension_file == "png" || extension_file == "jpg" || extension_file ==
                             "jpeg" || extension_file == "gif" || extension_file == "tiff") {
@@ -678,10 +598,6 @@
 
                             let img_preview = document.createElement('img')
                             img_preview.classList.add('img-preview')
-
-                            /* let cross_image = document.createElement('img')
-                            cross_image.classList.add('cross-image-preview')
-                            cross_image.src = "{{ asset('img/cross-upload.png') }}" */
 
                             let reader = new FileReader()
 
@@ -724,8 +640,8 @@
             })
 
             function sendImage(images) {
-                console.log('SEND IMAGES');
-                console.log(images);
+                /* console.log('SEND IMAGES');
+                console.log(images); */
 
                 $.ajax({
                     url: "{{ route('message.send-image') }}", // La ressource ciblée
@@ -744,19 +660,12 @@
 
                         xhr.upload.addEventListener("progress", function(evt) {
 
-                            console.log("EVT LENGTH COMPUTABLE");
-                            console.log(evt.lengthComputable);
-
                             if (evt.lengthComputable) {
 
-                                console.log("EVT LOADED");
-                                console.log(evt.loaded);
-
-                                console.log("EVT TOTAL");
-                                console.log(evt.total);
 
                                 let percentComplete = (evt.loaded / evt.total) * 100;
                                 //Do something with upload progress here
+
                             }
 
                         }, false);
@@ -795,47 +704,9 @@
                 appendImageToReceiver(image)
             })
 
-            function appendImageToReceiver(datas) {
-
-                console.log("DATA IMAGE RECEIVED");
-                console.log(datas);
-
-                if (datas.sender_id == "{{ $friendInfo->id }}") {
-
-                    let img = document.createElement('img')
-                    img.src = datas.data
-                    img.className = "img-style-append";
-                    img.setAttribute('data-toggle', 'modal')
-                    img.setAttribute('data-target', '#Modal_zoom_image')
-
-                    let $friend_full_name = datas.sender_name;
-                    let $image = '{{ makeShortCutName($friend_full_name) }}';
-
-                    let new_message =
-                        '<div class="d-flex justify-content-start"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' + $friend_full_name +
-                        ' ' +
-                        '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() + '">' +
-                        getCurrentTime() + '</span></div></div></div></div>';
-
-                    $('#messageWrapper').append(new_message)
-
-                    let div_image_append = document.createElement('div')
-                    div_image_append.style.display = 'flex'
-                    div_image_append.style.justifyContent = 'flex-start'
-
-                    div_image_append.append(img)
-
-                    $('#messageWrapper').append(div_image_append)
-                    $('#audio_hp')[0].play()
-                    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
-
-                }
-            }
-
             function appendImageToSender(images) {
-                console.log("SENDER IMAGE RECEIVED");
-                console.log(images)
+                /* console.log("SENDER IMAGE RECEIVED");
+                console.log(images) */
 
                 images.forEach(data => {
 
@@ -846,15 +717,14 @@
                     img.setAttribute('data-target', '#Modal_zoom_image')
 
                     let $user_full_name = '{{ $user_full_name }}'
-                    let $image = '{{ makeShortCutName($user_full_name) }}'
 
                     let new_message =
-                        '<div class="d-flex justify-content-end"><div><div class="col-md-12 mt-2 mb-2 user-info d-flex align-items-center"><div class="chat-image"><div class="name-image">' +
-                        $image + '</div></div><div class="chat-name ml-1 font-weight-bold">' +
-                        $user_full_name + ' ' +
+                        '<div class="d-flex justify-content-end"><div><div class="user-info d-flex align-items-center"><div class="image-chat"><img src="{{ route('profile_image_serve', Auth::id()) }}" alt="avatar"></div><div class="chat-name ml-1 font-weight-bold">' +
+                        $user_full_name +
+                        ' ' +
                         '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() +
                         '">' +
-                        getCurrentTime() + '</span></div></div></div></div>'
+                        getCurrentTime() + '</span></div></div></div></div>';
 
                     $('#messageWrapper').append(new_message)
 
@@ -865,9 +735,48 @@
                     div_image_append.append(img)
 
                     $('#messageWrapper').append(div_image_append)
-                    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+                    $("#chatBody").scrollTop($("#chatBody")[0]
+                        .scrollHeight);
 
                 })
+            }
+
+            function appendImageToReceiver(datas) {
+
+                /* console.log("DATA IMAGE RECEIVED");
+                console.log(datas); */
+
+                if (datas.sender_id == "{{ $friendInfo->id }}") {
+
+                    /* Create and Style of image */
+                    let img = document.createElement('img')
+                    img.src = datas.data
+                    img.className = "img-style-append"
+                    img.setAttribute('data-toggle', 'modal')
+                    img.setAttribute('data-target', '#Modal_zoom_image')
+
+                    /* New message */
+                    let $friend_full_name = datas.sender_name
+
+                    let new_message =
+                        '<div class="d-flex justify-content-start"><div><div class="user-info mt-2 mb-2 d-flex align-items-center"><div class="image-chat"><img src="{{ route('profile_image_friends_serve', $friendInfo->id) }}" alt="avatar"></div><div class="chat-name ml-1 font-weight-bold">' +
+                        $friend_full_name +
+                        ' ' +
+                        '<span class="small time text-secondary" title="' + getCurrent_Date_and_Time() +
+                        '">' +
+                        getCurrentTime() + '</span></div></div></div></div>';
+
+                    let div_image_append = document.createElement('div')
+                    div_image_append.style.display = 'flex'
+                    div_image_append.style.justifyContent = 'flex-start'
+                    div_image_append.append(img)
+
+                    $('#messageWrapper').append(new_message)
+                    $('#messageWrapper').append(div_image_append)
+
+                    $('#audio_hp')[0].play()
+                    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+                }
             }
 
             /* Image zoom photo with modal */
@@ -878,6 +787,75 @@
                 /* console.log(image_src) */
             })
 
+            /* SEARCH USER AJAX */
+            /* SEARCH USER AJAX */
+            /* SEARCH USER AJAX */
+
+            let $input_search = $('#input-search-user')
+
+            $input_search.on('keyup', e => {
+
+                let message = $input_search.val()
+                let length_message = message.length
+
+                if (length_message > 2) {
+
+                    $.ajax({
+                        url: "{{ route('search_user_DB') }}", // La ressource ciblée
+                        method: 'POST', // Le type de la requête HTTP
+                        dataType: 'JSON', // On définit le type des données retourné par le serveur (évite d'utiliser JSON.parse pour la réponse)
+
+                        data: {
+                            message: message,
+                            _token: "{{ csrf_token() }}",
+                        },
+
+                        success: function(response, status) {
+                            if (response.users_list) {
+
+                                $('#search-result-ajax').empty();
+                                $('#search-result-ajax').append(
+                                    '<span class="results_ajax p-1 mt-1">There is <strong>' +
+                                    response.users_list.length +
+                                    '</strong> result(s) for your search</span>')
+
+                                response.users_list.forEach(user => {
+
+                                    let url_a =
+                                        "{{ route('message.conversation', '') }}" +
+                                        "/" + user.id
+                                    let url_img =
+                                        "{{ route('profile_image_friends_serve', '') }}" +
+                                        "/" + user.id
+
+                                    $('#search-result-ajax').append(
+                                        '<a href="' + url_a +
+                                        '"><li class="chat-user-list d-flex align-items-center"><div class="chat-image"><i class="fa fa-circle fa-sm user-status-icon status-' +
+                                        user.id +
+                                        '"title="Away"></i><div class="name-image mr-1"><img src="' +
+                                        url_img +
+                                        '" alt="avatar"></div></div><div class="m-auto chat-name ml-1">' +
+                                        user.firstname + ' ' + user.lastname +
+                                        '</div></li></a>')
+
+                                    socket.emit('update_status', user.id)
+                                });
+                                $('#search-result-ajax').append('<hr>')
+
+                            }
+                        },
+
+                        error: function(response) {
+                            console.log(response);
+                        }
+                    });
+
+                } else if (length_message <= 0) {
+                    console.log('0');
+                    $('#search-result-ajax').empty();
+                }
+
+            })
         })
     </script>
 @endpush

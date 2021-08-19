@@ -3,7 +3,7 @@
 @section('content')
     <div class="centered-login">
         <div class="mb-4">
-            <h3 class="text-white">Laravel Chat App</h3>
+            <h3 class="text-white">Conversation Tchat Application</h3>
         </div>
 
         <div class="d-flex">

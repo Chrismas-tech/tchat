@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Martin',
                 'lastname' => 'Luciani',
                 'email' => 'm@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -30,6 +31,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Bernard',
                 'lastname' => 'Blier',
                 'email' => 'b@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -39,6 +41,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Christophe',
                 'lastname' => 'Luciani',
                 'email' => 'c@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -48,6 +51,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Damien',
                 'lastname' => 'Gola',
                 'email' => 'd@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -57,6 +61,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Gérard',
                 'lastname' => 'Mensoif',
                 'email' => 'e@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -66,6 +71,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Calo',
                 'lastname' => 'Gero',
                 'email' => 'f@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -75,6 +81,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Mylène',
                 'lastname' => 'Farmer',
                 'email' => 'g@gmail.com',
+                'sex' => 'female',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -84,6 +91,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Harry',
                 'lastname' => 'Foly',
                 'email' => 'h@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -93,6 +101,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Louis',
                 'lastname' => 'De Funes',
                 'email' => 'i@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),
@@ -102,6 +111,7 @@ class UserSeeder extends Seeder
                 'firstname' => 'Christian',
                 'lastname' => 'Clavier',
                 'email' => 'j@gmail.com',
+                'sex' => 'male',
                 'email_verified_at' => now(),
                 'password' => Hash::make('azertyui'), // password
                 'remember_token' => Str::random(10),

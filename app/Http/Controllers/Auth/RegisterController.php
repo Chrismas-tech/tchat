@@ -54,6 +54,8 @@ class RegisterController extends Controller
             'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'avatar' => 'mimes:jpeg,jpg,png,tiff|max:3000000',
+            'sex' => ['required', 'string'],
         ]);
     }
 
@@ -65,11 +67,38 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $count_user = User::all()->count();
+        $user_id = $count_user + 1;
+
+        $request = app('request');
+
+        /* Si il y a une photo de profil */
+        if ($request->file('avatar')) {
+
+            /* Pour valider l'extension et la taille on s'en charge dans la fonction validator au-dessus*/
+            /* Pour modifier le message d'erreur, il faut aller dans validator.php */
+            $name_file = uniqid() . $request->file('avatar')->getClientOriginalName();
+
+                $request->file('avatar')->storeAs('profile-photos/user-id-' . $user_id . '/', $name_file, 'private');
+
+                return User::create([
+                    'firstname' => $data['firstname'],
+                    'lastname' => $data['lastname'],
+                    'email' => $data['email'],
+                    'password' => Hash::make($data['password']),
+                    'sex' => $data['sex'],
+                    'avatar' => $name_file,
+                ]);
+            
+            /* Sinon sans photo de profil */
+        } else {
+            return User::create([
+                'firstname' => $data['firstname'],
+                'lastname' => $data['lastname'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'sex' => $data['sex'],
+            ]);
+        }
     }
 }
