@@ -91,7 +91,7 @@ class MessageGroupController extends Controller
         /* ->with('message_group_members.user')
         ->first(); */
 
-        return view('message_groups.index', compact('users', 'user', 'members_of_group', 'user_full_name', 'groups', 'currentGroup', 'messages_of_group'));
+        return view('message_groups.group', compact('users', 'user', 'members_of_group', 'user_full_name', 'groups', 'currentGroup', 'messages_of_group'));
     }
 
     /**
