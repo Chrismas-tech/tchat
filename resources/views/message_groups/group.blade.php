@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="d-flex p-4 responsive-users">
+    <div class="d-flex p-5 responsive-users">
 
         <div class="mr-4">
             <div class="d-flex justify-content-between align-items-center">
@@ -56,7 +56,7 @@
             <div class="chat-group-header">
 
                 <div class="d-flex align-items-center">
-                    <div class="bg-admin-group mr-2 rounded px-2 py-2 font-weight-bold">
+                    <div class="bg-blue text-white mr-2 rounded px-2 py-2 font-weight-bold">
                         <img class="icon-profile" src="{{ asset('img/icon-admin.png') }}" alt="icon-profile">Créateur du
                         groupe : {{ $currentGroup->name }}
                     </div>
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <div class="chat-body" id="chatBody">
+            <div class="chat-body-group" id="chatBody">
                 <div class="message-listing" id="messageWrapper">
 
                     <!-- Pour tous les messages du groupe-->
@@ -289,7 +289,7 @@
 
             let $chatInput = $("#chatInput")
             let $chatInputTollbar = $('.chat-input-toolbar')
-            let $chatBody = $(".chat-Body")
+            let $chatBodyGroup = $(".chat-body-group")
 
             let sender_id = '{{ Auth::id() }}'
             let sender_name = '{{ Auth::user()->firstname }}' + ' ' + '{{ Auth::user()->lastname }}'
