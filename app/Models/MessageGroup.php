@@ -13,6 +13,7 @@ class MessageGroup extends Model
         'user_id',
         'name',
         'status',
+        'message_group_id',
     ];
 
     public function message_group_members() {
