@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
                 'email' => 'm@gmail.com',
                 'sex' => 'male',
                 'email_verified_at' => now(),
-                'password' => Hash::make('azertyui'), // password
+                'password' => Hash::make('martluci'), // password
                 'remember_token' => Str::random(10),
             ],
 
