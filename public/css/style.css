@@ -36,6 +36,8 @@ a {
     font-size: 14px !important;
     border-bottom: none;
     border: 2px solid lightblue;
+    background-color: white;
+    border-radius: 8px 8px 0 0;
 }
 
 input[type=radio] {

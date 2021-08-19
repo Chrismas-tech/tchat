@@ -149,7 +149,6 @@ io.on('connection', socket => {
 
 })
 
-
 redis.on('message', (channel, message) => {
     /* console.log("REDIS"); */
 
