@@ -374,6 +374,16 @@ input[type="file"] {
     border-bottom-color: #0aa4f3;
 }
 
+.chat-body-group {
+    height: calc(40vh);
+    position: relative;
+    overflow: auto;
+    border: solid 2px #e2e2e2;
+    border-radius: 8px 8px 0px 0px;
+    padding: 10px;
+    border-bottom-color: #0aa4f3;
+}
+
 .message-text {
     margin-left: 54px;
     margin-top: -10px;
